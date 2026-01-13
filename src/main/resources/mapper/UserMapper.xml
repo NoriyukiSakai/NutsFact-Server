@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.nines.nutsfact.domain.model.user.User">
+        <id property="userId" column="user_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
+        <result property="authUserId" column="auth_user_id"/>
+        <result property="email" column="email"/>
+        <result property="name" column="name"/>
+        <result property="role" column="role"/>
+        <result property="profileImageUrl" column="profile_image_url"/>
+        <result property="phone" column="phone"/>
+        <result property="password" column="password"/>
+        <result property="provider" column="provider"/>
+        <result property="lastSignInAt" column="last_sign_in_at"/>
+        <result property="createdDate" column="created_date"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+        <result property="isActive" column="is_active"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="UserResultMap">
+        SELECT user_id, business_account_id, auth_user_id, email, name, role,
+               profile_image_url, phone, password, provider, last_sign_in_at,
+               created_date, last_update_date, is_active
+        FROM USERS
+        ORDER BY user_id
+    </select>
+
+    <select id="findByBusinessAccountId" resultMap="UserResultMap">
+        SELECT user_id, business_account_id, auth_user_id, email, name, role,
+               profile_image_url, phone, password, provider, last_sign_in_at,
+               created_date, last_update_date, is_active
+        FROM USERS
+        WHERE business_account_id = #{businessAccountId}
+        ORDER BY user_id
+    </select>
+
+    <select id="findById" resultMap="UserResultMap">
+        SELECT user_id, business_account_id, auth_user_id, email, name, role,
+               profile_image_url, phone, password, provider, last_sign_in_at,
+               created_date, last_update_date, is_active
+        FROM USERS
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findByEmail" resultMap="UserResultMap">
+        SELECT user_id, business_account_id, auth_user_id, email, name, role,
+               profile_image_url, phone, password, provider, last_sign_in_at,
+               created_date, last_update_date, is_active
+        FROM USERS
+        WHERE email = #{email}
+    </select>
+
+    <select id="findByAuthUserId" resultMap="UserResultMap">
+        SELECT user_id, business_account_id, auth_user_id, email, name, role,
+               profile_image_url, phone, password, provider, last_sign_in_at,
+               created_date, last_update_date, is_active
+        FROM USERS
+        WHERE auth_user_id = #{authUserId}
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.user.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO USERS (business_account_id, auth_user_id, email, name, role,
+                          profile_image_url, phone, password, provider, is_active)
+        VALUES (#{businessAccountId}, #{authUserId}, #{email}, #{name}, #{role},
+                #{profileImageUrl}, #{phone}, #{password}, #{provider}, #{isActive})
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.user.User">
+        UPDATE USERS
+        SET business_account_id = #{businessAccountId},
+            auth_user_id = #{authUserId},
+            email = #{email},
+            name = #{name},
+            role = #{role},
+            profile_image_url = #{profileImageUrl},
+            phone = #{phone},
+            provider = #{provider},
+            is_active = #{isActive}
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateLastSignInAt">
+        UPDATE USERS
+        SET last_sign_in_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM USERS WHERE user_id = #{userId}
+    </delete>
+
+    <select id="countByBusinessAccountId" resultType="int">
+        SELECT COUNT(*) FROM USERS WHERE business_account_id = #{businessAccountId}
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.ClassCategoryMapper">
+
+    <resultMap id="ClassCategoryResultMap" type="com.nines.nutsfact.domain.model.master.ClassCategory">
+        <id property="categoryId" column="class_category_id"/>
+        <result property="categoryType" column="class_type"/>
+        <result property="categoryName" column="class_category_name"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="ClassCategoryResultMap">
+        SELECT class_category_id, class_type, class_category_name, description
+        FROM MASTER_CLASSCATEGORY
+        ORDER BY class_type, class_category_id
+    </select>
+
+    <select id="findByType" resultMap="ClassCategoryResultMap">
+        SELECT class_category_id, class_type, class_category_name, description
+        FROM MASTER_CLASSCATEGORY
+        WHERE class_type = #{categoryType}
+        ORDER BY class_category_id
+    </select>
+
+    <select id="findById" resultMap="ClassCategoryResultMap">
+        SELECT class_category_id, class_type, class_category_name, description
+        FROM MASTER_CLASSCATEGORY
+        WHERE class_category_id = #{categoryId}
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.ClassCategory" useGeneratedKeys="true" keyProperty="categoryId">
+        INSERT INTO MASTER_CLASSCATEGORY (class_type, class_category_name, description)
+        VALUES (#{categoryType}, #{categoryName}, #{description})
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.master.ClassCategory">
+        UPDATE MASTER_CLASSCATEGORY
+        SET class_type = #{categoryType},
+            class_category_name = #{categoryName},
+            description = #{description}
+        WHERE class_category_id = #{categoryId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM MASTER_CLASSCATEGORY WHERE class_category_id = #{categoryId}
+    </delete>
+
+</mapper>

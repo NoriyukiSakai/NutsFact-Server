@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.AllergenicControlMapper">
+
+    <resultMap id="AllergenicControlResultMap" type="com.nines.nutsfact.domain.model.allergy.AllergenicControl">
+        <id property="foodId" column="food_id"/>
+        <result property="item1Val" column="item1_val"/>
+        <result property="item2Val" column="item2_val"/>
+        <result property="item3Val" column="item3_val"/>
+        <result property="item4Val" column="item4_val"/>
+        <result property="item5Val" column="item5_val"/>
+        <result property="item6Val" column="item6_val"/>
+        <result property="item7Val" column="item7_val"/>
+        <result property="item8Val" column="item8_val"/>
+        <result property="item9Val" column="item9_val"/>
+        <result property="item10Val" column="item10_val"/>
+        <result property="item11Val" column="item11_val"/>
+        <result property="item12Val" column="item12_val"/>
+        <result property="item13Val" column="item13_val"/>
+        <result property="item14Val" column="item14_val"/>
+        <result property="item15Val" column="item15_val"/>
+        <result property="item16Val" column="item16_val"/>
+        <result property="item17Val" column="item17_val"/>
+        <result property="item18Val" column="item18_val"/>
+        <result property="item19Val" column="item19_val"/>
+        <result property="item20Val" column="item20_val"/>
+        <result property="item21Val" column="item21_val"/>
+        <result property="item22Val" column="item22_val"/>
+        <result property="item23Val" column="item23_val"/>
+        <result property="item24Val" column="item24_val"/>
+        <result property="item25Val" column="item25_val"/>
+        <result property="item26Val" column="item26_val"/>
+        <result property="item27Val" column="item27_val"/>
+        <result property="item28Val" column="item28_val"/>
+        <result property="item29Val" column="item29_val"/>
+        <result property="item30Val" column="item30_val"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="AllergenicControlResultMap">
+        SELECT * FROM ALLERGENIC_CONTROL ORDER BY food_id
+    </select>
+
+    <select id="findByFoodId" resultMap="AllergenicControlResultMap">
+        SELECT * FROM ALLERGENIC_CONTROL WHERE food_id = #{foodId}
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.allergy.AllergenicControl">
+        INSERT INTO ALLERGENIC_CONTROL (
+            food_id, item1_val, item2_val, item3_val, item4_val, item5_val,
+            item6_val, item7_val, item8_val, item9_val, item10_val,
+            item11_val, item12_val, item13_val, item14_val, item15_val,
+            item16_val, item17_val, item18_val, item19_val, item20_val,
+            item21_val, item22_val, item23_val, item24_val, item25_val,
+            item26_val, item27_val, item28_val, item29_val, item30_val
+        ) VALUES (
+            #{foodId}, #{item1Val}, #{item2Val}, #{item3Val}, #{item4Val}, #{item5Val},
+            #{item6Val}, #{item7Val}, #{item8Val}, #{item9Val}, #{item10Val},
+            #{item11Val}, #{item12Val}, #{item13Val}, #{item14Val}, #{item15Val},
+            #{item16Val}, #{item17Val}, #{item18Val}, #{item19Val}, #{item20Val},
+            #{item21Val}, #{item22Val}, #{item23Val}, #{item24Val}, #{item25Val},
+            #{item26Val}, #{item27Val}, #{item28Val}, #{item29Val}, #{item30Val}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.allergy.AllergenicControl">
+        UPDATE ALLERGENIC_CONTROL SET
+            item1_val = #{item1Val}, item2_val = #{item2Val}, item3_val = #{item3Val},
+            item4_val = #{item4Val}, item5_val = #{item5Val}, item6_val = #{item6Val},
+            item7_val = #{item7Val}, item8_val = #{item8Val}, item9_val = #{item9Val},
+            item10_val = #{item10Val}, item11_val = #{item11Val}, item12_val = #{item12Val},
+            item13_val = #{item13Val}, item14_val = #{item14Val}, item15_val = #{item15Val},
+            item16_val = #{item16Val}, item17_val = #{item17Val}, item18_val = #{item18Val},
+            item19_val = #{item19Val}, item20_val = #{item20Val}, item21_val = #{item21Val},
+            item22_val = #{item22Val}, item23_val = #{item23Val}, item24_val = #{item24Val},
+            item25_val = #{item25Val}, item26_val = #{item26Val}, item27_val = #{item27Val},
+            item28_val = #{item28Val}, item29_val = #{item29Val}, item30_val = #{item30Val}
+        WHERE food_id = #{foodId}
+    </update>
+
+    <insert id="upsert" parameterType="com.nines.nutsfact.domain.model.allergy.AllergenicControl">
+        INSERT INTO ALLERGENIC_CONTROL (
+            food_id, item1_val, item2_val, item3_val, item4_val, item5_val,
+            item6_val, item7_val, item8_val, item9_val, item10_val,
+            item11_val, item12_val, item13_val, item14_val, item15_val,
+            item16_val, item17_val, item18_val, item19_val, item20_val,
+            item21_val, item22_val, item23_val, item24_val, item25_val,
+            item26_val, item27_val, item28_val, item29_val, item30_val
+        ) VALUES (
+            #{foodId}, #{item1Val}, #{item2Val}, #{item3Val}, #{item4Val}, #{item5Val},
+            #{item6Val}, #{item7Val}, #{item8Val}, #{item9Val}, #{item10Val},
+            #{item11Val}, #{item12Val}, #{item13Val}, #{item14Val}, #{item15Val},
+            #{item16Val}, #{item17Val}, #{item18Val}, #{item19Val}, #{item20Val},
+            #{item21Val}, #{item22Val}, #{item23Val}, #{item24Val}, #{item25Val},
+            #{item26Val}, #{item27Val}, #{item28Val}, #{item29Val}, #{item30Val}
+        ) ON DUPLICATE KEY UPDATE
+            item1_val = VALUES(item1_val), item2_val = VALUES(item2_val), item3_val = VALUES(item3_val),
+            item4_val = VALUES(item4_val), item5_val = VALUES(item5_val), item6_val = VALUES(item6_val),
+            item7_val = VALUES(item7_val), item8_val = VALUES(item8_val), item9_val = VALUES(item9_val),
+            item10_val = VALUES(item10_val), item11_val = VALUES(item11_val), item12_val = VALUES(item12_val),
+            item13_val = VALUES(item13_val), item14_val = VALUES(item14_val), item15_val = VALUES(item15_val),
+            item16_val = VALUES(item16_val), item17_val = VALUES(item17_val), item18_val = VALUES(item18_val),
+            item19_val = VALUES(item19_val), item20_val = VALUES(item20_val), item21_val = VALUES(item21_val),
+            item22_val = VALUES(item22_val), item23_val = VALUES(item23_val), item24_val = VALUES(item24_val),
+            item25_val = VALUES(item25_val), item26_val = VALUES(item26_val), item27_val = VALUES(item27_val),
+            item28_val = VALUES(item28_val), item29_val = VALUES(item29_val), item30_val = VALUES(item30_val)
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM ALLERGENIC_CONTROL WHERE food_id = #{foodId}
+    </delete>
+
+</mapper>

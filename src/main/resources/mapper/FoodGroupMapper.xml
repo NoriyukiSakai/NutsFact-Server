@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.FoodGroupMapper">
+
+    <resultMap id="FoodGroupResultMap" type="com.nines.nutsfact.domain.model.master.FoodGroup">
+        <id property="foodGroupId" column="food_group_id"/>
+        <result property="foodGroupName" column="food_group_name"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="FoodGroupResultMap">
+        SELECT food_group_id, food_group_name, description
+        FROM MASTER_FOOD_GROUP
+        ORDER BY food_group_id
+    </select>
+
+    <select id="findById" resultMap="FoodGroupResultMap">
+        SELECT food_group_id, food_group_name, description
+        FROM MASTER_FOOD_GROUP
+        WHERE food_group_id = #{foodGroupId}
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.FoodGroup">
+        INSERT INTO MASTER_FOOD_GROUP (food_group_id, food_group_name, description)
+        VALUES (#{foodGroupId}, #{foodGroupName}, #{description})
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.master.FoodGroup">
+        UPDATE MASTER_FOOD_GROUP
+        SET food_group_name = #{foodGroupName},
+            description = #{description}
+        WHERE food_group_id = #{foodGroupId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM MASTER_FOOD_GROUP WHERE food_group_id = #{foodGroupId}
+    </delete>
+
+</mapper>

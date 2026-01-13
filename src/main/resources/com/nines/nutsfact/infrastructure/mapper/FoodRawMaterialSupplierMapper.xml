@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.FoodRawMaterialSupplierMapper">
+
+    <resultMap id="FoodRawMaterialSupplierResultMap" type="com.nines.nutsfact.domain.model.FoodRawMaterialSupplier">
+        <id property="id" column="id"/>
+        <result property="foodId" column="food_id"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="purchasePrice" column="purchase_price"/>
+        <result property="volumeAmount" column="volume_amount"/>
+        <result property="weightOrCapacity" column="weight_or_capacity"/>
+        <result property="convertRatio" column="convert_ratio"/>
+        <result property="pricePerUnit" column="price_per_unit"/>
+        <result property="createDate" column="create_date"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+        <result property="isActive" column="is_active"/>
+    </resultMap>
+
+    <select id="findByFoodId" resultMap="FoodRawMaterialSupplierResultMap">
+        SELECT id, food_id, supplier_id, supplier_name, purchase_price, volume_amount,
+               weight_or_capacity, convert_ratio, price_per_unit, create_date, last_update_date, is_active
+        FROM vfood_raw_material_supplier
+        WHERE food_id = #{foodId}
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultMap="FoodRawMaterialSupplierResultMap">
+        SELECT id, food_id, supplier_id, supplier_name, purchase_price, volume_amount,
+               weight_or_capacity, convert_ratio, price_per_unit, create_date, last_update_date, is_active
+        FROM vfood_raw_material_supplier
+        WHERE id = #{id}
+    </select>
+
+    <select id="getLastInsertId" resultType="Integer">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="entity.id">
+        INSERT INTO FOOD_RAW_MATERIALS_SUPPLIER (food_id, supplier_id, purchase_price, volume_amount,
+                                                  weight_or_capacity, convert_ratio, price_per_unit, is_active)
+        VALUES (#{entity.foodId}, #{entity.supplierId}, #{entity.purchasePrice}, #{entity.volumeAmount},
+                #{entity.weightOrCapacity}, #{entity.convertRatio}, #{entity.pricePerUnit}, #{entity.isActive})
+    </insert>
+
+    <update id="update">
+        UPDATE FOOD_RAW_MATERIALS_SUPPLIER
+        SET supplier_id = #{entity.supplierId},
+            purchase_price = #{entity.purchasePrice},
+            volume_amount = #{entity.volumeAmount},
+            weight_or_capacity = #{entity.weightOrCapacity},
+            convert_ratio = #{entity.convertRatio},
+            price_per_unit = #{entity.pricePerUnit},
+            is_active = #{entity.isActive}
+        WHERE id = #{entity.id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM FOOD_RAW_MATERIALS_SUPPLIER WHERE id = #{id}
+    </delete>
+
+</mapper>

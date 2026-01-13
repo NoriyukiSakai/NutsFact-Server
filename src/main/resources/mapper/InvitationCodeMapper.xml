@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.InvitationCodeMapper">
+
+    <resultMap id="InvitationCodeResultMap" type="com.nines.nutsfact.domain.model.user.InvitationCode">
+        <id property="id" column="id"/>
+        <result property="businessAccountId" column="business_account_id"/>
+        <result property="code" column="code"/>
+        <result property="email" column="email"/>
+        <result property="role" column="role"/>
+        <result property="expiresAt" column="expires_at"/>
+        <result property="isUsed" column="is_used"/>
+        <result property="usedAt" column="used_at"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createdByUserId" column="created_by_user_id"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="InvitationCodeResultMap">
+        SELECT id, business_account_id, code, email, role, expires_at,
+               is_used, used_at, create_date, created_by_user_id
+        FROM INVITATION_CODE
+        ORDER BY id DESC
+    </select>
+
+    <select id="findByBusinessAccountId" resultMap="InvitationCodeResultMap">
+        SELECT id, business_account_id, code, email, role, expires_at,
+               is_used, used_at, create_date, created_by_user_id
+        FROM INVITATION_CODE
+        WHERE business_account_id = #{businessAccountId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="findById" resultMap="InvitationCodeResultMap">
+        SELECT id, business_account_id, code, email, role, expires_at,
+               is_used, used_at, create_date, created_by_user_id
+        FROM INVITATION_CODE
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByCode" resultMap="InvitationCodeResultMap">
+        SELECT id, business_account_id, code, email, role, expires_at,
+               is_used, used_at, create_date, created_by_user_id
+        FROM INVITATION_CODE
+        WHERE code = #{code}
+    </select>
+
+    <select id="findByCodeAndEmail" resultMap="InvitationCodeResultMap">
+        SELECT id, business_account_id, code, email, role, expires_at,
+               is_used, used_at, create_date, created_by_user_id
+        FROM INVITATION_CODE
+        WHERE code = #{code} AND email = #{email}
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.user.InvitationCode" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO INVITATION_CODE (business_account_id, code, email, role,
+                                     expires_at, is_used, created_by_user_id)
+        VALUES (#{businessAccountId}, #{code}, #{email}, #{role},
+                #{expiresAt}, #{isUsed}, #{createdByUserId})
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.user.InvitationCode">
+        UPDATE INVITATION_CODE
+        SET business_account_id = #{businessAccountId},
+            email = #{email},
+            role = #{role},
+            expires_at = #{expiresAt},
+            is_used = #{isUsed},
+            used_at = #{usedAt}
+        WHERE id = #{id}
+    </update>
+
+    <update id="markAsUsed">
+        UPDATE INVITATION_CODE
+        SET is_used = true, used_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM INVITATION_CODE WHERE id = #{id}
+    </delete>
+
+</mapper>

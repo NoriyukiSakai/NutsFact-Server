@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.BusinessAccountMapper">
+
+    <resultMap id="BusinessAccountResultMap" type="com.nines.nutsfact.domain.model.user.BusinessAccount">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="companyName" column="company_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="logoImageUrl" column="logo_image_url"/>
+        <result property="websiteUrl" column="website_url"/>
+        <result property="registrationStatus" column="registration_status"/>
+        <result property="maxUserCount" column="max_user_count"/>
+        <result property="currentUserCount" column="current_user_count"/>
+        <result property="createDate" column="create_date"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+        <result property="isActive" column="is_active"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="BusinessAccountResultMap">
+        SELECT id, code, company_name, contact_phone, logo_image_url, website_url,
+               registration_status, max_user_count, current_user_count,
+               create_date, last_update_date, is_active
+        FROM BUSINESS_ACCOUNT
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultMap="BusinessAccountResultMap">
+        SELECT id, code, company_name, contact_phone, logo_image_url, website_url,
+               registration_status, max_user_count, current_user_count,
+               create_date, last_update_date, is_active
+        FROM BUSINESS_ACCOUNT
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByCode" resultMap="BusinessAccountResultMap">
+        SELECT id, code, company_name, contact_phone, logo_image_url, website_url,
+               registration_status, max_user_count, current_user_count,
+               create_date, last_update_date, is_active
+        FROM BUSINESS_ACCOUNT
+        WHERE code = #{code}
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.user.BusinessAccount" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO BUSINESS_ACCOUNT (code, company_name, contact_phone, logo_image_url,
+                                      website_url, registration_status, max_user_count,
+                                      current_user_count, is_active)
+        VALUES (#{code}, #{companyName}, #{contactPhone}, #{logoImageUrl},
+                #{websiteUrl}, #{registrationStatus}, #{maxUserCount},
+                #{currentUserCount}, #{isActive})
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.user.BusinessAccount">
+        UPDATE BUSINESS_ACCOUNT
+        SET company_name = #{companyName},
+            contact_phone = #{contactPhone},
+            logo_image_url = #{logoImageUrl},
+            website_url = #{websiteUrl},
+            registration_status = #{registrationStatus},
+            max_user_count = #{maxUserCount},
+            current_user_count = #{currentUserCount},
+            is_active = #{isActive}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE BUSINESS_ACCOUNT
+        SET registration_status = #{registrationStatus}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM BUSINESS_ACCOUNT WHERE id = #{id}
+    </delete>
+
+    <select id="generateNextCode" resultType="string">
+        SELECT CONCAT('BA', LPAD(COALESCE(MAX(id), 0) + 1, 8, '0')) FROM BUSINESS_ACCOUNT
+    </select>
+
+</mapper>

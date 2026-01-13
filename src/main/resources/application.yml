@@ -1,0 +1,57 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: nutsfact-server
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:develop}
+
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/NUTSFACT?allowPublicKeyRetrieval=true&useSSL=false&connectionTimeZone=Asia/Tokyo}
+    username: ${DB_USERNAME:nutsfact_user}
+    password: ${DB_PASSWORD:root@1}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+mybatis:
+  mapper-locations:
+    - classpath:com/nines/nutsfact/infrastructure/mapper/*.xml
+    - classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+
+logging:
+  level:
+    root: INFO
+    com.nines.nutsfact: DEBUG
+    org.mybatis: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: develop
+
+logging:
+  level:
+    root: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+
+logging:
+  level:
+    root: WARN
+    com.nines.nutsfact: INFO

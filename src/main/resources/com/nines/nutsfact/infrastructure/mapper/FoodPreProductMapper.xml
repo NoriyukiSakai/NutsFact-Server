@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.FoodPreProductMapper">
+
+    <resultMap id="foodPreProductResult" type="com.nines.nutsfact.domain.model.FoodPreProductItem">
+        <id property="preId" column="pre_id"/>
+        <result property="preNo" column="pre_no"/>
+        <result property="preKind" column="pre_kind"/>
+        <result property="preName" column="pre_name"/>
+        <result property="displayName" column="display_name"/>
+        <result property="weightInputMode" column="weight_input_mode"/>
+        <result property="classCategoryId" column="class_category_id"/>
+        <result property="capacity" column="capacity"/>
+        <result property="unit" column="unit"/>
+        <result property="infUnit" column="inf_unit"/>
+        <result property="infVolume" column="inf_volume"/>
+        <result property="infDisplay" column="inf_display"/>
+        <result property="infEnergy" column="inf_energy"/>
+        <result property="infProtein" column="inf_protein"/>
+        <result property="infFat" column="inf_fat"/>
+        <result property="infCarbo" column="inf_carbo"/>
+        <result property="infSugar" column="inf_sugar"/>
+        <result property="infSodium" column="inf_sodium"/>
+        <result property="infLmtKind" column="inf_lmt_kind"/>
+        <result property="infLmtDateFlag" column="inf_lmt_date_flag"/>
+        <result property="infLmtDate" column="inf_lmt_date"/>
+        <result property="infStorageMethod" column="inf_storage_method"/>
+        <result property="infContamiFlag" column="inf_contami_flag"/>
+        <result property="infContamination" column="inf_contamination"/>
+        <result property="weightSum" column="weight_sum"/>
+        <result property="costPriceSum" column="cost_price_sum"/>
+        <result property="detailCount" column="detail_count"/>
+        <result property="placeOfOrigin" column="place_of_origin"/>
+        <result property="purpose" column="purpose"/>
+        <result property="isActive" column="is_active"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="foodPreProductResult">
+        SELECT * FROM FOOD_PRE_PRODUCT_ITEM
+    </select>
+
+    <select id="findByKind" resultMap="foodPreProductResult">
+        SELECT * FROM FOOD_PRE_PRODUCT_ITEM WHERE pre_kind = #{preKind}
+    </select>
+
+    <select id="findSelectItems" resultType="com.nines.nutsfact.domain.model.SelectItem">
+        SELECT pre_id as id, pre_name as name, pre_no as no, IFNULL(display_name, '') as description
+        FROM FOOD_PRE_PRODUCT_ITEM
+        <where>
+            <if test="preKind != null">
+                pre_kind = #{preKind}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="foodPreProductResult">
+        SELECT * FROM FOOD_PRE_PRODUCT_ITEM WHERE pre_id = #{id}
+    </select>
+
+    <select id="getLastInsertId" resultType="Integer">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="entity.preId">
+        INSERT INTO FOOD_PRE_PRODUCT_ITEM (
+            pre_no, pre_kind, pre_name, display_name, weight_input_mode, class_category_id,
+            capacity, unit, inf_unit, inf_volume, inf_display,
+            inf_energy, inf_protein, inf_fat, inf_carbo, inf_sugar, inf_sodium,
+            inf_lmt_kind, inf_lmt_date_flag, inf_lmt_date, inf_storage_method,
+            inf_contami_flag, inf_contamination,
+            weight_sum, cost_price_sum, detail_count, place_of_origin, purpose, is_active
+        ) VALUES (
+            #{entity.preNo}, #{entity.preKind}, #{entity.preName}, #{entity.displayName},
+            #{entity.weightInputMode}, #{entity.classCategoryId},
+            #{entity.capacity}, #{entity.unit}, #{entity.infUnit}, #{entity.infVolume}, #{entity.infDisplay},
+            #{entity.infEnergy}, #{entity.infProtein}, #{entity.infFat}, #{entity.infCarbo}, #{entity.infSugar}, #{entity.infSodium},
+            #{entity.infLmtKind}, #{entity.infLmtDateFlag}, #{entity.infLmtDate}, #{entity.infStorageMethod},
+            #{entity.infContamiFlag}, #{entity.infContamination},
+            #{entity.weightSum}, #{entity.costPriceSum}, #{entity.detailCount},
+            #{entity.placeOfOrigin}, #{entity.purpose}, #{entity.isActive}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE FOOD_PRE_PRODUCT_ITEM SET
+            pre_no = #{entity.preNo},
+            pre_kind = #{entity.preKind},
+            pre_name = #{entity.preName},
+            display_name = #{entity.displayName},
+            weight_input_mode = #{entity.weightInputMode},
+            class_category_id = #{entity.classCategoryId},
+            capacity = #{entity.capacity},
+            unit = #{entity.unit},
+            inf_unit = #{entity.infUnit},
+            inf_volume = #{entity.infVolume},
+            inf_display = #{entity.infDisplay},
+            inf_energy = #{entity.infEnergy},
+            inf_protein = #{entity.infProtein},
+            inf_fat = #{entity.infFat},
+            inf_carbo = #{entity.infCarbo},
+            inf_sugar = #{entity.infSugar},
+            inf_sodium = #{entity.infSodium},
+            inf_lmt_kind = #{entity.infLmtKind},
+            inf_lmt_date_flag = #{entity.infLmtDateFlag},
+            inf_lmt_date = #{entity.infLmtDate},
+            inf_storage_method = #{entity.infStorageMethod},
+            inf_contami_flag = #{entity.infContamiFlag},
+            inf_contamination = #{entity.infContamination},
+            weight_sum = #{entity.weightSum},
+            cost_price_sum = #{entity.costPriceSum},
+            detail_count = #{entity.detailCount},
+            place_of_origin = #{entity.placeOfOrigin},
+            purpose = #{entity.purpose},
+            is_active = #{entity.isActive}
+        WHERE pre_id = #{entity.preId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM FOOD_PRE_PRODUCT_ITEM WHERE pre_id = #{id}
+    </delete>
+</mapper>

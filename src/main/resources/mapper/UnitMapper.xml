@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.UnitMapper">
+
+    <resultMap id="UnitResultMap" type="com.nines.nutsfact.domain.model.master.Unit">
+        <id property="unitId" column="unit_id"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="unitType" column="unit_type"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="UnitResultMap">
+        SELECT unit_id, unit_name, unit_type
+        FROM MASTER_UNIT
+        ORDER BY unit_id
+    </select>
+
+    <select id="findByType" resultMap="UnitResultMap">
+        SELECT unit_id, unit_name, unit_type
+        FROM MASTER_UNIT
+        WHERE unit_type = #{unitType}
+        ORDER BY unit_id
+    </select>
+
+    <select id="findById" resultMap="UnitResultMap">
+        SELECT unit_id, unit_name, unit_type
+        FROM MASTER_UNIT
+        WHERE unit_id = #{unitId}
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.Unit" useGeneratedKeys="true" keyProperty="unitId">
+        INSERT INTO MASTER_UNIT (unit_name, unit_type)
+        VALUES (#{unitName}, #{unitType})
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.master.Unit">
+        UPDATE MASTER_UNIT
+        SET unit_name = #{unitName},
+            unit_type = #{unitType}
+        WHERE unit_id = #{unitId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM MASTER_UNIT WHERE unit_id = #{unitId}
+    </delete>
+
+</mapper>
