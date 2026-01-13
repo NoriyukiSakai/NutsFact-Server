@@ -58,8 +58,9 @@ public class ApixFoodPreProductDetailController {
             @RequestParam("detailId") Integer detailId) {
 
         FoodPreProductDetailItem item = service.findById(detailId);
-        Map<String, Object> response = toMap(item);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(item));
         return ResponseEntity.ok(response);
     }
 
@@ -73,8 +74,9 @@ public class ApixFoodPreProductDetailController {
         FoodPreProductDetailItem entity = fromMap(request);
         FoodPreProductDetailItem created = service.create(entity);
 
-        Map<String, Object> response = toMap(created);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(created));
         return ResponseEntity.ok(response);
     }
 
@@ -85,7 +87,7 @@ public class ApixFoodPreProductDetailController {
     public ResponseEntity<Map<String, Object>> update(
             @RequestBody Map<String, Object> request) {
 
-        Integer detailId = getInteger(request, "detailId");
+        Integer detailId = getIntegerAny(request, "detail_id", "detailId");
         if (detailId == null) {
             throw new IllegalArgumentException("detailIdが指定されていません");
         }
@@ -98,8 +100,9 @@ public class ApixFoodPreProductDetailController {
 
         FoodPreProductDetailItem updated = service.update(existing);
 
-        Map<String, Object> response = toMap(updated);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(updated));
         return ResponseEntity.ok(response);
     }
 
@@ -120,17 +123,17 @@ public class ApixFoodPreProductDetailController {
 
     private Map<String, Object> toMap(FoodPreProductDetailItem item) {
         Map<String, Object> map = new HashMap<>();
-        map.put("detailId", item.getDetailId());
-        map.put("preId", item.getPreId());
-        map.put("componentKb", item.getComponentKb());
-        map.put("detailFoodId", item.getDetailFoodId());
-        map.put("detailPreId", item.getDetailPreId());
-        map.put("compositeRawMaterialsKb", item.getCompositeRawMaterialsKb());
-        map.put("detailFoodName", item.getDetailFoodName());
-        map.put("detailPreName", item.getDetailPreName());
-        map.put("mixingRatio", item.getMixingRatio());
+        map.put("detail_id", item.getDetailId());
+        map.put("pre_id", item.getPreId());
+        map.put("component_kb", item.getComponentKb());
+        map.put("detail_food_id", item.getDetailFoodId());
+        map.put("detail_pre_id", item.getDetailPreId());
+        map.put("composite_raw_materials_kb", item.getCompositeRawMaterialsKb());
+        map.put("detail_food_name", item.getDetailFoodName());
+        map.put("detail_pre_name", item.getDetailPreName());
+        map.put("mixing_ratio", item.getMixingRatio());
         map.put("weight", item.getWeight());
-        map.put("costPrice", item.getCostPrice());
+        map.put("cost_price", item.getCostPrice());
         map.put("energy", item.getEnergy());
         map.put("protein", item.getProtein());
         map.put("fat", item.getFat());
@@ -142,43 +145,67 @@ public class ApixFoodPreProductDetailController {
 
     private FoodPreProductDetailItem fromMap(Map<String, Object> map) {
         FoodPreProductDetailItem entity = new FoodPreProductDetailItem();
-        entity.setDetailId(getInteger(map, "detailId"));
-        entity.setPreId(getInteger(map, "preId"));
-        entity.setComponentKb(getBoolean(map, "componentKb"));
-        entity.setDetailFoodId(getInteger(map, "detailFoodId"));
-        entity.setDetailPreId(getInteger(map, "detailPreId"));
-        entity.setCompositeRawMaterialsKb(getBoolean(map, "compositeRawMaterialsKb"));
-        entity.setDetailFoodName(getString(map, "detailFoodName"));
-        entity.setDetailPreName(getString(map, "detailPreName"));
-        entity.setMixingRatio(getFloat(map, "mixingRatio"));
-        entity.setWeight(getFloat(map, "weight"));
-        entity.setCostPrice(getFloat(map, "costPrice"));
-        entity.setEnergy(getFloat(map, "energy"));
-        entity.setProtein(getFloat(map, "protein"));
-        entity.setFat(getFloat(map, "fat"));
-        entity.setCarbo(getFloat(map, "carbo"));
-        entity.setSugar(getFloat(map, "sugar"));
-        entity.setSodium(getFloat(map, "sodium"));
+        entity.setDetailId(getIntegerAny(map, "detail_id", "detailId"));
+        entity.setPreId(getIntegerAny(map, "pre_id", "preId"));
+        entity.setComponentKb(getBooleanAny(map, "component_kb", "componentKb"));
+        entity.setDetailFoodId(getIntegerAny(map, "detail_food_id", "detailFoodId"));
+        entity.setDetailPreId(getIntegerAny(map, "detail_pre_id", "detailPreId"));
+        entity.setCompositeRawMaterialsKb(getBooleanAny(map, "composite_raw_materials_kb", "compositeRawMaterialsKb"));
+        entity.setDetailFoodName(getStringAny(map, "detail_food_name", "detailFoodName"));
+        entity.setDetailPreName(getStringAny(map, "detail_pre_name", "detailPreName"));
+        entity.setMixingRatio(getFloatAny(map, "mixing_ratio", "mixingRatio"));
+        entity.setWeight(getFloatAny(map, "weight", "weight"));
+        entity.setCostPrice(getFloatAny(map, "cost_price", "costPrice"));
+        entity.setEnergy(getFloatAny(map, "energy", "energy"));
+        entity.setProtein(getFloatAny(map, "protein", "protein"));
+        entity.setFat(getFloatAny(map, "fat", "fat"));
+        entity.setCarbo(getFloatAny(map, "carbo", "carbo"));
+        entity.setSugar(getFloatAny(map, "sugar", "sugar"));
+        entity.setSodium(getFloatAny(map, "sodium", "sodium"));
         return entity;
     }
 
     private void mergeFromMap(FoodPreProductDetailItem entity, Map<String, Object> map) {
-        if (map.containsKey("preId")) entity.setPreId(getInteger(map, "preId"));
-        if (map.containsKey("componentKb")) entity.setComponentKb(getBoolean(map, "componentKb"));
-        if (map.containsKey("detailFoodId")) entity.setDetailFoodId(getInteger(map, "detailFoodId"));
-        if (map.containsKey("detailPreId")) entity.setDetailPreId(getInteger(map, "detailPreId"));
-        if (map.containsKey("compositeRawMaterialsKb")) entity.setCompositeRawMaterialsKb(getBoolean(map, "compositeRawMaterialsKb"));
-        if (map.containsKey("detailFoodName")) entity.setDetailFoodName(getString(map, "detailFoodName"));
-        if (map.containsKey("detailPreName")) entity.setDetailPreName(getString(map, "detailPreName"));
-        if (map.containsKey("mixingRatio")) entity.setMixingRatio(getFloat(map, "mixingRatio"));
-        if (map.containsKey("weight")) entity.setWeight(getFloat(map, "weight"));
-        if (map.containsKey("costPrice")) entity.setCostPrice(getFloat(map, "costPrice"));
-        if (map.containsKey("energy")) entity.setEnergy(getFloat(map, "energy"));
-        if (map.containsKey("protein")) entity.setProtein(getFloat(map, "protein"));
-        if (map.containsKey("fat")) entity.setFat(getFloat(map, "fat"));
-        if (map.containsKey("carbo")) entity.setCarbo(getFloat(map, "carbo"));
-        if (map.containsKey("sugar")) entity.setSugar(getFloat(map, "sugar"));
-        if (map.containsKey("sodium")) entity.setSodium(getFloat(map, "sodium"));
+        if (hasKey(map, "pre_id", "preId")) entity.setPreId(getIntegerAny(map, "pre_id", "preId"));
+        if (hasKey(map, "component_kb", "componentKb")) entity.setComponentKb(getBooleanAny(map, "component_kb", "componentKb"));
+        if (hasKey(map, "detail_food_id", "detailFoodId")) entity.setDetailFoodId(getIntegerAny(map, "detail_food_id", "detailFoodId"));
+        if (hasKey(map, "detail_pre_id", "detailPreId")) entity.setDetailPreId(getIntegerAny(map, "detail_pre_id", "detailPreId"));
+        if (hasKey(map, "composite_raw_materials_kb", "compositeRawMaterialsKb")) entity.setCompositeRawMaterialsKb(getBooleanAny(map, "composite_raw_materials_kb", "compositeRawMaterialsKb"));
+        if (hasKey(map, "detail_food_name", "detailFoodName")) entity.setDetailFoodName(getStringAny(map, "detail_food_name", "detailFoodName"));
+        if (hasKey(map, "detail_pre_name", "detailPreName")) entity.setDetailPreName(getStringAny(map, "detail_pre_name", "detailPreName"));
+        if (hasKey(map, "mixing_ratio", "mixingRatio")) entity.setMixingRatio(getFloatAny(map, "mixing_ratio", "mixingRatio"));
+        if (hasKey(map, "weight", "weight")) entity.setWeight(getFloatAny(map, "weight", "weight"));
+        if (hasKey(map, "cost_price", "costPrice")) entity.setCostPrice(getFloatAny(map, "cost_price", "costPrice"));
+        if (hasKey(map, "energy", "energy")) entity.setEnergy(getFloatAny(map, "energy", "energy"));
+        if (hasKey(map, "protein", "protein")) entity.setProtein(getFloatAny(map, "protein", "protein"));
+        if (hasKey(map, "fat", "fat")) entity.setFat(getFloatAny(map, "fat", "fat"));
+        if (hasKey(map, "carbo", "carbo")) entity.setCarbo(getFloatAny(map, "carbo", "carbo"));
+        if (hasKey(map, "sugar", "sugar")) entity.setSugar(getFloatAny(map, "sugar", "sugar"));
+        if (hasKey(map, "sodium", "sodium")) entity.setSodium(getFloatAny(map, "sodium", "sodium"));
+    }
+
+    private boolean hasKey(Map<String, Object> map, String snakeCase, String camelCase) {
+        return map.containsKey(snakeCase) || map.containsKey(camelCase);
+    }
+
+    private Integer getIntegerAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        Integer val = getInteger(map, snakeCase);
+        return val != null ? val : getInteger(map, camelCase);
+    }
+
+    private String getStringAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        String val = getString(map, snakeCase);
+        return val != null ? val : getString(map, camelCase);
+    }
+
+    private Boolean getBooleanAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        if (map.containsKey(snakeCase)) return getBoolean(map, snakeCase);
+        return getBoolean(map, camelCase);
+    }
+
+    private Float getFloatAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        Float val = getFloat(map, snakeCase);
+        return val != null ? val : getFloat(map, camelCase);
     }
 
     private Integer getInteger(Map<String, Object> map, String key) {
