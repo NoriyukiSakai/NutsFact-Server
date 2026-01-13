@@ -33,6 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtUtil.validateToken(token) && jwtUtil.isAccessToken(token)) {
                 Claims claims = jwtUtil.parseToken(token);
                 Integer userId = Integer.parseInt(claims.getSubject());
+                Integer businessAccountId = claims.get("businessAccountId", Integer.class);
+                String email = claims.get("email", String.class);
                 Integer role = claims.get("role", Integer.class);
 
                 String authority = switch (role != null ? role : 4) {
@@ -43,9 +45,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     default -> "ROLE_GUEST";
                 };
 
+                AuthenticatedUser authenticatedUser = AuthenticatedUser.builder()
+                        .userId(userId)
+                        .businessAccountId(businessAccountId)
+                        .email(email)
+                        .role(role)
+                        .build();
+
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                userId,
+                                authenticatedUser,
                                 null,
                                 Collections.singletonList(new SimpleGrantedAuthority(authority))
                         );

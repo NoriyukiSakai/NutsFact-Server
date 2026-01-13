@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nines.nutsfact.api.v1.request.InvitationCodeCreateRequest;
 import com.nines.nutsfact.api.v1.request.InvitationCodeUseRequest;
 import com.nines.nutsfact.api.v1.request.InvitationCodeVerifyRequest;
+import com.nines.nutsfact.config.AuthenticatedUser;
 import com.nines.nutsfact.domain.model.user.BusinessAccount;
 import com.nines.nutsfact.domain.model.user.InvitationCode;
-import com.nines.nutsfact.domain.model.user.User;
 import com.nines.nutsfact.domain.service.AuthService;
 import com.nines.nutsfact.domain.service.BusinessAccountService;
 import com.nines.nutsfact.domain.service.InvitationCodeService;
-import com.nines.nutsfact.domain.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,16 +33,14 @@ public class InvitationCodeController {
 
     private final InvitationCodeService invitationCodeService;
     private final BusinessAccountService businessAccountService;
-    private final UserService userService;
     private final AuthService authService;
 
     @GetMapping("/GetData")
     public ResponseEntity<Map<String, Object>> getData(Authentication authentication) {
-        Integer userId = (Integer) authentication.getPrincipal();
-        User currentUser = userService.findById(userId);
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
 
         List<InvitationCode> codes = invitationCodeService.findByBusinessAccountId(
-                currentUser.getBusinessAccountId());
+                authUser.getBusinessAccountId());
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -56,15 +53,14 @@ public class InvitationCodeController {
     public ResponseEntity<Map<String, Object>> create(
             Authentication authentication,
             @Valid @RequestBody InvitationCodeCreateRequest request) {
-        Integer userId = (Integer) authentication.getPrincipal();
-        User currentUser = userService.findById(userId);
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
 
         InvitationCode created = invitationCodeService.create(
-                currentUser.getBusinessAccountId(),
+                authUser.getBusinessAccountId(),
                 request.getEmail(),
                 request.getRole(),
                 request.getExpirationDays(),
-                userId);
+                authUser.getUserId());
 
         return ResponseEntity.ok(buildInvitationCodeResponse(created));
     }
@@ -97,9 +93,9 @@ public class InvitationCodeController {
     public ResponseEntity<Map<String, Object>> use(
             Authentication authentication,
             @Valid @RequestBody InvitationCodeUseRequest request) {
-        Integer userId = (Integer) authentication.getPrincipal();
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
 
-        AuthService.AuthResult result = authService.useInvitationCode(userId, request.getCode());
+        AuthService.AuthResult result = authService.useInvitationCode(authUser.getUserId(), request.getCode());
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");

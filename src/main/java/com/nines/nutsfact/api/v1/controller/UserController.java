@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nines.nutsfact.api.v1.request.ChangeRoleRequest;
 import com.nines.nutsfact.api.v1.request.UserCreateRequest;
 import com.nines.nutsfact.api.v1.request.UserUpdateRequest;
+import com.nines.nutsfact.config.AuthenticatedUser;
 import com.nines.nutsfact.domain.model.user.User;
 import com.nines.nutsfact.domain.service.BusinessAccountService;
 import com.nines.nutsfact.domain.service.UserService;
@@ -34,10 +35,9 @@ public class UserController {
 
     @GetMapping("/GetData")
     public ResponseEntity<Map<String, Object>> getData(Authentication authentication) {
-        Integer userId = (Integer) authentication.getPrincipal();
-        User currentUser = userService.findById(userId);
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
 
-        List<User> users = userService.findByBusinessAccountId(currentUser.getBusinessAccountId());
+        List<User> users = userService.findByBusinessAccountId(authUser.getBusinessAccountId());
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");

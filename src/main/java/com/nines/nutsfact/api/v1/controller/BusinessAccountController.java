@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nines.nutsfact.api.v1.request.BusinessAccountCreateRequest;
 import com.nines.nutsfact.api.v1.request.BusinessAccountUpdateRequest;
+import com.nines.nutsfact.config.AuthenticatedUser;
 import com.nines.nutsfact.domain.model.user.BusinessAccount;
 import com.nines.nutsfact.domain.model.user.User;
 import com.nines.nutsfact.domain.service.BusinessAccountService;
@@ -38,17 +39,16 @@ public class BusinessAccountController {
 
     @GetMapping("/getCurrent")
     public ResponseEntity<Map<String, Object>> getCurrent(Authentication authentication) {
-        Integer userId = (Integer) authentication.getPrincipal();
-        User user = userService.findById(userId);
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
 
-        if (user.getBusinessAccountId() == null) {
+        if (!authUser.hasBusinessAccount()) {
             Map<String, Object> response = new HashMap<>();
             response.put("status", "Fail");
             response.put("message", "ビジネスアカウントが設定されていません");
             return ResponseEntity.ok(response);
         }
 
-        BusinessAccount businessAccount = businessAccountService.findById(user.getBusinessAccountId());
+        BusinessAccount businessAccount = businessAccountService.findById(authUser.getBusinessAccountId());
         return ResponseEntity.ok(buildResponse(businessAccount));
     }
 
@@ -56,7 +56,7 @@ public class BusinessAccountController {
     public ResponseEntity<Map<String, Object>> insert(
             Authentication authentication,
             @Valid @RequestBody BusinessAccountCreateRequest request) {
-        Integer userId = (Integer) authentication.getPrincipal();
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
 
         BusinessAccount businessAccount = new BusinessAccount();
         businessAccount.setCompanyName(request.getCompanyName());
@@ -67,10 +67,10 @@ public class BusinessAccountController {
 
         BusinessAccount created = businessAccountService.create(businessAccount);
 
-        User user = userService.findById(userId);
+        User user = userService.findById(authUser.getUserId());
         user.setBusinessAccountId(created.getId());
         user.setRole(1);
-        userService.update(userId, user);
+        userService.update(authUser.getUserId(), user);
 
         businessAccountService.updateCurrentUserCount(created.getId());
 

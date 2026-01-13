@@ -17,6 +17,7 @@ import com.nines.nutsfact.api.v1.request.auth.PasswordResetRequest;
 import com.nines.nutsfact.api.v1.request.auth.PasswordUpdateRequest;
 import com.nines.nutsfact.api.v1.request.auth.RefreshTokenRequest;
 import com.nines.nutsfact.api.v1.request.auth.SignUpRequest;
+import com.nines.nutsfact.config.AuthenticatedUser;
 import com.nines.nutsfact.domain.model.auth.AuthToken;
 import com.nines.nutsfact.domain.service.AuthService;
 
@@ -80,8 +81,8 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> updatePassword(
             Authentication authentication,
             @Valid @RequestBody PasswordUpdateRequest request) {
-        Integer userId = (Integer) authentication.getPrincipal();
-        authService.updatePassword(userId, request.getNewPassword());
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
+        authService.updatePassword(authUser.getUserId(), request.getNewPassword());
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         return ResponseEntity.ok(response);
@@ -89,8 +90,8 @@ public class AuthController {
 
     @GetMapping("/getCurrentUser")
     public ResponseEntity<Map<String, Object>> getCurrentUser(Authentication authentication) {
-        Integer userId = (Integer) authentication.getPrincipal();
-        AuthService.CurrentUserResult result = authService.getCurrentUser(userId);
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
+        AuthService.CurrentUserResult result = authService.getCurrentUser(authUser.getUserId());
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
