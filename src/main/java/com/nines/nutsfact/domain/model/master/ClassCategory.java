@@ -8,4 +8,5 @@ public class ClassCategory {
     private Integer categoryType; // 1:原材料 2:仕込品 3:半製品 4:製品
     private String categoryName;
     private String description;
+    private Boolean isActive;
 }

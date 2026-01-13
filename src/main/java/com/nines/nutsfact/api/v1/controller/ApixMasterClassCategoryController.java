@@ -152,7 +152,7 @@ public class ApixMasterClassCategoryController {
         map.put("class_type", item.getCategoryType());
         map.put("class_category_name", item.getCategoryName());
         map.put("description", item.getDescription());
-        map.put("is_active", true);
+        map.put("is_active", item.getIsActive() != null ? item.getIsActive() : true);
         return map;
     }
 
@@ -162,6 +162,7 @@ public class ApixMasterClassCategoryController {
         entity.setCategoryType(getInteger(map, "class_type"));
         entity.setCategoryName(getString(map, "class_category_name"));
         entity.setDescription(getString(map, "description"));
+        entity.setIsActive(getBoolean(map, "is_active"));
         return entity;
     }
 
@@ -176,5 +177,12 @@ public class ApixMasterClassCategoryController {
     private String getString(Map<String, Object> map, String key) {
         Object value = map.get(key);
         return value != null ? value.toString() : null;
+    }
+
+    private Boolean getBoolean(Map<String, Object> map, String key) {
+        Object value = map.get(key);
+        if (value == null) return null;
+        if (value instanceof Boolean) return (Boolean) value;
+        return Boolean.parseBoolean(value.toString());
     }
 }

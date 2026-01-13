@@ -19,11 +19,11 @@ public class FoodRawMaterialSupplier {
     private Integer foodId;
     private Integer supplierId;
     private String supplierName;
-    private Integer purchasePrice;
-    private Integer volumeAmount;
+    private Double purchasePrice;
+    private Double volumeAmount;
     private Integer weightOrCapacity;
-    private Float convertRatio;
-    private Float pricePerUnit;
+    private Double convertRatio;
+    private Double pricePerUnit;
     private Date createDate;
     private Date lastUpdateDate;
     private Boolean isActive;

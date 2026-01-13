@@ -7,37 +7,39 @@
         <result property="categoryType" column="class_type"/>
         <result property="categoryName" column="class_category_name"/>
         <result property="description" column="description"/>
+        <result property="isActive" column="is_active"/>
     </resultMap>
 
     <select id="findAll" resultMap="ClassCategoryResultMap">
-        SELECT class_category_id, class_type, class_category_name, description
+        SELECT class_category_id, class_type, class_category_name, description, is_active
         FROM MASTER_CLASSCATEGORY
         ORDER BY class_type, class_category_id
     </select>
 
     <select id="findByType" resultMap="ClassCategoryResultMap">
-        SELECT class_category_id, class_type, class_category_name, description
+        SELECT class_category_id, class_type, class_category_name, description, is_active
         FROM MASTER_CLASSCATEGORY
         WHERE class_type = #{categoryType}
         ORDER BY class_category_id
     </select>
 
     <select id="findById" resultMap="ClassCategoryResultMap">
-        SELECT class_category_id, class_type, class_category_name, description
+        SELECT class_category_id, class_type, class_category_name, description, is_active
         FROM MASTER_CLASSCATEGORY
         WHERE class_category_id = #{categoryId}
     </select>
 
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.ClassCategory" useGeneratedKeys="true" keyProperty="categoryId">
-        INSERT INTO MASTER_CLASSCATEGORY (class_type, class_category_name, description)
-        VALUES (#{categoryType}, #{categoryName}, #{description})
+        INSERT INTO MASTER_CLASSCATEGORY (class_type, class_category_name, description, is_active)
+        VALUES (#{categoryType}, #{categoryName}, #{description}, #{isActive})
     </insert>
 
     <update id="update" parameterType="com.nines.nutsfact.domain.model.master.ClassCategory">
         UPDATE MASTER_CLASSCATEGORY
         SET class_type = #{categoryType},
             class_category_name = #{categoryName},
-            description = #{description}
+            description = #{description},
+            is_active = #{isActive}
         WHERE class_category_id = #{categoryId}
     </update>
 

@@ -144,11 +144,11 @@ public class ApixFoodRawMaterialSupplierController {
         entity.setFoodId(getIntegerAny(map, "food_id", "foodId"));
         entity.setSupplierId(getIntegerAny(map, "supplier_id", "supplierId"));
         entity.setSupplierName(getStringAny(map, "supplier_name", "supplierName"));
-        entity.setPurchasePrice(getIntegerAny(map, "purchase_price", "purchasePrice"));
-        entity.setVolumeAmount(getIntegerAny(map, "volume_amount", "volumeAmount"));
+        entity.setPurchasePrice(getDoubleAny(map, "purchase_price", "purchasePrice"));
+        entity.setVolumeAmount(getDoubleAny(map, "volume_amount", "volumeAmount"));
         entity.setWeightOrCapacity(getIntegerAny(map, "weight_or_capacity", "weightOrCapacity"));
-        entity.setConvertRatio(getFloatAny(map, "convert_ratio", "convertRatio"));
-        entity.setPricePerUnit(getFloatAny(map, "price_per_unit", "pricePerUnit"));
+        entity.setConvertRatio(getDoubleAny(map, "convert_ratio", "convertRatio"));
+        entity.setPricePerUnit(getDoubleAny(map, "price_per_unit", "pricePerUnit"));
         entity.setIsActive(getBooleanAny(map, "is_active", "isActive"));
         return entity;
     }
@@ -156,11 +156,11 @@ public class ApixFoodRawMaterialSupplierController {
     private void mergeFromMap(FoodRawMaterialSupplier entity, Map<String, Object> map) {
         if (hasKey(map, "food_id", "foodId")) entity.setFoodId(getIntegerAny(map, "food_id", "foodId"));
         if (hasKey(map, "supplier_id", "supplierId")) entity.setSupplierId(getIntegerAny(map, "supplier_id", "supplierId"));
-        if (hasKey(map, "purchase_price", "purchasePrice")) entity.setPurchasePrice(getIntegerAny(map, "purchase_price", "purchasePrice"));
-        if (hasKey(map, "volume_amount", "volumeAmount")) entity.setVolumeAmount(getIntegerAny(map, "volume_amount", "volumeAmount"));
+        if (hasKey(map, "purchase_price", "purchasePrice")) entity.setPurchasePrice(getDoubleAny(map, "purchase_price", "purchasePrice"));
+        if (hasKey(map, "volume_amount", "volumeAmount")) entity.setVolumeAmount(getDoubleAny(map, "volume_amount", "volumeAmount"));
         if (hasKey(map, "weight_or_capacity", "weightOrCapacity")) entity.setWeightOrCapacity(getIntegerAny(map, "weight_or_capacity", "weightOrCapacity"));
-        if (hasKey(map, "convert_ratio", "convertRatio")) entity.setConvertRatio(getFloatAny(map, "convert_ratio", "convertRatio"));
-        if (hasKey(map, "price_per_unit", "pricePerUnit")) entity.setPricePerUnit(getFloatAny(map, "price_per_unit", "pricePerUnit"));
+        if (hasKey(map, "convert_ratio", "convertRatio")) entity.setConvertRatio(getDoubleAny(map, "convert_ratio", "convertRatio"));
+        if (hasKey(map, "price_per_unit", "pricePerUnit")) entity.setPricePerUnit(getDoubleAny(map, "price_per_unit", "pricePerUnit"));
         if (hasKey(map, "is_active", "isActive")) entity.setIsActive(getBooleanAny(map, "is_active", "isActive"));
     }
 
@@ -186,6 +186,11 @@ public class ApixFoodRawMaterialSupplierController {
     private Float getFloatAny(Map<String, Object> map, String snakeCase, String camelCase) {
         Float val = getFloat(map, snakeCase);
         return val != null ? val : getFloat(map, camelCase);
+    }
+
+    private Double getDoubleAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        Double val = getDouble(map, snakeCase);
+        return val != null ? val : getDouble(map, camelCase);
     }
 
     private Integer getInteger(Map<String, Object> map, String key) {
@@ -214,5 +219,13 @@ public class ApixFoodRawMaterialSupplierController {
         if (value instanceof Float) return (Float) value;
         if (value instanceof Number) return ((Number) value).floatValue();
         return Float.parseFloat(value.toString());
+    }
+
+    private Double getDouble(Map<String, Object> map, String key) {
+        Object value = map.get(key);
+        if (value == null) return null;
+        if (value instanceof Double) return (Double) value;
+        if (value instanceof Number) return ((Number) value).doubleValue();
+        return Double.parseDouble(value.toString());
     }
 }
