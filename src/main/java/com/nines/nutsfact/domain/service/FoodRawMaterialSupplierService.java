@@ -37,10 +37,9 @@ public class FoodRawMaterialSupplierService {
             }
 
             repository.insert(entity);
-            Integer newId = repository.getLastInsertId();
-            entity.setId(newId);
+            // useGeneratedKeys により entity.id に自動設定される
 
-            log.info("原材料仕入先情報を登録しました: ID={}", newId);
+            log.info("原材料仕入先情報を登録しました: ID={}", entity.getId());
             return entity;
 
         } catch (Exception e) {

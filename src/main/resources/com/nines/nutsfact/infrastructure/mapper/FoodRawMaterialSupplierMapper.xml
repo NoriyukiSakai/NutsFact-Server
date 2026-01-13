@@ -37,14 +37,14 @@
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="entity.id">
-        INSERT INTO FOOD_RAW_MATERIALS_SUPPLIER (food_id, supplier_id, purchase_price, volume_amount,
+        INSERT INTO FOOD_RAW_MATERIAL_SUPPLIER (food_id, supplier_id, purchase_price, volume_amount,
                                                   weight_or_capacity, convert_ratio, price_per_unit)
         VALUES (#{entity.foodId}, #{entity.supplierId}, #{entity.purchasePrice}, #{entity.volumeAmount},
                 #{entity.weightOrCapacity}, #{entity.convertRatio}, #{entity.pricePerUnit})
     </insert>
 
     <update id="update">
-        UPDATE FOOD_RAW_MATERIALS_SUPPLIER
+        UPDATE FOOD_RAW_MATERIAL_SUPPLIER
         SET supplier_id = #{entity.supplierId},
             purchase_price = #{entity.purchasePrice},
             volume_amount = #{entity.volumeAmount},
@@ -55,7 +55,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM FOOD_RAW_MATERIALS_SUPPLIER WHERE id = #{id}
+        DELETE FROM FOOD_RAW_MATERIAL_SUPPLIER WHERE id = #{id}
     </delete>
 
 </mapper>
