@@ -29,7 +29,7 @@ public class ClassCategoryRepository {
     }
 
     public void save(ClassCategory classCategory) {
-        if (classCategory.getCategoryId() == null) {
+        if (classCategory.getCategoryId() == null || classCategory.getCategoryId() == 0) {
             classCategoryMapper.insert(classCategory);
         } else {
             classCategoryMapper.update(classCategory);
