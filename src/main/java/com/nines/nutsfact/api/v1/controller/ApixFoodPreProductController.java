@@ -56,8 +56,9 @@ public class ApixFoodPreProductController {
             @RequestParam("preId") Integer preId) {
 
         FoodPreProductItem item = service.findById(preId);
-        Map<String, Object> response = toMap(item);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(item));
         return ResponseEntity.ok(response);
     }
 
@@ -71,8 +72,9 @@ public class ApixFoodPreProductController {
         FoodPreProductItem entity = fromMap(request);
         FoodPreProductItem created = service.create(entity);
 
-        Map<String, Object> response = toMap(created);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(created));
         return ResponseEntity.ok(response);
     }
 
@@ -83,7 +85,7 @@ public class ApixFoodPreProductController {
     public ResponseEntity<Map<String, Object>> update(
             @RequestBody Map<String, Object> request) {
 
-        Integer preId = getInteger(request, "preId");
+        Integer preId = getIntegerAny(request, "pre_id", "preId");
         if (preId == null) {
             throw new IllegalArgumentException("preIdが指定されていません");
         }
@@ -96,8 +98,9 @@ public class ApixFoodPreProductController {
 
         FoodPreProductItem updated = service.update(existing);
 
-        Map<String, Object> response = toMap(updated);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(updated));
         return ResponseEntity.ok(response);
     }
 
@@ -118,96 +121,120 @@ public class ApixFoodPreProductController {
 
     private Map<String, Object> toMap(FoodPreProductItem item) {
         Map<String, Object> map = new HashMap<>();
-        map.put("preId", item.getPreId());
-        map.put("preNo", item.getPreNo());
-        map.put("preKind", item.getPreKind());
-        map.put("preName", item.getPreName());
-        map.put("displayName", item.getDisplayName());
-        map.put("weightInputMode", item.getWeightInputMode());
-        map.put("classCategoryId", item.getClassCategoryId());
+        map.put("pre_id", item.getPreId());
+        map.put("pre_no", item.getPreNo());
+        map.put("pre_kind", item.getPreKind());
+        map.put("pre_name", item.getPreName());
+        map.put("display_name", item.getDisplayName());
+        map.put("weight_input_mode", item.getWeightInputMode());
+        map.put("class_category_id", item.getClassCategoryId());
         map.put("capacity", item.getCapacity());
         map.put("unit", item.getUnit());
-        map.put("infUnit", item.getInfUnit());
-        map.put("infVolume", item.getInfVolume());
-        map.put("infDisplay", item.getInfDisplay());
-        map.put("infEnergy", item.getInfEnergy());
-        map.put("infProtein", item.getInfProtein());
-        map.put("infFat", item.getInfFat());
-        map.put("infCarbo", item.getInfCarbo());
-        map.put("infSugar", item.getInfSugar());
-        map.put("infSodium", item.getInfSodium());
-        map.put("infLmtKind", item.getInfLmtKind());
-        map.put("infLmtDateFlag", item.getInfLmtDateFlag());
-        map.put("infLmtDate", item.getInfLmtDate());
-        map.put("infStorageMethod", item.getInfStorageMethod());
-        map.put("infContamiFlag", item.getInfContamiFlag());
-        map.put("infContamination", item.getInfContamination());
-        map.put("weightSum", item.getWeightSum());
-        map.put("costPriceSum", item.getCostPriceSum());
-        map.put("detailCount", item.getDetailCount());
-        map.put("placeOfOrigin", item.getPlaceOfOrigin());
+        map.put("inf_unit", item.getInfUnit());
+        map.put("inf_volume", item.getInfVolume());
+        map.put("inf_display", item.getInfDisplay());
+        map.put("inf_energy", item.getInfEnergy());
+        map.put("inf_protein", item.getInfProtein());
+        map.put("inf_fat", item.getInfFat());
+        map.put("inf_carbo", item.getInfCarbo());
+        map.put("inf_sugar", item.getInfSugar());
+        map.put("inf_sodium", item.getInfSodium());
+        map.put("inf_lmt_kind", item.getInfLmtKind());
+        map.put("inf_lmt_date_flag", item.getInfLmtDateFlag());
+        map.put("inf_lmt_date", item.getInfLmtDate());
+        map.put("inf_storage_method", item.getInfStorageMethod());
+        map.put("inf_contami_flag", item.getInfContamiFlag());
+        map.put("inf_contamination", item.getInfContamination());
+        map.put("weight_sum", item.getWeightSum());
+        map.put("cost_price_sum", item.getCostPriceSum());
+        map.put("detail_count", item.getDetailCount());
+        map.put("place_of_origin", item.getPlaceOfOrigin());
         map.put("purpose", item.getPurpose());
-        map.put("isActive", item.getIsActive());
+        map.put("is_active", item.getIsActive());
         return map;
     }
 
     private FoodPreProductItem fromMap(Map<String, Object> map) {
         FoodPreProductItem entity = new FoodPreProductItem();
-        entity.setPreId(getInteger(map, "preId"));
-        entity.setPreNo(getString(map, "preNo"));
-        entity.setPreKind(getInteger(map, "preKind"));
-        entity.setPreName(getString(map, "preName"));
-        entity.setDisplayName(getString(map, "displayName"));
-        entity.setWeightInputMode(getInteger(map, "weightInputMode"));
-        entity.setClassCategoryId(getInteger(map, "classCategoryId"));
-        entity.setCapacity(getFloat(map, "capacity"));
-        entity.setUnit(getInteger(map, "unit"));
-        entity.setInfUnit(getInteger(map, "infUnit"));
-        entity.setInfVolume(getFloat(map, "infVolume"));
-        entity.setInfDisplay(getInteger(map, "infDisplay"));
-        entity.setInfEnergy(getFloat(map, "infEnergy"));
-        entity.setInfProtein(getFloat(map, "infProtein"));
-        entity.setInfFat(getFloat(map, "infFat"));
-        entity.setInfCarbo(getFloat(map, "infCarbo"));
-        entity.setInfSugar(getFloat(map, "infSugar"));
-        entity.setInfSodium(getFloat(map, "infSodium"));
-        entity.setInfLmtKind(getInteger(map, "infLmtKind"));
-        entity.setInfLmtDateFlag(getBoolean(map, "infLmtDateFlag"));
-        entity.setInfStorageMethod(getString(map, "infStorageMethod"));
-        entity.setInfContamiFlag(getBoolean(map, "infContamiFlag"));
-        entity.setInfContamination(getString(map, "infContamination"));
-        entity.setPlaceOfOrigin(getString(map, "placeOfOrigin"));
-        entity.setPurpose(getString(map, "purpose"));
-        entity.setIsActive(getBoolean(map, "isActive"));
+        entity.setPreId(getIntegerAny(map, "pre_id", "preId"));
+        entity.setPreNo(getStringAny(map, "pre_no", "preNo"));
+        entity.setPreKind(getIntegerAny(map, "pre_kind", "preKind"));
+        entity.setPreName(getStringAny(map, "pre_name", "preName"));
+        entity.setDisplayName(getStringAny(map, "display_name", "displayName"));
+        entity.setWeightInputMode(getIntegerAny(map, "weight_input_mode", "weightInputMode"));
+        entity.setClassCategoryId(getIntegerAny(map, "class_category_id", "classCategoryId"));
+        entity.setCapacity(getFloatAny(map, "capacity", "capacity"));
+        entity.setUnit(getIntegerAny(map, "unit", "unit"));
+        entity.setInfUnit(getIntegerAny(map, "inf_unit", "infUnit"));
+        entity.setInfVolume(getFloatAny(map, "inf_volume", "infVolume"));
+        entity.setInfDisplay(getIntegerAny(map, "inf_display", "infDisplay"));
+        entity.setInfEnergy(getFloatAny(map, "inf_energy", "infEnergy"));
+        entity.setInfProtein(getFloatAny(map, "inf_protein", "infProtein"));
+        entity.setInfFat(getFloatAny(map, "inf_fat", "infFat"));
+        entity.setInfCarbo(getFloatAny(map, "inf_carbo", "infCarbo"));
+        entity.setInfSugar(getFloatAny(map, "inf_sugar", "infSugar"));
+        entity.setInfSodium(getFloatAny(map, "inf_sodium", "infSodium"));
+        entity.setInfLmtKind(getIntegerAny(map, "inf_lmt_kind", "infLmtKind"));
+        entity.setInfLmtDateFlag(getBooleanAny(map, "inf_lmt_date_flag", "infLmtDateFlag"));
+        entity.setInfStorageMethod(getStringAny(map, "inf_storage_method", "infStorageMethod"));
+        entity.setInfContamiFlag(getBooleanAny(map, "inf_contami_flag", "infContamiFlag"));
+        entity.setInfContamination(getStringAny(map, "inf_contamination", "infContamination"));
+        entity.setPlaceOfOrigin(getStringAny(map, "place_of_origin", "placeOfOrigin"));
+        entity.setPurpose(getStringAny(map, "purpose", "purpose"));
+        entity.setIsActive(getBooleanAny(map, "is_active", "isActive"));
         return entity;
     }
 
     private void mergeFromMap(FoodPreProductItem entity, Map<String, Object> map) {
-        if (map.containsKey("preNo")) entity.setPreNo(getString(map, "preNo"));
-        if (map.containsKey("preKind")) entity.setPreKind(getInteger(map, "preKind"));
-        if (map.containsKey("preName")) entity.setPreName(getString(map, "preName"));
-        if (map.containsKey("displayName")) entity.setDisplayName(getString(map, "displayName"));
-        if (map.containsKey("weightInputMode")) entity.setWeightInputMode(getInteger(map, "weightInputMode"));
-        if (map.containsKey("classCategoryId")) entity.setClassCategoryId(getInteger(map, "classCategoryId"));
-        if (map.containsKey("capacity")) entity.setCapacity(getFloat(map, "capacity"));
-        if (map.containsKey("unit")) entity.setUnit(getInteger(map, "unit"));
-        if (map.containsKey("infUnit")) entity.setInfUnit(getInteger(map, "infUnit"));
-        if (map.containsKey("infVolume")) entity.setInfVolume(getFloat(map, "infVolume"));
-        if (map.containsKey("infDisplay")) entity.setInfDisplay(getInteger(map, "infDisplay"));
-        if (map.containsKey("infEnergy")) entity.setInfEnergy(getFloat(map, "infEnergy"));
-        if (map.containsKey("infProtein")) entity.setInfProtein(getFloat(map, "infProtein"));
-        if (map.containsKey("infFat")) entity.setInfFat(getFloat(map, "infFat"));
-        if (map.containsKey("infCarbo")) entity.setInfCarbo(getFloat(map, "infCarbo"));
-        if (map.containsKey("infSugar")) entity.setInfSugar(getFloat(map, "infSugar"));
-        if (map.containsKey("infSodium")) entity.setInfSodium(getFloat(map, "infSodium"));
-        if (map.containsKey("infLmtKind")) entity.setInfLmtKind(getInteger(map, "infLmtKind"));
-        if (map.containsKey("infLmtDateFlag")) entity.setInfLmtDateFlag(getBoolean(map, "infLmtDateFlag"));
-        if (map.containsKey("infStorageMethod")) entity.setInfStorageMethod(getString(map, "infStorageMethod"));
-        if (map.containsKey("infContamiFlag")) entity.setInfContamiFlag(getBoolean(map, "infContamiFlag"));
-        if (map.containsKey("infContamination")) entity.setInfContamination(getString(map, "infContamination"));
-        if (map.containsKey("placeOfOrigin")) entity.setPlaceOfOrigin(getString(map, "placeOfOrigin"));
-        if (map.containsKey("purpose")) entity.setPurpose(getString(map, "purpose"));
-        if (map.containsKey("isActive")) entity.setIsActive(getBoolean(map, "isActive"));
+        if (hasKey(map, "pre_no", "preNo")) entity.setPreNo(getStringAny(map, "pre_no", "preNo"));
+        if (hasKey(map, "pre_kind", "preKind")) entity.setPreKind(getIntegerAny(map, "pre_kind", "preKind"));
+        if (hasKey(map, "pre_name", "preName")) entity.setPreName(getStringAny(map, "pre_name", "preName"));
+        if (hasKey(map, "display_name", "displayName")) entity.setDisplayName(getStringAny(map, "display_name", "displayName"));
+        if (hasKey(map, "weight_input_mode", "weightInputMode")) entity.setWeightInputMode(getIntegerAny(map, "weight_input_mode", "weightInputMode"));
+        if (hasKey(map, "class_category_id", "classCategoryId")) entity.setClassCategoryId(getIntegerAny(map, "class_category_id", "classCategoryId"));
+        if (hasKey(map, "capacity", "capacity")) entity.setCapacity(getFloatAny(map, "capacity", "capacity"));
+        if (hasKey(map, "unit", "unit")) entity.setUnit(getIntegerAny(map, "unit", "unit"));
+        if (hasKey(map, "inf_unit", "infUnit")) entity.setInfUnit(getIntegerAny(map, "inf_unit", "infUnit"));
+        if (hasKey(map, "inf_volume", "infVolume")) entity.setInfVolume(getFloatAny(map, "inf_volume", "infVolume"));
+        if (hasKey(map, "inf_display", "infDisplay")) entity.setInfDisplay(getIntegerAny(map, "inf_display", "infDisplay"));
+        if (hasKey(map, "inf_energy", "infEnergy")) entity.setInfEnergy(getFloatAny(map, "inf_energy", "infEnergy"));
+        if (hasKey(map, "inf_protein", "infProtein")) entity.setInfProtein(getFloatAny(map, "inf_protein", "infProtein"));
+        if (hasKey(map, "inf_fat", "infFat")) entity.setInfFat(getFloatAny(map, "inf_fat", "infFat"));
+        if (hasKey(map, "inf_carbo", "infCarbo")) entity.setInfCarbo(getFloatAny(map, "inf_carbo", "infCarbo"));
+        if (hasKey(map, "inf_sugar", "infSugar")) entity.setInfSugar(getFloatAny(map, "inf_sugar", "infSugar"));
+        if (hasKey(map, "inf_sodium", "infSodium")) entity.setInfSodium(getFloatAny(map, "inf_sodium", "infSodium"));
+        if (hasKey(map, "inf_lmt_kind", "infLmtKind")) entity.setInfLmtKind(getIntegerAny(map, "inf_lmt_kind", "infLmtKind"));
+        if (hasKey(map, "inf_lmt_date_flag", "infLmtDateFlag")) entity.setInfLmtDateFlag(getBooleanAny(map, "inf_lmt_date_flag", "infLmtDateFlag"));
+        if (hasKey(map, "inf_storage_method", "infStorageMethod")) entity.setInfStorageMethod(getStringAny(map, "inf_storage_method", "infStorageMethod"));
+        if (hasKey(map, "inf_contami_flag", "infContamiFlag")) entity.setInfContamiFlag(getBooleanAny(map, "inf_contami_flag", "infContamiFlag"));
+        if (hasKey(map, "inf_contamination", "infContamination")) entity.setInfContamination(getStringAny(map, "inf_contamination", "infContamination"));
+        if (hasKey(map, "place_of_origin", "placeOfOrigin")) entity.setPlaceOfOrigin(getStringAny(map, "place_of_origin", "placeOfOrigin"));
+        if (hasKey(map, "purpose", "purpose")) entity.setPurpose(getStringAny(map, "purpose", "purpose"));
+        if (hasKey(map, "is_active", "isActive")) entity.setIsActive(getBooleanAny(map, "is_active", "isActive"));
+    }
+
+    private boolean hasKey(Map<String, Object> map, String snakeCase, String camelCase) {
+        return map.containsKey(snakeCase) || map.containsKey(camelCase);
+    }
+
+    private Integer getIntegerAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        Integer val = getInteger(map, snakeCase);
+        return val != null ? val : getInteger(map, camelCase);
+    }
+
+    private String getStringAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        String val = getString(map, snakeCase);
+        return val != null ? val : getString(map, camelCase);
+    }
+
+    private Boolean getBooleanAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        if (map.containsKey(snakeCase)) return getBoolean(map, snakeCase);
+        return getBoolean(map, camelCase);
+    }
+
+    private Float getFloatAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        Float val = getFloat(map, snakeCase);
+        return val != null ? val : getFloat(map, camelCase);
     }
 
     private Integer getInteger(Map<String, Object> map, String key) {
