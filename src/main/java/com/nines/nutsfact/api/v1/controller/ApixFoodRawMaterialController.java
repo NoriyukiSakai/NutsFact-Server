@@ -65,8 +65,9 @@ public class ApixFoodRawMaterialController {
             @RequestParam("foodId") Integer foodId) {
 
         FoodRawMaterial item = service.findById(foodId);
-        Map<String, Object> response = toFlatMap(item);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toFlatMap(item));
         return ResponseEntity.ok(response);
     }
 
@@ -78,8 +79,9 @@ public class ApixFoodRawMaterialController {
             @RequestParam("foodNo") String foodNo) {
 
         FoodRawMaterial item = service.findByFoodNo(foodNo);
-        Map<String, Object> response = toFlatMap(item);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toFlatMap(item));
         return ResponseEntity.ok(response);
     }
 
@@ -93,8 +95,9 @@ public class ApixFoodRawMaterialController {
         FoodRawMaterial entity = fromFlatMap(request);
         FoodRawMaterial created = service.create(entity);
 
-        Map<String, Object> response = toFlatMap(created);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toFlatMap(created));
         return ResponseEntity.ok(response);
     }
 
@@ -122,8 +125,9 @@ public class ApixFoodRawMaterialController {
 
         FoodRawMaterial updated = service.update(existing);
 
-        Map<String, Object> response = toFlatMap(updated);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toFlatMap(updated));
         return ResponseEntity.ok(response);
     }
 
@@ -143,57 +147,57 @@ public class ApixFoodRawMaterialController {
     }
 
     /**
-     * FoodRawMaterialをフラットなMapに変換
+     * FoodRawMaterialをフラットなMapに変換（snake_case）
      */
     private Map<String, Object> toFlatMap(FoodRawMaterial item) {
         Map<String, Object> map = new HashMap<>();
 
         // 基本情報
-        map.put("foodId", item.getFoodId());
-        map.put("foodNo", item.getFoodNo());
-        map.put("foodGroupId", item.getFoodGroupId());
-        map.put("indexNo", item.getIndexNo());
-        map.put("classCategoryId", item.getClassCategoryId());
-        map.put("originalFoodId", item.getOriginalFoodId());
-        map.put("originalFoodGroupId", item.getOriginalFoodGroupId());
-        map.put("originalFoodNo", item.getOriginalFoodNo());
-        map.put("originalIndexNo", item.getOriginalIndexNo());
-        map.put("originalFoodName", item.getOriginalFoodName());
-        map.put("foodName", item.getFoodName());
-        map.put("foodFukuBunrui", item.getFoodFukuBunrui());
-        map.put("foodRuiKubun", item.getFoodRuiKubun());
-        map.put("foodDaiBunrui", item.getFoodDaiBunrui());
-        map.put("foodCyuBunrui", item.getFoodCyuBunrui());
-        map.put("foodSyoBunrui", item.getFoodSyoBunrui());
-        map.put("foodSaibun", item.getFoodSaibun());
-        map.put("categoryId", item.getCategoryId());
+        map.put("food_id", item.getFoodId());
+        map.put("food_no", item.getFoodNo());
+        map.put("food_group_id", item.getFoodGroupId());
+        map.put("index_no", item.getIndexNo());
+        map.put("class_category_id", item.getClassCategoryId());
+        map.put("original_food_id", item.getOriginalFoodId());
+        map.put("original_food_group_id", item.getOriginalFoodGroupId());
+        map.put("original_food_no", item.getOriginalFoodNo());
+        map.put("original_index_no", item.getOriginalIndexNo());
+        map.put("original_food_name", item.getOriginalFoodName());
+        map.put("food_name", item.getFoodName());
+        map.put("food_fuku_bunrui", item.getFoodFukuBunrui());
+        map.put("food_rui_kubun", item.getFoodRuiKubun());
+        map.put("food_dai_bunrui", item.getFoodDaiBunrui());
+        map.put("food_cyu_bunrui", item.getFoodCyuBunrui());
+        map.put("food_syo_bunrui", item.getFoodSyoBunrui());
+        map.put("food_saibun", item.getFoodSaibun());
+        map.put("category_id", item.getCategoryId());
         map.put("hashtag", item.getHashtag());
-        map.put("compositeRawMaterialsKb", item.getCompositeRawMaterialsKb());
-        map.put("pricePerUnit", item.getPricePerUnit());
-        map.put("makerId", item.getMakerId());
-        map.put("makerName", item.getMakerName());
-        map.put("sallerId", item.getSellerId());
-        map.put("sallerName", item.getSellerName());
-        map.put("compositeRawItemlist", item.getCompositeRawItemlist());
-        map.put("displayName", item.getDisplayName());
-        map.put("placeOfOrigin", item.getPlaceOfOrigin());
-        map.put("displayPlaceOfOrigin", item.getDisplayPlaceOfOrigin());
-        map.put("revisionOfFoodNo", item.getRevisionOfFoodNo());
-        map.put("nextFoodId", item.getNextFoodId());
-        map.put("expireDate", item.getExpireDate());
-        map.put("createDate", item.getCreateDate());
-        map.put("lastUpdateDate", item.getLastUpdateDate());
+        map.put("composite_raw_materials_kb", item.getCompositeRawMaterialsKb());
+        map.put("price_per_unit", item.getPricePerUnit());
+        map.put("maker_id", item.getMakerId());
+        map.put("maker_name", item.getMakerName());
+        map.put("saller_id", item.getSellerId());
+        map.put("saller_name", item.getSellerName());
+        map.put("composite_raw_itemlist", item.getCompositeRawItemlist());
+        map.put("display_name", item.getDisplayName());
+        map.put("place_of_origin", item.getPlaceOfOrigin());
+        map.put("display_place_of_origin", item.getDisplayPlaceOfOrigin());
+        map.put("revision_of_food_no", item.getRevisionOfFoodNo());
+        map.put("next_food_id", item.getNextFoodId());
+        map.put("expire_date", item.getExpireDate());
+        map.put("create_date", item.getCreateDate());
+        map.put("last_update_date", item.getLastUpdateDate());
         map.put("status", item.getStatus());
-        map.put("updateInformation", item.getUpdateInformation());
+        map.put("update_information", item.getUpdateInformation());
         map.put("description", item.getDescription());
-        map.put("isActive", item.getIsActive());
+        map.put("is_active", item.getIsActive());
 
         // 基本栄養成分
         if (item.getBasicNutrition() != null) {
             var bn = item.getBasicNutrition();
             map.put("refuse", bn.getRefuse());
             map.put("enerc", bn.getEnerc());
-            map.put("enercKcal", bn.getEnercKcal());
+            map.put("enerc_kcal", bn.getEnercKcal());
             map.put("water", bn.getWater());
             map.put("prot", bn.getProt());
             map.put("protcaa", bn.getProtcaa());
@@ -208,7 +212,7 @@ public class ApixFoodRawMaterialController {
             map.put("oa", bn.getOa());
             map.put("ash", bn.getAsh());
             map.put("alc", bn.getAlc());
-            map.put("naclEq", bn.getNaclEq());
+            map.put("nacl_eq", bn.getNaclEq());
         }
 
         // ミネラル
@@ -237,7 +241,7 @@ public class ApixFoodRawMaterialController {
             map.put("cartb", vt.getCartb());
             map.put("crypxb", vt.getCrypxb());
             map.put("cartbeq", vt.getCartbeq());
-            map.put("vitaRae", vt.getVitaRae());
+            map.put("vita_rae", vt.getVitaRae());
             map.put("vitd", vt.getVitd());
             map.put("tocpha", vt.getTocpha());
             map.put("tocphb", vt.getTocphb());
