@@ -58,8 +58,9 @@ public class ApixFoodRawMaterialSupplierController {
             @RequestParam("id") Integer id) {
 
         FoodRawMaterialSupplier item = service.findById(id);
-        Map<String, Object> response = toMap(item);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(item));
         return ResponseEntity.ok(response);
     }
 
@@ -73,8 +74,9 @@ public class ApixFoodRawMaterialSupplierController {
         FoodRawMaterialSupplier entity = fromMap(request);
         FoodRawMaterialSupplier created = service.create(entity);
 
-        Map<String, Object> response = toMap(created);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(created));
         return ResponseEntity.ok(response);
     }
 
@@ -85,7 +87,7 @@ public class ApixFoodRawMaterialSupplierController {
     public ResponseEntity<Map<String, Object>> update(
             @RequestBody Map<String, Object> request) {
 
-        Integer id = getInteger(request, "id");
+        Integer id = getIntegerAny(request, "id", "id");
         if (id == null) {
             throw new IllegalArgumentException("idが指定されていません");
         }
@@ -98,8 +100,9 @@ public class ApixFoodRawMaterialSupplierController {
 
         FoodRawMaterialSupplier updated = service.update(existing);
 
-        Map<String, Object> response = toMap(updated);
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
+        response.put("item", toMap(updated));
         return ResponseEntity.ok(response);
     }
 
@@ -121,44 +124,68 @@ public class ApixFoodRawMaterialSupplierController {
     private Map<String, Object> toMap(FoodRawMaterialSupplier item) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", item.getId());
-        map.put("foodId", item.getFoodId());
-        map.put("supplierId", item.getSupplierId());
-        map.put("supplierName", item.getSupplierName());
-        map.put("purchasePrice", item.getPurchasePrice());
-        map.put("volumeAmount", item.getVolumeAmount());
-        map.put("weightOrCapacity", item.getWeightOrCapacity());
-        map.put("convertRatio", item.getConvertRatio());
-        map.put("pricePerUnit", item.getPricePerUnit());
-        map.put("createDate", item.getCreateDate());
-        map.put("lastUpdateDate", item.getLastUpdateDate());
-        map.put("isActive", item.getIsActive());
+        map.put("food_id", item.getFoodId());
+        map.put("supplier_id", item.getSupplierId());
+        map.put("supplier_name", item.getSupplierName());
+        map.put("purchase_price", item.getPurchasePrice());
+        map.put("volume_amount", item.getVolumeAmount());
+        map.put("weight_or_capacity", item.getWeightOrCapacity());
+        map.put("convert_ratio", item.getConvertRatio());
+        map.put("price_per_unit", item.getPricePerUnit());
+        map.put("create_date", item.getCreateDate());
+        map.put("last_update_date", item.getLastUpdateDate());
+        map.put("is_active", item.getIsActive());
         return map;
     }
 
     private FoodRawMaterialSupplier fromMap(Map<String, Object> map) {
         FoodRawMaterialSupplier entity = new FoodRawMaterialSupplier();
-        entity.setId(getInteger(map, "id"));
-        entity.setFoodId(getInteger(map, "foodId"));
-        entity.setSupplierId(getInteger(map, "supplierId"));
-        entity.setSupplierName(getString(map, "supplierName"));
-        entity.setPurchasePrice(getInteger(map, "purchasePrice"));
-        entity.setVolumeAmount(getInteger(map, "volumeAmount"));
-        entity.setWeightOrCapacity(getInteger(map, "weightOrCapacity"));
-        entity.setConvertRatio(getFloat(map, "convertRatio"));
-        entity.setPricePerUnit(getFloat(map, "pricePerUnit"));
-        entity.setIsActive(getBoolean(map, "isActive"));
+        entity.setId(getIntegerAny(map, "id", "id"));
+        entity.setFoodId(getIntegerAny(map, "food_id", "foodId"));
+        entity.setSupplierId(getIntegerAny(map, "supplier_id", "supplierId"));
+        entity.setSupplierName(getStringAny(map, "supplier_name", "supplierName"));
+        entity.setPurchasePrice(getIntegerAny(map, "purchase_price", "purchasePrice"));
+        entity.setVolumeAmount(getIntegerAny(map, "volume_amount", "volumeAmount"));
+        entity.setWeightOrCapacity(getIntegerAny(map, "weight_or_capacity", "weightOrCapacity"));
+        entity.setConvertRatio(getFloatAny(map, "convert_ratio", "convertRatio"));
+        entity.setPricePerUnit(getFloatAny(map, "price_per_unit", "pricePerUnit"));
+        entity.setIsActive(getBooleanAny(map, "is_active", "isActive"));
         return entity;
     }
 
     private void mergeFromMap(FoodRawMaterialSupplier entity, Map<String, Object> map) {
-        if (map.containsKey("foodId")) entity.setFoodId(getInteger(map, "foodId"));
-        if (map.containsKey("supplierId")) entity.setSupplierId(getInteger(map, "supplierId"));
-        if (map.containsKey("purchasePrice")) entity.setPurchasePrice(getInteger(map, "purchasePrice"));
-        if (map.containsKey("volumeAmount")) entity.setVolumeAmount(getInteger(map, "volumeAmount"));
-        if (map.containsKey("weightOrCapacity")) entity.setWeightOrCapacity(getInteger(map, "weightOrCapacity"));
-        if (map.containsKey("convertRatio")) entity.setConvertRatio(getFloat(map, "convertRatio"));
-        if (map.containsKey("pricePerUnit")) entity.setPricePerUnit(getFloat(map, "pricePerUnit"));
-        if (map.containsKey("isActive")) entity.setIsActive(getBoolean(map, "isActive"));
+        if (hasKey(map, "food_id", "foodId")) entity.setFoodId(getIntegerAny(map, "food_id", "foodId"));
+        if (hasKey(map, "supplier_id", "supplierId")) entity.setSupplierId(getIntegerAny(map, "supplier_id", "supplierId"));
+        if (hasKey(map, "purchase_price", "purchasePrice")) entity.setPurchasePrice(getIntegerAny(map, "purchase_price", "purchasePrice"));
+        if (hasKey(map, "volume_amount", "volumeAmount")) entity.setVolumeAmount(getIntegerAny(map, "volume_amount", "volumeAmount"));
+        if (hasKey(map, "weight_or_capacity", "weightOrCapacity")) entity.setWeightOrCapacity(getIntegerAny(map, "weight_or_capacity", "weightOrCapacity"));
+        if (hasKey(map, "convert_ratio", "convertRatio")) entity.setConvertRatio(getFloatAny(map, "convert_ratio", "convertRatio"));
+        if (hasKey(map, "price_per_unit", "pricePerUnit")) entity.setPricePerUnit(getFloatAny(map, "price_per_unit", "pricePerUnit"));
+        if (hasKey(map, "is_active", "isActive")) entity.setIsActive(getBooleanAny(map, "is_active", "isActive"));
+    }
+
+    private boolean hasKey(Map<String, Object> map, String snakeCase, String camelCase) {
+        return map.containsKey(snakeCase) || map.containsKey(camelCase);
+    }
+
+    private Integer getIntegerAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        Integer val = getInteger(map, snakeCase);
+        return val != null ? val : getInteger(map, camelCase);
+    }
+
+    private String getStringAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        String val = getString(map, snakeCase);
+        return val != null ? val : getString(map, camelCase);
+    }
+
+    private Boolean getBooleanAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        if (map.containsKey(snakeCase)) return getBoolean(map, snakeCase);
+        return getBoolean(map, camelCase);
+    }
+
+    private Float getFloatAny(Map<String, Object> map, String snakeCase, String camelCase) {
+        Float val = getFloat(map, snakeCase);
+        return val != null ? val : getFloat(map, camelCase);
     }
 
     private Integer getInteger(Map<String, Object> map, String key) {
