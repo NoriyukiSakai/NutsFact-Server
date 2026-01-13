@@ -38,9 +38,9 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="entity.id">
         INSERT INTO FOOD_RAW_MATERIALS_SUPPLIER (food_id, supplier_id, purchase_price, volume_amount,
-                                                  weight_or_capacity, convert_ratio, price_per_unit, is_active)
+                                                  weight_or_capacity, convert_ratio, price_per_unit)
         VALUES (#{entity.foodId}, #{entity.supplierId}, #{entity.purchasePrice}, #{entity.volumeAmount},
-                #{entity.weightOrCapacity}, #{entity.convertRatio}, #{entity.pricePerUnit}, #{entity.isActive})
+                #{entity.weightOrCapacity}, #{entity.convertRatio}, #{entity.pricePerUnit})
     </insert>
 
     <update id="update">
@@ -50,8 +50,7 @@
             volume_amount = #{entity.volumeAmount},
             weight_or_capacity = #{entity.weightOrCapacity},
             convert_ratio = #{entity.convertRatio},
-            price_per_unit = #{entity.pricePerUnit},
-            is_active = #{entity.isActive}
+            price_per_unit = #{entity.pricePerUnit}
         WHERE id = #{entity.id}
     </update>
 
