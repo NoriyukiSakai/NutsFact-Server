@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nines.nutsfact.api.v1.request.BusinessAccountCreateRequest;
 import com.nines.nutsfact.api.v1.request.BusinessAccountUpdateRequest;
+import com.nines.nutsfact.api.v1.request.InvitationCodeCreateRequest;
 import com.nines.nutsfact.config.AuthenticatedUser;
 import com.nines.nutsfact.domain.model.user.BusinessAccount;
+import com.nines.nutsfact.domain.model.user.InvitationCode;
 import com.nines.nutsfact.domain.model.user.User;
 import com.nines.nutsfact.domain.service.BusinessAccountService;
+import com.nines.nutsfact.domain.service.InvitationCodeService;
 import com.nines.nutsfact.domain.service.UserService;
 
 import jakarta.validation.Valid;
@@ -30,6 +33,19 @@ public class BusinessAccountController {
 
     private final BusinessAccountService businessAccountService;
     private final UserService userService;
+    private final InvitationCodeService invitationCodeService;
+
+    /**
+     * ビジネスアカウント一覧取得（運営管理者用）
+     */
+    @GetMapping("/findAll")
+    public ResponseEntity<Map<String, Object>> findAll() {
+        var accounts = businessAccountService.findAll();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "Success");
+        response.put("items", accounts.stream().map(this::toResponseMap).toList());
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/findById")
     public ResponseEntity<Map<String, Object>> findById(@RequestParam("id") Integer id) {
@@ -74,6 +90,24 @@ public class BusinessAccountController {
 
         businessAccountService.updateCurrentUserCount(created.getId());
 
+        return ResponseEntity.ok(buildResponse(created));
+    }
+
+    /**
+     * ビジネスアカウント作成（運営管理者用）
+     * 作成者をビジネスアカウントに紐づけない
+     */
+    @PostMapping("/insertAdmin")
+    public ResponseEntity<Map<String, Object>> insertAdmin(
+            @Valid @RequestBody BusinessAccountCreateRequest request) {
+        BusinessAccount businessAccount = new BusinessAccount();
+        businessAccount.setCompanyName(request.getCompanyName());
+        businessAccount.setContactPhone(request.getContactPhone());
+        businessAccount.setLogoImageUrl(request.getLogoImageUrl());
+        businessAccount.setWebsiteUrl(request.getWebsiteUrl());
+        businessAccount.setMaxUserCount(request.getMaxUserCount());
+
+        BusinessAccount created = businessAccountService.create(businessAccount);
         return ResponseEntity.ok(buildResponse(created));
     }
 
@@ -126,21 +160,99 @@ public class BusinessAccountController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * ビジネスオーナー招待（運営管理者用）
+     * 指定したビジネスアカウントに対して招待コードを発行
+     */
+    @PostMapping("/inviteOwner")
+    public ResponseEntity<Map<String, Object>> inviteOwner(
+            Authentication authentication,
+            @RequestParam("businessAccountId") Integer businessAccountId,
+            @Valid @RequestBody InvitationCodeCreateRequest request) {
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
+
+        // ビジネスアカウントの存在確認
+        BusinessAccount businessAccount = businessAccountService.findById(businessAccountId);
+
+        // ビジネスオーナーとして招待（role = 10）
+        Integer role = request.getRole() != null ? request.getRole() : 10;
+
+        InvitationCode created = invitationCodeService.create(
+                businessAccountId,
+                request.getEmail(),
+                role,
+                request.getExpirationDays(),
+                authUser.getUserId());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "Success");
+        response.put("item", buildInvitationCodeMap(created));
+        response.put("businessAccountName", businessAccount.getCompanyName());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 招待コード一覧取得（運営管理者用）
+     */
+    @GetMapping("/getInvitations")
+    public ResponseEntity<Map<String, Object>> getInvitations(
+            @RequestParam("businessAccountId") Integer businessAccountId) {
+        var codes = invitationCodeService.findByBusinessAccountId(businessAccountId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "Success");
+        response.put("items", codes.stream().map(this::buildInvitationCodeMap).toList());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 招待コード取り消し（運営管理者用）
+     */
+    @PostMapping("/revokeInvitation")
+    public ResponseEntity<Map<String, Object>> revokeInvitation(@RequestParam("id") Integer id) {
+        invitationCodeService.revoke(id);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "Success");
+        return ResponseEntity.ok(response);
+    }
+
+    private Map<String, Object> buildInvitationCodeMap(InvitationCode code) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", code.getId());
+        map.put("businessAccountId", code.getBusinessAccountId());
+        map.put("code", code.getCode());
+        map.put("email", code.getEmail());
+        map.put("role", code.getRole());
+        map.put("expiresAt", code.getExpiresAt());
+        map.put("isUsed", code.getIsUsed());
+        map.put("usedAt", code.getUsedAt());
+        map.put("createDate", code.getCreateDate());
+        map.put("createdByUserId", code.getCreatedByUserId());
+        return map;
+    }
+
     private Map<String, Object> buildResponse(BusinessAccount businessAccount) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
-        response.put("id", businessAccount.getId());
-        response.put("code", businessAccount.getCode());
-        response.put("companyName", businessAccount.getCompanyName());
-        response.put("contactPhone", businessAccount.getContactPhone());
-        response.put("logoImageUrl", businessAccount.getLogoImageUrl());
-        response.put("websiteUrl", businessAccount.getWebsiteUrl());
-        response.put("registrationStatus", businessAccount.getRegistrationStatus());
-        response.put("maxUserCount", businessAccount.getMaxUserCount());
-        response.put("currentUserCount", businessAccount.getCurrentUserCount());
-        response.put("createDate", businessAccount.getCreateDate());
-        response.put("lastUpdateDate", businessAccount.getLastUpdateDate());
-        response.put("isActive", businessAccount.getIsActive());
+        response.put("item", toResponseMap(businessAccount));
         return response;
+    }
+
+    private Map<String, Object> toResponseMap(BusinessAccount businessAccount) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", businessAccount.getId());
+        map.put("code", businessAccount.getCode());
+        map.put("companyName", businessAccount.getCompanyName());
+        map.put("contactPhone", businessAccount.getContactPhone());
+        map.put("logoImageUrl", businessAccount.getLogoImageUrl());
+        map.put("websiteUrl", businessAccount.getWebsiteUrl());
+        map.put("registrationStatus", businessAccount.getRegistrationStatus());
+        map.put("maxUserCount", businessAccount.getMaxUserCount());
+        map.put("currentUserCount", businessAccount.getCurrentUserCount());
+        map.put("createDate", businessAccount.getCreateDate());
+        map.put("lastUpdateDate", businessAccount.getLastUpdateDate());
+        map.put("isActive", businessAccount.getIsActive());
+        return map;
     }
 }

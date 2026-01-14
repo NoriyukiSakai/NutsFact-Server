@@ -33,7 +33,9 @@ public class ApixFoodRawMaterialController {
 
     /**
      * カテゴリ別原材料一覧取得
-     * patternId: 1=8訂, 2=公開, 3=登録済
+     * patternId: 1=8訂, 2=拡張, 3=ユーザ定義
+     * patternId=1,2はbusinessAccountIdでフィルタリングしない
+     * patternId=3はbusinessAccountIdでフィルタリング
      */
     @GetMapping("/getDataX")
     public ResponseEntity<Map<String, Object>> getDataX(
@@ -41,7 +43,7 @@ public class ApixFoodRawMaterialController {
 
         List<FoodRawMaterial> items;
         if (patternId != null) {
-            items = service.findByCategory(patternId);
+            items = service.findByCategoryWithBusinessAccountFilter(patternId);
         } else {
             items = service.findAll();
         }
@@ -59,12 +61,13 @@ public class ApixFoodRawMaterialController {
 
     /**
      * ID指定で原材料取得
+     * categoryId=1（8訂）, 2（拡張）の場合はbusinessAccountIdでフィルタリングしない
      */
     @GetMapping("/findById")
     public ResponseEntity<Map<String, Object>> findById(
             @RequestParam("foodId") Integer foodId) {
 
-        FoodRawMaterial item = service.findById(foodId);
+        FoodRawMaterial item = service.findByIdWithBusinessAccountFilter(foodId);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("item", toFlatMap(item));
@@ -103,6 +106,7 @@ public class ApixFoodRawMaterialController {
 
     /**
      * 原材料更新
+     * businessAccountIdでフィルタリング
      */
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> update(
@@ -117,13 +121,13 @@ public class ApixFoodRawMaterialController {
             throw new IllegalArgumentException("food_idが指定されていません");
         }
 
-        // 既存データを取得
-        FoodRawMaterial existing = service.findById(foodId);
+        // 既存データを取得（businessAccountIdでフィルタリング）
+        FoodRawMaterial existing = service.findByIdWithBusinessAccountFilter(foodId);
 
         // リクエストの値で上書き（nullでないフィールドのみ）
         mergeFromFlatMap(existing, request);
 
-        FoodRawMaterial updated = service.update(existing);
+        FoodRawMaterial updated = service.updateWithBusinessAccountFilter(existing);
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -133,12 +137,13 @@ public class ApixFoodRawMaterialController {
 
     /**
      * 原材料削除
+     * businessAccountIdでフィルタリング
      */
     @GetMapping("/delete")
     public ResponseEntity<Map<String, Object>> delete(
             @RequestParam("foodId") Integer foodId) {
 
-        service.delete(foodId);
+        service.deleteWithBusinessAccountFilter(foodId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -154,6 +159,7 @@ public class ApixFoodRawMaterialController {
 
         // 基本情報
         map.put("food_id", item.getFoodId());
+        map.put("business_account_id", item.getBusinessAccountId());
         map.put("food_no", item.getFoodNo());
         map.put("food_group_id", item.getFoodGroupId());
         map.put("index_no", item.getIndexNo());

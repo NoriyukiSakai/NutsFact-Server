@@ -17,5 +17,8 @@ public class UserUpdateRequest {
     @Size(max = 256, message = "プロフィール画像URLは256文字以内で入力してください")
     private String profileImageUrl;
 
+    @Size(max = 20, message = "電話番号は20文字以内で入力してください")
+    private String phone;
+
     private Boolean isActive;
 }

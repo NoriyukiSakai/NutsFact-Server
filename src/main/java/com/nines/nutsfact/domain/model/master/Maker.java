@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class Maker {
     private Integer makerId;
+    private Integer businessAccountId;
     private String makerName;
     private String contactInfo;
     private String address;

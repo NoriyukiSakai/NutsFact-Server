@@ -35,7 +35,7 @@ public class ApixAllergenicControlController {
      */
     @GetMapping("/getData")
     public ResponseEntity<Map<String, Object>> getData() {
-        List<AllergenicControl> items = service.findAll();
+        List<AllergenicControl> items = service.findAllWithBusinessAccountFilter();
 
         List<Map<String, Object>> itemList = items.stream()
             .map(this::toMap)
@@ -55,7 +55,7 @@ public class ApixAllergenicControlController {
     public ResponseEntity<Map<String, Object>> findById(
             @RequestParam("foodId") Integer foodId) {
 
-        AllergenicControl item = service.findByFoodId(foodId);
+        AllergenicControl item = service.findByFoodIdWithBusinessAccountFilter(foodId);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         if (item != null) {

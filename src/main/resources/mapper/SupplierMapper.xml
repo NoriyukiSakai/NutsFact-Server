@@ -4,6 +4,7 @@
 
     <resultMap id="SupplierResultMap" type="com.nines.nutsfact.domain.model.master.Supplier">
         <id property="supplierId" column="supplier_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="supplierName" column="supplier_name"/>
         <result property="contactInfo" column="contact_info"/>
         <result property="address" column="address"/>
@@ -13,20 +14,36 @@
     </resultMap>
 
     <select id="findAll" resultMap="SupplierResultMap">
-        SELECT supplier_id, supplier_name, contact_info, address, phone_number, email, is_active
+        SELECT supplier_id, business_account_id, supplier_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_SUPPLIER
         ORDER BY supplier_id
     </select>
 
+    <select id="findByBusinessAccountId" resultMap="SupplierResultMap">
+        SELECT supplier_id, business_account_id, supplier_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_SUPPLIER
+        WHERE business_account_id = #{businessAccountId}
+        ORDER BY supplier_id
+    </select>
+
     <select id="findById" resultMap="SupplierResultMap">
-        SELECT supplier_id, supplier_name, contact_info, address, phone_number, email, is_active
+        SELECT supplier_id, business_account_id, supplier_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_SUPPLIER
         WHERE supplier_id = #{supplierId}
     </select>
 
+    <select id="findByIdAndBusinessAccountId" resultMap="SupplierResultMap">
+        SELECT supplier_id, business_account_id, supplier_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_SUPPLIER
+        WHERE supplier_id = #{supplierId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.Supplier" useGeneratedKeys="true" keyProperty="supplierId">
-        INSERT INTO MASTER_SUPPLIER (supplier_name, contact_info, address, phone_number, email, is_active)
-        VALUES (#{supplierName}, #{contactInfo}, #{address}, #{phoneNumber}, #{email}, #{isActive})
+        INSERT INTO MASTER_SUPPLIER (business_account_id, supplier_name, contact_info, address, phone_number, email, is_active)
+        VALUES (#{businessAccountId}, #{supplierName}, #{contactInfo}, #{address}, #{phoneNumber}, #{email}, #{isActive})
     </insert>
 
     <update id="update" parameterType="com.nines.nutsfact.domain.model.master.Supplier">
@@ -38,10 +55,21 @@
             email = #{email},
             is_active = #{isActive}
         WHERE supplier_id = #{supplierId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </update>
 
     <delete id="delete">
         DELETE FROM MASTER_SUPPLIER WHERE supplier_id = #{supplierId}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM MASTER_SUPPLIER
+        WHERE supplier_id = #{supplierId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 
 </mapper>

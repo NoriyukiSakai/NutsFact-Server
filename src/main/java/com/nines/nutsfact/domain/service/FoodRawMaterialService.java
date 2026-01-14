@@ -1,5 +1,6 @@
 package com.nines.nutsfact.domain.service;
 
+import com.nines.nutsfact.config.SecurityContextHelper;
 import com.nines.nutsfact.domain.model.FoodRawMaterial;
 import com.nines.nutsfact.domain.model.SelectItem;
 import com.nines.nutsfact.domain.repository.FoodRawMaterialRepository;
@@ -29,6 +30,26 @@ public class FoodRawMaterialService {
         return repository.findByCategory(categoryId);
     }
 
+    /**
+     * カテゴリ別原材料一覧取得（businessAccountIdフィルタリング）
+     * categoryId=1（8訂）, 2（拡張）の場合はbusinessAccountIdでフィルタリングしない
+     */
+    @Transactional(readOnly = true)
+    public List<FoodRawMaterial> findByCategoryWithBusinessAccountFilter(Integer categoryId) {
+        // patternId=1（8訂）or 2（拡張）はbusiness_account_idでフィルタリングしない
+        if (categoryId != null && (categoryId == 1 || categoryId == 2)) {
+            return repository.findByCategory(categoryId);
+        }
+
+        // patternId=3（ユーザ定義）はbusiness_account_idでフィルタリング
+        Integer businessAccountId = SecurityContextHelper.
+        getCurrentBusinessAccountId();
+        if (businessAccountId != null) {
+            return repository.findByCategoryAndBusinessAccountId(categoryId, businessAccountId);
+        }
+        return repository.findByCategory(categoryId);
+    }
+
     @Transactional(readOnly = true)
     public List<SelectItem> findSelectItems(Integer categoryId) {
         return repository.findSelectItems(categoryId);
@@ -37,6 +58,17 @@ public class FoodRawMaterialService {
     @Transactional(readOnly = true)
     public FoodRawMaterial findById(Integer id) {
         return repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("原材料", id));
+    }
+
+    /**
+     * ID指定で原材料取得（businessAccountIdフィルタリング）
+     * categoryId=1（8訂）, 2（拡張）の場合はbusinessAccountIdでフィルタリングしない
+     */
+    @Transactional(readOnly = true)
+    public FoodRawMaterial findByIdWithBusinessAccountFilter(Integer id) {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        return repository.findByIdAndBusinessAccountId(id, businessAccountId)
             .orElseThrow(() -> new EntityNotFoundException("原材料", id));
     }
 
@@ -57,11 +89,16 @@ public class FoodRawMaterialService {
                 entity.setIsActive(true);
             }
 
+            // businessAccountIdを自動設定
+            if (entity.getBusinessAccountId() == null) {
+                entity.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+            }
+
             repository.insert(entity);
             Integer newId = repository.getLastInsertId();
             entity.setFoodId(newId);
 
-            log.info("原材料を登録しました: ID={}", newId);
+            log.info("原材料を登録しました: ID={}, businessAccountId={}", newId, entity.getBusinessAccountId());
             return entity;
 
         } catch (Exception e) {
@@ -91,6 +128,33 @@ public class FoodRawMaterialService {
         }
     }
 
+    /**
+     * 原材料更新（businessAccountIdでのフィルタリング付き）
+     */
+    @Transactional
+    public FoodRawMaterial updateWithBusinessAccountFilter(FoodRawMaterial entity) {
+        if (entity.getFoodId() == null) {
+            throw new IllegalArgumentException("食品IDが指定されていません");
+        }
+
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        repository.findByIdAndBusinessAccountId(entity.getFoodId(), businessAccountId)
+            .orElseThrow(() -> new EntityNotFoundException("原材料", entity.getFoodId()));
+
+        // businessAccountIdを確実に設定
+        entity.setBusinessAccountId(businessAccountId);
+
+        try {
+            repository.update(entity);
+            log.info("原材料を更新しました: ID={}, businessAccountId={}", entity.getFoodId(), businessAccountId);
+            return entity;
+
+        } catch (Exception e) {
+            log.error("原材料の更新に失敗: ID={}, {}", entity.getFoodId(), e.getMessage(), e);
+            throw new DataAccessFailedException("更新", e);
+        }
+    }
+
     @Transactional
     public void delete(Integer id) {
         // 存在確認
@@ -100,6 +164,26 @@ public class FoodRawMaterialService {
         try {
             repository.delete(id);
             log.info("原材料を削除しました: ID={}", id);
+
+        } catch (Exception e) {
+            log.error("原材料の削除に失敗: ID={}, {}", id, e.getMessage(), e);
+            throw new DataAccessFailedException("削除", e);
+        }
+    }
+
+    /**
+     * 原材料削除（businessAccountIdでのフィルタリング付き）
+     */
+    @Transactional
+    public void deleteWithBusinessAccountFilter(Integer id) {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+
+        repository.findByIdAndBusinessAccountId(id, businessAccountId)
+            .orElseThrow(() -> new EntityNotFoundException("原材料", id));
+
+        try {
+            repository.deleteByIdAndBusinessAccountId(id, businessAccountId);
+            log.info("原材料を削除しました: ID={}, businessAccountId={}", id, businessAccountId);
 
         } catch (Exception e) {
             log.error("原材料の削除に失敗: ID={}, {}", id, e.getMessage(), e);

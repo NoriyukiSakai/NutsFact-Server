@@ -1,5 +1,6 @@
 package com.nines.nutsfact.domain.service;
 
+import com.nines.nutsfact.config.SecurityContextHelper;
 import com.nines.nutsfact.domain.model.FoodPreProductItem;
 import com.nines.nutsfact.domain.model.FoodPreProductDetailItem;
 import com.nines.nutsfact.domain.model.SelectItem;
@@ -28,7 +29,25 @@ public class FoodPreProductService {
     }
 
     @Transactional(readOnly = true)
+    public List<FoodPreProductItem> findAllWithBusinessAccountFilter() {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        if (businessAccountId != null) {
+            return repository.findByBusinessAccountId(businessAccountId);
+        }
+        return repository.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public List<FoodPreProductItem> findByKind(Integer preKind) {
+        return repository.findByKind(preKind);
+    }
+
+    @Transactional(readOnly = true)
+    public List<FoodPreProductItem> findByKindWithBusinessAccountFilter(Integer preKind) {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        if (businessAccountId != null) {
+            return repository.findByKindAndBusinessAccountId(preKind, businessAccountId);
+        }
         return repository.findByKind(preKind);
     }
 
@@ -49,11 +68,29 @@ public class FoodPreProductService {
         return item;
     }
 
+    @Transactional(readOnly = true)
+    public FoodPreProductItem findByIdWithBusinessAccountFilter(Integer id) {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        FoodPreProductItem item = repository.findByIdAndBusinessAccountId(id, businessAccountId)
+            .orElseThrow(() -> new EntityNotFoundException("仕込品", id));
+
+        // 明細も取得
+        List<FoodPreProductDetailItem> details = detailRepository.findByPreId(id);
+        item.setDetails(details);
+
+        return item;
+    }
+
     @Transactional
     public FoodPreProductItem create(FoodPreProductItem entity) {
         try {
             if (entity.getIsActive() == null) {
                 entity.setIsActive(true);
+            }
+
+            // businessAccountIdを自動設定
+            if (entity.getBusinessAccountId() == null) {
+                entity.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
             }
 
             repository.insert(entity);
@@ -64,6 +101,10 @@ public class FoodPreProductService {
             if (entity.getDetails() != null && !entity.getDetails().isEmpty()) {
                 for (FoodPreProductDetailItem detail : entity.getDetails()) {
                     detail.setPreId(newId);
+                    // 明細にもbusinessAccountIdを設定
+                    if (detail.getBusinessAccountId() == null) {
+                        detail.setBusinessAccountId(entity.getBusinessAccountId());
+                    }
                     detailRepository.insert(detail);
                 }
             }
@@ -102,6 +143,34 @@ public class FoodPreProductService {
     }
 
     @Transactional
+    public FoodPreProductItem updateWithBusinessAccountFilter(FoodPreProductItem entity) {
+        if (entity.getPreId() == null) {
+            throw new IllegalArgumentException("仕込品IDが指定されていません");
+        }
+
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        repository.findByIdAndBusinessAccountId(entity.getPreId(), businessAccountId)
+            .orElseThrow(() -> new EntityNotFoundException("仕込品", entity.getPreId()));
+
+        // businessAccountIdを設定
+        entity.setBusinessAccountId(businessAccountId);
+
+        try {
+            repository.update(entity);
+
+            // 集計値の更新
+            updateSummary(entity);
+
+            log.info("仕込品を更新しました: ID={}", entity.getPreId());
+            return entity;
+
+        } catch (Exception e) {
+            log.error("仕込品の更新に失敗: ID={}, {}", entity.getPreId(), e.getMessage(), e);
+            throw new DataAccessFailedException("更新", e);
+        }
+    }
+
+    @Transactional
     public void delete(Integer id) {
         repository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("仕込品", id));
@@ -110,6 +179,24 @@ public class FoodPreProductService {
             // 明細を先に削除
             detailRepository.deleteByPreId(id);
             repository.delete(id);
+            log.info("仕込品を削除しました: ID={}", id);
+
+        } catch (Exception e) {
+            log.error("仕込品の削除に失敗: ID={}, {}", id, e.getMessage(), e);
+            throw new DataAccessFailedException("削除", e);
+        }
+    }
+
+    @Transactional
+    public void deleteWithBusinessAccountFilter(Integer id) {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        repository.findByIdAndBusinessAccountId(id, businessAccountId)
+            .orElseThrow(() -> new EntityNotFoundException("仕込品", id));
+
+        try {
+            // 明細を先に削除
+            detailRepository.deleteByPreIdAndBusinessAccountId(id, businessAccountId);
+            repository.deleteByIdAndBusinessAccountId(id, businessAccountId);
             log.info("仕込品を削除しました: ID={}", id);
 
         } catch (Exception e) {

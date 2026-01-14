@@ -4,6 +4,7 @@
 
     <resultMap id="foodPreProductDetailResult" type="com.nines.nutsfact.domain.model.FoodPreProductDetailItem">
         <id property="detailId" column="detail_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="preId" column="pre_id"/>
         <result property="componentKb" column="component_kb"/>
         <result property="detailFoodId" column="detail_food_id"/>
@@ -34,13 +35,29 @@
         SELECT LAST_INSERT_ID()
     </select>
 
+    <select id="findByPreIdAndBusinessAccountId" resultMap="foodPreProductDetailResult">
+        SELECT * FROM FOOD_PRE_PRODUCT_DETAIL_ITEM
+        WHERE pre_id = #{preId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
+    <select id="findByIdAndBusinessAccountId" resultMap="foodPreProductDetailResult">
+        SELECT * FROM FOOD_PRE_PRODUCT_DETAIL_ITEM
+        WHERE detail_id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="entity.detailId">
         INSERT INTO FOOD_PRE_PRODUCT_DETAIL_ITEM (
-            pre_id, component_kb, detail_food_id, detail_pre_id, composite_raw_materials_kb,
+            business_account_id, pre_id, component_kb, detail_food_id, detail_pre_id, composite_raw_materials_kb,
             detail_food_name, detail_pre_name, mixing_ratio, weight, cost_price,
             energy, protein, fat, carbo, sugar, sodium
         ) VALUES (
-            #{entity.preId}, #{entity.componentKb}, #{entity.detailFoodId}, #{entity.detailPreId},
+            #{entity.businessAccountId}, #{entity.preId}, #{entity.componentKb}, #{entity.detailFoodId}, #{entity.detailPreId},
             #{entity.compositeRawMaterialsKb}, #{entity.detailFoodName}, #{entity.detailPreName},
             #{entity.mixingRatio}, #{entity.weight}, #{entity.costPrice},
             #{entity.energy}, #{entity.protein}, #{entity.fat}, #{entity.carbo}, #{entity.sugar}, #{entity.sodium}
@@ -66,6 +83,9 @@
             sugar = #{entity.sugar},
             sodium = #{entity.sodium}
         WHERE detail_id = #{entity.detailId}
+        <if test="entity.businessAccountId != null">
+            AND business_account_id = #{entity.businessAccountId}
+        </if>
     </update>
 
     <delete id="delete">
@@ -74,5 +94,21 @@
 
     <delete id="deleteByPreId">
         DELETE FROM FOOD_PRE_PRODUCT_DETAIL_ITEM WHERE pre_id = #{preId}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM FOOD_PRE_PRODUCT_DETAIL_ITEM
+        WHERE detail_id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </delete>
+
+    <delete id="deleteByPreIdAndBusinessAccountId">
+        DELETE FROM FOOD_PRE_PRODUCT_DETAIL_ITEM
+        WHERE pre_id = #{preId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 </mapper>

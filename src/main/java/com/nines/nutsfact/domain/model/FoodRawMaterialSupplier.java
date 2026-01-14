@@ -16,6 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class FoodRawMaterialSupplier {
     private Integer id;
+    private Integer businessAccountId;
     private Integer foodId;
     private Integer supplierId;
     private String supplierName;

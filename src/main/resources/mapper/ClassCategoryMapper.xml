@@ -4,6 +4,7 @@
 
     <resultMap id="ClassCategoryResultMap" type="com.nines.nutsfact.domain.model.master.ClassCategory">
         <id property="categoryId" column="class_category_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="categoryType" column="class_type"/>
         <result property="categoryName" column="class_category_name"/>
         <result property="description" column="description"/>
@@ -11,27 +12,53 @@
     </resultMap>
 
     <select id="findAll" resultMap="ClassCategoryResultMap">
-        SELECT class_category_id, class_type, class_category_name, description, is_active
+        SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
         FROM MASTER_CLASSCATEGORY
         ORDER BY class_type, class_category_id
     </select>
 
     <select id="findByType" resultMap="ClassCategoryResultMap">
-        SELECT class_category_id, class_type, class_category_name, description, is_active
+        SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
         FROM MASTER_CLASSCATEGORY
         WHERE class_type = #{categoryType}
         ORDER BY class_category_id
     </select>
 
+    <select id="findByBusinessAccountId" resultMap="ClassCategoryResultMap">
+        SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
+        FROM MASTER_CLASSCATEGORY
+        WHERE business_account_id = #{businessAccountId}
+        ORDER BY class_type, class_category_id
+    </select>
+
+    <select id="findByTypeAndBusinessAccountId" resultMap="ClassCategoryResultMap">
+        SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
+        FROM MASTER_CLASSCATEGORY
+        WHERE class_type = #{categoryType}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+        ORDER BY class_category_id
+    </select>
+
     <select id="findById" resultMap="ClassCategoryResultMap">
-        SELECT class_category_id, class_type, class_category_name, description, is_active
+        SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
         FROM MASTER_CLASSCATEGORY
         WHERE class_category_id = #{categoryId}
     </select>
 
+    <select id="findByIdAndBusinessAccountId" resultMap="ClassCategoryResultMap">
+        SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
+        FROM MASTER_CLASSCATEGORY
+        WHERE class_category_id = #{categoryId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.ClassCategory" useGeneratedKeys="true" keyProperty="categoryId">
-        INSERT INTO MASTER_CLASSCATEGORY (class_type, class_category_name, description, is_active)
-        VALUES (#{categoryType}, #{categoryName}, #{description}, #{isActive})
+        INSERT INTO MASTER_CLASSCATEGORY (business_account_id, class_type, class_category_name, description, is_active)
+        VALUES (#{businessAccountId}, #{categoryType}, #{categoryName}, #{description}, #{isActive})
     </insert>
 
     <update id="update" parameterType="com.nines.nutsfact.domain.model.master.ClassCategory">
@@ -41,10 +68,21 @@
             description = #{description},
             is_active = #{isActive}
         WHERE class_category_id = #{categoryId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </update>
 
     <delete id="delete">
         DELETE FROM MASTER_CLASSCATEGORY WHERE class_category_id = #{categoryId}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM MASTER_CLASSCATEGORY
+        WHERE class_category_id = #{categoryId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 
 </mapper>

@@ -23,6 +23,11 @@ public class InvitationCodeService {
     private static final int CODE_LENGTH = 12;
     private static final SecureRandom RANDOM = new SecureRandom();
 
+    // ロール定義
+    public static final int ROLE_SYSTEM_ADMIN = 0;       // 運営管理者
+    public static final int ROLE_BUSINESS_OWNER = 10;    // ビジネスオーナー
+    public static final int ROLE_BUSINESS_USER = 21;     // ビジネス利用者（デフォルト）
+
     public List<InvitationCode> findAll() {
         return invitationCodeRepository.findAll();
     }
@@ -48,7 +53,8 @@ public class InvitationCodeService {
         invitationCode.setBusinessAccountId(businessAccountId);
         invitationCode.setCode(generateCode());
         invitationCode.setEmail(email);
-        invitationCode.setRole(role);
+        // roleがnullの場合はビジネス利用者（21）をデフォルト設定
+        invitationCode.setRole(role != null ? role : ROLE_BUSINESS_USER);
         invitationCode.setExpiresAt(LocalDateTime.now().plusDays(expirationDays != null ? expirationDays : 7));
         invitationCode.setIsUsed(false);
         invitationCode.setCreatedByUserId(createdByUserId);

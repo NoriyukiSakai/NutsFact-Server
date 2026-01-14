@@ -17,6 +17,7 @@ import java.io.Serializable;
 public class FoodPreProductDetailItem implements Serializable {
 
     private Integer detailId;
+    private Integer businessAccountId;
     private Integer preId;
 
     // 構成品区分

@@ -28,26 +28,26 @@ public class FoodPreProductDetailController {
     private final FoodPreProductConverter converter;
 
     /**
-     * 仕込品IDで明細一覧取得
+     * 仕込品IDで明細一覧取得（businessAccountIdでフィルタリング）
      */
     @GetMapping("/by-pre-id/{preId}")
     public ResponseEntity<ApiResponse<List<FoodPreProductDetailItem>>> findByPreId(
             @PathVariable Integer preId) {
-        List<FoodPreProductDetailItem> items = service.findByPreId(preId);
+        List<FoodPreProductDetailItem> items = service.findByPreIdWithBusinessAccountFilter(preId);
         return ResponseEntity.ok(ApiResponse.success(items, items.size()));
     }
 
     /**
-     * 明細詳細取得
+     * 明細詳細取得（businessAccountIdでフィルタリング）
      */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<FoodPreProductDetailItem>> findById(@PathVariable Integer id) {
-        FoodPreProductDetailItem item = service.findById(id);
+        FoodPreProductDetailItem item = service.findByIdWithBusinessAccountFilter(id);
         return ResponseEntity.ok(ApiResponse.success(item));
     }
 
     /**
-     * 明細新規作成
+     * 明細新規作成（businessAccountIdを自動設定）
      */
     @PostMapping
     public ResponseEntity<ApiResponse<FoodPreProductDetailItem>> create(
@@ -59,7 +59,7 @@ public class FoodPreProductDetailController {
     }
 
     /**
-     * 明細更新
+     * 明細更新（businessAccountIdでフィルタリング）
      */
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<FoodPreProductDetailItem>> update(
@@ -67,16 +67,16 @@ public class FoodPreProductDetailController {
             @Valid @RequestBody FoodPreProductDetailRequest request) {
         request.setDetailId(id);
         FoodPreProductDetailItem entity = converter.toDetailEntity(request);
-        FoodPreProductDetailItem updated = service.update(entity);
+        FoodPreProductDetailItem updated = service.updateWithBusinessAccountFilter(entity);
         return ResponseEntity.ok(ApiResponse.success(updated));
     }
 
     /**
-     * 明細削除
+     * 明細削除（businessAccountIdでフィルタリング）
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse> delete(@PathVariable Integer id) {
-        service.delete(id);
+        service.deleteWithBusinessAccountFilter(id);
         return ResponseEntity.ok(DeleteResponse.success(id));
     }
 }

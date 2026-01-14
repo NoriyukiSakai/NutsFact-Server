@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nines.nutsfact.config.SecurityContextHelper;
 import com.nines.nutsfact.domain.model.master.Maker;
 import com.nines.nutsfact.domain.repository.MakerRepository;
 import com.nines.nutsfact.exception.ResourceNotFoundException;
@@ -21,13 +22,31 @@ public class MakerService {
         return makerRepository.findAll();
     }
 
+    public List<Maker> findAllWithBusinessAccountFilter() {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        if (businessAccountId != null) {
+            return makerRepository.findByBusinessAccountId(businessAccountId);
+        }
+        return makerRepository.findAll();
+    }
+
     public Maker findById(Integer makerId) {
         return makerRepository.findById(makerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Maker", makerId));
     }
 
+    public Maker findByIdWithBusinessAccountFilter(Integer makerId) {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        return makerRepository.findByIdAndBusinessAccountId(makerId, businessAccountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Maker", makerId));
+    }
+
     @Transactional
     public Maker create(Maker maker) {
+        // businessAccountIdを自動設定
+        if (maker.getBusinessAccountId() == null) {
+            maker.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+        }
         makerRepository.save(maker);
         return maker;
     }
@@ -41,8 +60,27 @@ public class MakerService {
     }
 
     @Transactional
+    public Maker updateWithBusinessAccountFilter(Integer makerId, Maker maker) {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        makerRepository.findByIdAndBusinessAccountId(makerId, businessAccountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Maker", makerId));
+        maker.setMakerId(makerId);
+        maker.setBusinessAccountId(businessAccountId);
+        makerRepository.save(maker);
+        return maker;
+    }
+
+    @Transactional
     public void delete(Integer makerId) {
         findById(makerId);
         makerRepository.delete(makerId);
+    }
+
+    @Transactional
+    public void deleteWithBusinessAccountFilter(Integer makerId) {
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        makerRepository.findByIdAndBusinessAccountId(makerId, businessAccountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Maker", makerId));
+        makerRepository.deleteByIdAndBusinessAccountId(makerId, businessAccountId);
     }
 }

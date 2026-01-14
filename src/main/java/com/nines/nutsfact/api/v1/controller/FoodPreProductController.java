@@ -38,12 +38,12 @@ public class FoodPreProductController {
     }
 
     /**
-     * 区分別仕込品一覧取得
+     * 区分別仕込品一覧取得（businessAccountIdでフィルタリング）
      */
     @GetMapping("/kind/{preKind}")
     public ResponseEntity<ApiResponse<List<FoodPreProductItem>>> findByKind(
             @PathVariable Integer preKind) {
-        List<FoodPreProductItem> items = service.findByKind(preKind);
+        List<FoodPreProductItem> items = service.findByKindWithBusinessAccountFilter(preKind);
         return ResponseEntity.ok(ApiResponse.success(items, items.size()));
     }
 
@@ -58,16 +58,16 @@ public class FoodPreProductController {
     }
 
     /**
-     * 仕込品詳細取得（明細含む）
+     * 仕込品詳細取得（明細含む、businessAccountIdでフィルタリング）
      */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<FoodPreProductItem>> findById(@PathVariable Integer id) {
-        FoodPreProductItem item = service.findById(id);
+        FoodPreProductItem item = service.findByIdWithBusinessAccountFilter(id);
         return ResponseEntity.ok(ApiResponse.success(item));
     }
 
     /**
-     * 仕込品新規作成
+     * 仕込品新規作成（businessAccountIdを自動設定）
      */
     @PostMapping
     public ResponseEntity<ApiResponse<FoodPreProductItem>> create(
@@ -79,7 +79,7 @@ public class FoodPreProductController {
     }
 
     /**
-     * 仕込品更新
+     * 仕込品更新（businessAccountIdでフィルタリング）
      */
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<FoodPreProductItem>> update(
@@ -87,16 +87,16 @@ public class FoodPreProductController {
             @Valid @RequestBody FoodPreProductRequest request) {
         request.setPreId(id);
         FoodPreProductItem entity = converter.toEntity(request);
-        FoodPreProductItem updated = service.update(entity);
+        FoodPreProductItem updated = service.updateWithBusinessAccountFilter(entity);
         return ResponseEntity.ok(ApiResponse.success(updated));
     }
 
     /**
-     * 仕込品削除
+     * 仕込品削除（businessAccountIdでフィルタリング）
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse> delete(@PathVariable Integer id) {
-        service.delete(id);
+        service.deleteWithBusinessAccountFilter(id);
         return ResponseEntity.ok(DeleteResponse.success(id));
     }
 }

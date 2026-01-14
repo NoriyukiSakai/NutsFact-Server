@@ -4,6 +4,7 @@
 
     <resultMap id="FoodRawMaterialSupplierResultMap" type="com.nines.nutsfact.domain.model.FoodRawMaterialSupplier">
         <id property="id" column="id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="foodId" column="food_id"/>
         <result property="supplierId" column="supplier_id"/>
         <result property="supplierName" column="supplier_name"/>
@@ -18,18 +19,39 @@
     </resultMap>
 
     <select id="findByFoodId" resultMap="FoodRawMaterialSupplierResultMap">
-        SELECT id, food_id, supplier_id, supplier_name, purchase_price, volume_amount,
+        SELECT id, business_account_id, food_id, supplier_id, supplier_name, purchase_price, volume_amount,
                weight_or_capacity, convert_ratio, price_per_unit, create_date, last_update_date, is_active
         FROM vfood_raw_material_supplier
         WHERE food_id = #{foodId}
         ORDER BY id
     </select>
 
+    <select id="findByFoodIdAndBusinessAccountId" resultMap="FoodRawMaterialSupplierResultMap">
+        SELECT id, business_account_id, food_id, supplier_id, supplier_name, purchase_price, volume_amount,
+               weight_or_capacity, convert_ratio, price_per_unit, create_date, last_update_date, is_active
+        FROM vfood_raw_material_supplier
+        WHERE food_id = #{foodId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+        ORDER BY id
+    </select>
+
     <select id="findById" resultMap="FoodRawMaterialSupplierResultMap">
-        SELECT id, food_id, supplier_id, supplier_name, purchase_price, volume_amount,
+        SELECT id, business_account_id, food_id, supplier_id, supplier_name, purchase_price, volume_amount,
                weight_or_capacity, convert_ratio, price_per_unit, create_date, last_update_date, is_active
         FROM vfood_raw_material_supplier
         WHERE id = #{id}
+    </select>
+
+    <select id="findByIdAndBusinessAccountId" resultMap="FoodRawMaterialSupplierResultMap">
+        SELECT id, business_account_id, food_id, supplier_id, supplier_name, purchase_price, volume_amount,
+               weight_or_capacity, convert_ratio, price_per_unit, create_date, last_update_date, is_active
+        FROM vfood_raw_material_supplier
+        WHERE id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </select>
 
     <select id="getLastInsertId" resultType="Integer">
@@ -37,9 +59,9 @@
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="entity.id">
-        INSERT INTO FOOD_RAW_MATERIAL_SUPPLIER (food_id, supplier_id, purchase_price, volume_amount,
+        INSERT INTO FOOD_RAW_MATERIAL_SUPPLIER (business_account_id, food_id, supplier_id, purchase_price, volume_amount,
                                                   weight_or_capacity, convert_ratio, price_per_unit)
-        VALUES (#{entity.foodId}, #{entity.supplierId}, #{entity.purchasePrice}, #{entity.volumeAmount},
+        VALUES (#{entity.businessAccountId}, #{entity.foodId}, #{entity.supplierId}, #{entity.purchasePrice}, #{entity.volumeAmount},
                 #{entity.weightOrCapacity}, #{entity.convertRatio}, #{entity.pricePerUnit})
     </insert>
 
@@ -52,10 +74,21 @@
             convert_ratio = #{entity.convertRatio},
             price_per_unit = #{entity.pricePerUnit}
         WHERE id = #{entity.id}
+        <if test="entity.businessAccountId != null">
+            AND business_account_id = #{entity.businessAccountId}
+        </if>
     </update>
 
     <delete id="delete">
         DELETE FROM FOOD_RAW_MATERIAL_SUPPLIER WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM FOOD_RAW_MATERIAL_SUPPLIER
+        WHERE id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 
 </mapper>

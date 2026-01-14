@@ -22,6 +22,7 @@ public class FoodRawMaterial implements Serializable {
 
     // === 識別情報 ===
     private Integer foodId;
+    private Integer businessAccountId;
     private String foodNo;
     private Integer foodGroupId;
     private String indexNo;

@@ -31,7 +31,7 @@ public class ApixMasterClassCategoryController {
     private final ClassCategoryService service;
 
     /**
-     * クラス分類一覧取得
+     * クラス分類一覧取得（businessAccountIdでフィルタリング）
      */
     @GetMapping("/getData")
     public ResponseEntity<Map<String, Object>> getData(
@@ -39,9 +39,9 @@ public class ApixMasterClassCategoryController {
 
         List<ClassCategory> items;
         if (classType != null) {
-            items = service.findByType(classType);
+            items = service.findByTypeWithBusinessAccountFilter(classType);
         } else {
-            items = service.findAll();
+            items = service.findAllWithBusinessAccountFilter();
         }
 
         List<Map<String, Object>> itemList = items.stream()
@@ -56,13 +56,13 @@ public class ApixMasterClassCategoryController {
     }
 
     /**
-     * ID指定でクラス分類取得
+     * ID指定でクラス分類取得（businessAccountIdでフィルタリング）
      */
     @GetMapping("/findById")
     public ResponseEntity<Map<String, Object>> findById(
             @RequestParam("classCategoryId") Integer classCategoryId) {
 
-        ClassCategory item = service.findById(classCategoryId);
+        ClassCategory item = service.findByIdWithBusinessAccountFilter(classCategoryId);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("item", toMap(item));
@@ -70,7 +70,7 @@ public class ApixMasterClassCategoryController {
     }
 
     /**
-     * クラス分類登録
+     * クラス分類登録（businessAccountIdを自動設定）
      */
     @PostMapping("/insert")
     public ResponseEntity<Map<String, Object>> insert(
@@ -86,7 +86,7 @@ public class ApixMasterClassCategoryController {
     }
 
     /**
-     * クラス分類更新
+     * クラス分類更新（businessAccountIdでフィルタリング）
      */
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> update(
@@ -98,7 +98,7 @@ public class ApixMasterClassCategoryController {
         }
 
         ClassCategory entity = fromMap(request);
-        ClassCategory updated = service.update(classCategoryId, entity);
+        ClassCategory updated = service.updateWithBusinessAccountFilter(classCategoryId, entity);
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -107,13 +107,13 @@ public class ApixMasterClassCategoryController {
     }
 
     /**
-     * クラス分類削除
+     * クラス分類削除（businessAccountIdでフィルタリング）
      */
     @GetMapping("/delete")
     public ResponseEntity<Map<String, Object>> delete(
             @RequestParam("classCategoryId") Integer classCategoryId) {
 
-        service.delete(classCategoryId);
+        service.deleteWithBusinessAccountFilter(classCategoryId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -122,13 +122,13 @@ public class ApixMasterClassCategoryController {
     }
 
     /**
-     * クラス分類選択肢取得
+     * クラス分類選択肢取得（businessAccountIdでフィルタリング）
      */
     @GetMapping("/getSelect")
     public ResponseEntity<Map<String, Object>> getSelect(
             @RequestParam("classType") Integer classType) {
 
-        List<ClassCategory> items = service.findByType(classType);
+        List<ClassCategory> items = service.findByTypeWithBusinessAccountFilter(classType);
 
         List<Map<String, Object>> itemList = items.stream()
             .map(item -> {

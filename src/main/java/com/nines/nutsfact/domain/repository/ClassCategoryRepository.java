@@ -24,8 +24,20 @@ public class ClassCategoryRepository {
         return classCategoryMapper.findByType(categoryType);
     }
 
+    public List<ClassCategory> findByBusinessAccountId(Integer businessAccountId) {
+        return classCategoryMapper.findByBusinessAccountId(businessAccountId);
+    }
+
+    public List<ClassCategory> findByTypeAndBusinessAccountId(Integer categoryType, Integer businessAccountId) {
+        return classCategoryMapper.findByTypeAndBusinessAccountId(categoryType, businessAccountId);
+    }
+
     public Optional<ClassCategory> findById(Integer categoryId) {
         return Optional.ofNullable(classCategoryMapper.findById(categoryId));
+    }
+
+    public Optional<ClassCategory> findByIdAndBusinessAccountId(Integer categoryId, Integer businessAccountId) {
+        return Optional.ofNullable(classCategoryMapper.findByIdAndBusinessAccountId(categoryId, businessAccountId));
     }
 
     public void save(ClassCategory classCategory) {
@@ -38,5 +50,9 @@ public class ClassCategoryRepository {
 
     public void delete(Integer categoryId) {
         classCategoryMapper.delete(categoryId);
+    }
+
+    public void deleteByIdAndBusinessAccountId(Integer categoryId, Integer businessAccountId) {
+        classCategoryMapper.deleteByIdAndBusinessAccountId(categoryId, businessAccountId);
     }
 }

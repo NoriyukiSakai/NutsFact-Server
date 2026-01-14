@@ -31,11 +31,17 @@ public class ApixFoodPreProductController {
     private final FoodPreProductService service;
 
     /**
-     * 仕込品一覧取得
+     * 仕込品一覧取得（区分指定、businessAccountIdでフィルタリング）
      */
     @GetMapping("/getData")
-    public ResponseEntity<Map<String, Object>> getData() {
-        List<FoodPreProductItem> items = service.findAll();
+    public ResponseEntity<Map<String, Object>> getData(
+            @RequestParam(value = "preKind", required = false) Integer preKind) {
+        List<FoodPreProductItem> items;
+        if (preKind != null) {
+            items = service.findByKindWithBusinessAccountFilter(preKind);
+        } else {
+            items = service.findAllWithBusinessAccountFilter();
+        }
 
         List<Map<String, Object>> itemList = items.stream()
             .map(this::toMap)
@@ -49,13 +55,13 @@ public class ApixFoodPreProductController {
     }
 
     /**
-     * ID指定で仕込品取得
+     * ID指定で仕込品取得（businessAccountIdでフィルタリング）
      */
     @GetMapping("/findById")
     public ResponseEntity<Map<String, Object>> findById(
             @RequestParam("preId") Integer preId) {
 
-        FoodPreProductItem item = service.findById(preId);
+        FoodPreProductItem item = service.findByIdWithBusinessAccountFilter(preId);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("item", toMap(item));
@@ -63,7 +69,7 @@ public class ApixFoodPreProductController {
     }
 
     /**
-     * 仕込品登録
+     * 仕込品登録（businessAccountIdを自動設定）
      */
     @PostMapping("/insert")
     public ResponseEntity<Map<String, Object>> insert(
@@ -79,7 +85,7 @@ public class ApixFoodPreProductController {
     }
 
     /**
-     * 仕込品更新
+     * 仕込品更新（businessAccountIdでフィルタリング）
      */
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> update(
@@ -90,13 +96,13 @@ public class ApixFoodPreProductController {
             throw new IllegalArgumentException("preIdが指定されていません");
         }
 
-        // 既存データを取得
-        FoodPreProductItem existing = service.findById(preId);
+        // 既存データを取得（businessAccountIdでフィルタリング）
+        FoodPreProductItem existing = service.findByIdWithBusinessAccountFilter(preId);
 
         // リクエストの値で上書き
         mergeFromMap(existing, request);
 
-        FoodPreProductItem updated = service.update(existing);
+        FoodPreProductItem updated = service.updateWithBusinessAccountFilter(existing);
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -105,13 +111,13 @@ public class ApixFoodPreProductController {
     }
 
     /**
-     * 仕込品削除
+     * 仕込品削除（businessAccountIdでフィルタリング）
      */
     @GetMapping("/delete")
     public ResponseEntity<Map<String, Object>> delete(
             @RequestParam("preId") Integer preId) {
 
-        service.delete(preId);
+        service.deleteWithBusinessAccountFilter(preId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");

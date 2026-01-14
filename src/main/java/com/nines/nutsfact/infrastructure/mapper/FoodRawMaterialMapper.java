@@ -15,9 +15,19 @@ public interface FoodRawMaterialMapper {
 
     List<FoodRawMaterial> findByCategory(@Param("categoryId") Integer categoryId);
 
+    List<FoodRawMaterial> findByCategoryAndBusinessAccountId(
+            @Param("categoryId") Integer categoryId,
+            @Param("businessAccountId") Integer businessAccountId);
+
+    List<FoodRawMaterial> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
+
     List<SelectItem> findSelectItems(@Param("categoryId") Integer categoryId);
 
     Optional<FoodRawMaterial> findById(@Param("id") Integer id);
+
+    Optional<FoodRawMaterial> findByIdAndBusinessAccountId(
+            @Param("id") Integer id,
+            @Param("businessAccountId") Integer businessAccountId);
 
     Optional<FoodRawMaterial> findByFoodNo(@Param("foodNo") String foodNo);
 
@@ -26,6 +36,10 @@ public interface FoodRawMaterialMapper {
     int update(@Param("entity") FoodRawMaterial entity);
 
     int delete(@Param("id") Integer id);
+
+    int deleteByIdAndBusinessAccountId(
+            @Param("id") Integer id,
+            @Param("businessAccountId") Integer businessAccountId);
 
     Integer getLastInsertId();
 }

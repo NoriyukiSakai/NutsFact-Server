@@ -15,15 +15,29 @@ public interface FoodPreProductMapper {
 
     List<FoodPreProductItem> findByKind(@Param("preKind") Integer preKind);
 
+    List<FoodPreProductItem> findByKindAndBusinessAccountId(
+            @Param("preKind") Integer preKind,
+            @Param("businessAccountId") Integer businessAccountId);
+
+    List<FoodPreProductItem> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
+
     List<SelectItem> findSelectItems(@Param("preKind") Integer preKind);
 
     Optional<FoodPreProductItem> findById(@Param("id") Integer id);
+
+    Optional<FoodPreProductItem> findByIdAndBusinessAccountId(
+            @Param("id") Integer id,
+            @Param("businessAccountId") Integer businessAccountId);
 
     int insert(@Param("entity") FoodPreProductItem entity);
 
     int update(@Param("entity") FoodPreProductItem entity);
 
     int delete(@Param("id") Integer id);
+
+    int deleteByIdAndBusinessAccountId(
+            @Param("id") Integer id,
+            @Param("businessAccountId") Integer businessAccountId);
 
     Integer getLastInsertId();
 }

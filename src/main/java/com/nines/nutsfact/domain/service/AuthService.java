@@ -167,6 +167,52 @@ public class AuthService {
         return new AuthResult(authUser, token, user, businessAccount, false, "招待コードの適用が完了しました");
     }
 
+    @Transactional
+    public AuthResult signUpWithInvitationCode(String email, String password, String name, String invitationCode) {
+        // 1. 招待コード検証（コードとメールアドレスの組み合わせで検索）
+        InvitationCode invitation = invitationCodeRepository.findByCodeAndEmail(invitationCode, email)
+                .orElseThrow(() -> new AuthenticationException("招待コードが無効です。コードとメールアドレスを確認してください"));
+
+        // 2. 使用済みチェック
+        if (invitation.getIsUsed()) {
+            throw new AuthenticationException("この招待コードは既に使用されています");
+        }
+
+        // 3. 有効期限チェック
+        if (invitation.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new AuthenticationException("この招待コードは有効期限が切れています");
+        }
+
+        // 4. メール重複チェック
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new AuthenticationException("このメールアドレスは既に登録されています");
+        }
+
+        // 5. ユーザー作成（BusinessAccountとロールを招待コードから設定）
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setName(name);
+        user.setProvider("email");
+        user.setBusinessAccountId(invitation.getBusinessAccountId());
+        user.setRole(invitation.getRole());
+        user.setIsActive(true);
+        userRepository.save(user);
+
+        // 6. 招待コードを使用済みにマーク
+        invitationCodeRepository.markAsUsed(invitation.getId());
+
+        // 7. JWTトークン生成
+        AuthToken token = jwtUtil.generateTokens(user);
+        AuthUser authUser = createAuthUser(user);
+
+        // 8. BusinessAccount情報を取得
+        BusinessAccount businessAccount = businessAccountRepository.findById(invitation.getBusinessAccountId())
+                .orElse(null);
+
+        return new AuthResult(authUser, token, user, businessAccount, false, "ユーザー登録が完了しました");
+    }
+
     private AuthUser createAuthUser(User user) {
         return AuthUser.builder()
                 .id(user.getAuthUserId() != null ? user.getAuthUserId() : String.valueOf(user.getUserId()))

@@ -29,13 +29,13 @@ public class AllergenicControlController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<AllergenicControl>>> findAll() {
-        List<AllergenicControl> controls = allergenicControlService.findAll();
+        List<AllergenicControl> controls = allergenicControlService.findAllWithBusinessAccountFilter();
         return ResponseEntity.ok(ApiResponse.success(controls));
     }
 
     @GetMapping("/food/{foodId}")
     public ResponseEntity<ApiResponse<AllergenicControl>> findByFoodId(@PathVariable("foodId") Integer foodId) {
-        AllergenicControl control = allergenicControlService.findByFoodId(foodId);
+        AllergenicControl control = allergenicControlService.findByFoodIdWithBusinessAccountFilter(foodId);
         return ResponseEntity.ok(ApiResponse.success(control));
     }
 
@@ -58,7 +58,7 @@ public class AllergenicControlController {
 
     @DeleteMapping("/food/{foodId}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable("foodId") Integer foodId) {
-        allergenicControlService.delete(foodId);
+        allergenicControlService.deleteWithBusinessAccountFilter(foodId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 

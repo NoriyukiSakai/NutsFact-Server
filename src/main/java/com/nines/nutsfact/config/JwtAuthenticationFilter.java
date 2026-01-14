@@ -37,11 +37,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = claims.get("email", String.class);
                 Integer role = claims.get("role", Integer.class);
 
-                String authority = switch (role != null ? role : 4) {
-                    case 0 -> "ROLE_HEADQUARTERS_ADMIN";
-                    case 1 -> "ROLE_OWNER";
-                    case 2 -> "ROLE_ADMIN";
-                    case 3 -> "ROLE_USER";
+                String authority = switch (role != null ? role : 99) {
+                    case 0 -> "ROLE_SYSTEM_ADMIN";       // 運営管理者
+                    case 10 -> "ROLE_BUSINESS_OWNER";    // ビジネスオーナー
+                    case 21 -> "ROLE_BUSINESS_USER";     // ビジネス利用者
                     default -> "ROLE_GUEST";
                 };
 

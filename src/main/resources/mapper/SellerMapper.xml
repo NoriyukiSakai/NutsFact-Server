@@ -4,6 +4,7 @@
 
     <resultMap id="SellerResultMap" type="com.nines.nutsfact.domain.model.master.Seller">
         <id property="sellerId" column="saller_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="sellerName" column="saller_name"/>
         <result property="contactInfo" column="contact_info"/>
         <result property="address" column="address"/>
@@ -13,20 +14,36 @@
     </resultMap>
 
     <select id="findAll" resultMap="SellerResultMap">
-        SELECT saller_id, saller_name, contact_info, address, phone_number, email, is_active
+        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_SALLER
         ORDER BY saller_id
     </select>
 
+    <select id="findByBusinessAccountId" resultMap="SellerResultMap">
+        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_SALLER
+        WHERE business_account_id = #{businessAccountId}
+        ORDER BY saller_id
+    </select>
+
     <select id="findById" resultMap="SellerResultMap">
-        SELECT saller_id, saller_name, contact_info, address, phone_number, email, is_active
+        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_SALLER
         WHERE saller_id = #{sellerId}
     </select>
 
+    <select id="findByIdAndBusinessAccountId" resultMap="SellerResultMap">
+        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_SALLER
+        WHERE saller_id = #{sellerId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.Seller" useGeneratedKeys="true" keyProperty="sellerId">
-        INSERT INTO MASTER_SALLER (saller_name, contact_info, address, phone_number, email, is_active)
-        VALUES (#{sellerName}, #{contactInfo}, #{address}, #{phoneNumber}, #{email}, #{isActive})
+        INSERT INTO MASTER_SALLER (business_account_id, saller_name, contact_info, address, phone_number, email, is_active)
+        VALUES (#{businessAccountId}, #{sellerName}, #{contactInfo}, #{address}, #{phoneNumber}, #{email}, #{isActive})
     </insert>
 
     <update id="update" parameterType="com.nines.nutsfact.domain.model.master.Seller">
@@ -38,10 +55,21 @@
             email = #{email},
             is_active = #{isActive}
         WHERE saller_id = #{sellerId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </update>
 
     <delete id="delete">
         DELETE FROM MASTER_SALLER WHERE saller_id = #{sellerId}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM MASTER_SALLER
+        WHERE saller_id = #{sellerId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 
 </mapper>

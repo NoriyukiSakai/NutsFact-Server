@@ -4,6 +4,7 @@
 
     <resultMap id="foodPreProductResult" type="com.nines.nutsfact.domain.model.FoodPreProductItem">
         <id property="preId" column="pre_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="preNo" column="pre_no"/>
         <result property="preKind" column="pre_kind"/>
         <result property="preName" column="pre_name"/>
@@ -57,20 +58,40 @@
         SELECT * FROM FOOD_PRE_PRODUCT_ITEM WHERE pre_id = #{id}
     </select>
 
+    <select id="findByIdAndBusinessAccountId" resultMap="foodPreProductResult">
+        SELECT * FROM FOOD_PRE_PRODUCT_ITEM
+        WHERE pre_id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
+    <select id="findByBusinessAccountId" resultMap="foodPreProductResult">
+        SELECT * FROM FOOD_PRE_PRODUCT_ITEM WHERE business_account_id = #{businessAccountId}
+    </select>
+
+    <select id="findByKindAndBusinessAccountId" resultMap="foodPreProductResult">
+        SELECT * FROM FOOD_PRE_PRODUCT_ITEM
+        WHERE pre_kind = #{preKind}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
     <select id="getLastInsertId" resultType="Integer">
         SELECT LAST_INSERT_ID()
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="entity.preId">
         INSERT INTO FOOD_PRE_PRODUCT_ITEM (
-            pre_no, pre_kind, pre_name, display_name, weight_input_mode, class_category_id,
+            business_account_id, pre_no, pre_kind, pre_name, display_name, weight_input_mode, class_category_id,
             capacity, unit, inf_unit, inf_volume, inf_display,
             inf_energy, inf_protein, inf_fat, inf_carbo, inf_sugar, inf_sodium,
             inf_lmt_kind, inf_lmt_date_flag, inf_lmt_date, inf_storage_method,
             inf_contami_flag, inf_contamination,
             weight_sum, cost_price_sum, detail_count, place_of_origin, purpose, is_active
         ) VALUES (
-            #{entity.preNo}, #{entity.preKind}, #{entity.preName}, #{entity.displayName},
+            #{entity.businessAccountId}, #{entity.preNo}, #{entity.preKind}, #{entity.preName}, #{entity.displayName},
             #{entity.weightInputMode}, #{entity.classCategoryId},
             #{entity.capacity}, #{entity.unit}, #{entity.infUnit}, #{entity.infVolume}, #{entity.infDisplay},
             #{entity.infEnergy}, #{entity.infProtein}, #{entity.infFat}, #{entity.infCarbo}, #{entity.infSugar}, #{entity.infSodium},
@@ -113,9 +134,20 @@
             purpose = #{entity.purpose},
             is_active = #{entity.isActive}
         WHERE pre_id = #{entity.preId}
+        <if test="entity.businessAccountId != null">
+            AND business_account_id = #{entity.businessAccountId}
+        </if>
     </update>
 
     <delete id="delete">
         DELETE FROM FOOD_PRE_PRODUCT_ITEM WHERE pre_id = #{id}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM FOOD_PRE_PRODUCT_ITEM
+        WHERE pre_id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 </mapper>

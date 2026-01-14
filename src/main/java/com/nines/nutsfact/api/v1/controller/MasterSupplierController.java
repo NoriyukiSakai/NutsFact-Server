@@ -28,7 +28,7 @@ public class MasterSupplierController {
 
     @GetMapping("/getData")
     public ResponseEntity<Map<String, Object>> getData() {
-        List<Supplier> suppliers = supplierService.findAll();
+        List<Supplier> suppliers = supplierService.findAllWithBusinessAccountFilter();
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("records", suppliers.size());
@@ -38,7 +38,7 @@ public class MasterSupplierController {
 
     @GetMapping("/findById")
     public ResponseEntity<Map<String, Object>> findById(@RequestParam("id") Integer id) {
-        Supplier supplier = supplierService.findById(id);
+        Supplier supplier = supplierService.findByIdWithBusinessAccountFilter(id);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("supplierId", supplier.getSupplierId());
@@ -61,13 +61,13 @@ public class MasterSupplierController {
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> update(@Valid @RequestBody SupplierRequest request) {
         Supplier supplier = convertToEntity(request);
-        Supplier updated = supplierService.update(request.getSupplierId(), supplier);
+        Supplier updated = supplierService.updateWithBusinessAccountFilter(request.getSupplierId(), supplier);
         return ResponseEntity.ok(buildResponse(updated));
     }
 
     @GetMapping("/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") Integer id) {
-        supplierService.delete(id);
+        supplierService.deleteWithBusinessAccountFilter(id);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("id", id);
@@ -76,7 +76,7 @@ public class MasterSupplierController {
 
     @GetMapping("/getSelect")
     public ResponseEntity<Map<String, Object>> getSelect() {
-        List<Supplier> suppliers = supplierService.findAll();
+        List<Supplier> suppliers = supplierService.findAllWithBusinessAccountFilter();
         List<Map<String, Object>> selectItems = suppliers.stream()
             .filter(s -> s.getIsActive() != null && s.getIsActive())
             .map(s -> {

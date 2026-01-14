@@ -30,13 +30,13 @@ public class SupplierController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Supplier>>> findAll() {
-        List<Supplier> suppliers = supplierService.findAll();
+        List<Supplier> suppliers = supplierService.findAllWithBusinessAccountFilter();
         return ResponseEntity.ok(ApiResponse.success(suppliers));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Supplier>> findById(@PathVariable("id") Integer id) {
-        Supplier supplier = supplierService.findById(id);
+        Supplier supplier = supplierService.findByIdWithBusinessAccountFilter(id);
         return ResponseEntity.ok(ApiResponse.success(supplier));
     }
 
@@ -52,7 +52,7 @@ public class SupplierController {
             @PathVariable("id") Integer id,
             @Valid @RequestBody SupplierRequest request) {
         Supplier supplier = convertToEntity(request);
-        Supplier updated = supplierService.update(id, supplier);
+        Supplier updated = supplierService.updateWithBusinessAccountFilter(id, supplier);
         return ResponseEntity.ok(ApiResponse.success(updated));
     }
 
@@ -69,7 +69,7 @@ public class SupplierController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable("id") Integer id) {
-        supplierService.delete(id);
+        supplierService.deleteWithBusinessAccountFilter(id);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

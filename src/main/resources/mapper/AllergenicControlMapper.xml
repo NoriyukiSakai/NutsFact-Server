@@ -4,6 +4,7 @@
 
     <resultMap id="AllergenicControlResultMap" type="com.nines.nutsfact.domain.model.allergy.AllergenicControl">
         <id property="foodId" column="food_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="item1Val" column="item1_val"/>
         <result property="item2Val" column="item2_val"/>
         <result property="item3Val" column="item3_val"/>
@@ -40,20 +41,34 @@
         SELECT * FROM ALLERGENIC_CONTROL ORDER BY food_id
     </select>
 
+    <select id="findByBusinessAccountId" resultMap="AllergenicControlResultMap">
+        SELECT * FROM ALLERGENIC_CONTROL
+        WHERE business_account_id = #{businessAccountId}
+        ORDER BY food_id
+    </select>
+
     <select id="findByFoodId" resultMap="AllergenicControlResultMap">
         SELECT * FROM ALLERGENIC_CONTROL WHERE food_id = #{foodId}
     </select>
 
+    <select id="findByFoodIdAndBusinessAccountId" resultMap="AllergenicControlResultMap">
+        SELECT * FROM ALLERGENIC_CONTROL
+        WHERE food_id = #{foodId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.allergy.AllergenicControl">
         INSERT INTO ALLERGENIC_CONTROL (
-            food_id, item1_val, item2_val, item3_val, item4_val, item5_val,
+            food_id, business_account_id, item1_val, item2_val, item3_val, item4_val, item5_val,
             item6_val, item7_val, item8_val, item9_val, item10_val,
             item11_val, item12_val, item13_val, item14_val, item15_val,
             item16_val, item17_val, item18_val, item19_val, item20_val,
             item21_val, item22_val, item23_val, item24_val, item25_val,
             item26_val, item27_val, item28_val, item29_val, item30_val
         ) VALUES (
-            #{foodId}, #{item1Val}, #{item2Val}, #{item3Val}, #{item4Val}, #{item5Val},
+            #{foodId}, #{businessAccountId}, #{item1Val}, #{item2Val}, #{item3Val}, #{item4Val}, #{item5Val},
             #{item6Val}, #{item7Val}, #{item8Val}, #{item9Val}, #{item10Val},
             #{item11Val}, #{item12Val}, #{item13Val}, #{item14Val}, #{item15Val},
             #{item16Val}, #{item17Val}, #{item18Val}, #{item19Val}, #{item20Val},
@@ -75,18 +90,21 @@
             item25_val = #{item25Val}, item26_val = #{item26Val}, item27_val = #{item27Val},
             item28_val = #{item28Val}, item29_val = #{item29Val}, item30_val = #{item30Val}
         WHERE food_id = #{foodId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </update>
 
     <insert id="upsert" parameterType="com.nines.nutsfact.domain.model.allergy.AllergenicControl">
         INSERT INTO ALLERGENIC_CONTROL (
-            food_id, item1_val, item2_val, item3_val, item4_val, item5_val,
+            food_id, business_account_id, item1_val, item2_val, item3_val, item4_val, item5_val,
             item6_val, item7_val, item8_val, item9_val, item10_val,
             item11_val, item12_val, item13_val, item14_val, item15_val,
             item16_val, item17_val, item18_val, item19_val, item20_val,
             item21_val, item22_val, item23_val, item24_val, item25_val,
             item26_val, item27_val, item28_val, item29_val, item30_val
         ) VALUES (
-            #{foodId}, #{item1Val}, #{item2Val}, #{item3Val}, #{item4Val}, #{item5Val},
+            #{foodId}, #{businessAccountId}, #{item1Val}, #{item2Val}, #{item3Val}, #{item4Val}, #{item5Val},
             #{item6Val}, #{item7Val}, #{item8Val}, #{item9Val}, #{item10Val},
             #{item11Val}, #{item12Val}, #{item13Val}, #{item14Val}, #{item15Val},
             #{item16Val}, #{item17Val}, #{item18Val}, #{item19Val}, #{item20Val},
@@ -107,6 +125,14 @@
 
     <delete id="delete">
         DELETE FROM ALLERGENIC_CONTROL WHERE food_id = #{foodId}
+    </delete>
+
+    <delete id="deleteByFoodIdAndBusinessAccountId">
+        DELETE FROM ALLERGENIC_CONTROL
+        WHERE food_id = #{foodId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 
 </mapper>

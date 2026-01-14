@@ -39,8 +39,14 @@ public class InvitationCodeController {
     public ResponseEntity<Map<String, Object>> getData(Authentication authentication) {
         AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
 
-        List<InvitationCode> codes = invitationCodeService.findByBusinessAccountId(
-                authUser.getBusinessAccountId());
+        // businessAccountIdがnullの場合は空リストを返す
+        List<InvitationCode> codes;
+        if (authUser.getBusinessAccountId() == null) {
+            codes = List.of();
+        } else {
+            codes = invitationCodeService.findByBusinessAccountId(
+                    authUser.getBusinessAccountId());
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -54,6 +60,14 @@ public class InvitationCodeController {
             Authentication authentication,
             @Valid @RequestBody InvitationCodeCreateRequest request) {
         AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
+
+        // businessAccountIdがnullの場合はエラー
+        if (authUser.getBusinessAccountId() == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "Error");
+            response.put("message", "ビジネスアカウントに所属していないため、招待を作成できません");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         InvitationCode created = invitationCodeService.create(
                 authUser.getBusinessAccountId(),

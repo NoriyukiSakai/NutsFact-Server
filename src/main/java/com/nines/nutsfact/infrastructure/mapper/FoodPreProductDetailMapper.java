@@ -12,7 +12,15 @@ public interface FoodPreProductDetailMapper {
 
     List<FoodPreProductDetailItem> findByPreId(@Param("preId") Integer preId);
 
+    List<FoodPreProductDetailItem> findByPreIdAndBusinessAccountId(
+            @Param("preId") Integer preId,
+            @Param("businessAccountId") Integer businessAccountId);
+
     Optional<FoodPreProductDetailItem> findById(@Param("id") Integer id);
+
+    Optional<FoodPreProductDetailItem> findByIdAndBusinessAccountId(
+            @Param("id") Integer id,
+            @Param("businessAccountId") Integer businessAccountId);
 
     int insert(@Param("entity") FoodPreProductDetailItem entity);
 
@@ -21,6 +29,14 @@ public interface FoodPreProductDetailMapper {
     int delete(@Param("id") Integer id);
 
     int deleteByPreId(@Param("preId") Integer preId);
+
+    int deleteByIdAndBusinessAccountId(
+            @Param("id") Integer id,
+            @Param("businessAccountId") Integer businessAccountId);
+
+    int deleteByPreIdAndBusinessAccountId(
+            @Param("preId") Integer preId,
+            @Param("businessAccountId") Integer businessAccountId);
 
     Integer getLastInsertId();
 }

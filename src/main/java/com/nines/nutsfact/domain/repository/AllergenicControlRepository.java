@@ -20,8 +20,16 @@ public class AllergenicControlRepository {
         return allergenicControlMapper.findAll();
     }
 
+    public List<AllergenicControl> findByBusinessAccountId(Integer businessAccountId) {
+        return allergenicControlMapper.findByBusinessAccountId(businessAccountId);
+    }
+
     public Optional<AllergenicControl> findByFoodId(Integer foodId) {
         return Optional.ofNullable(allergenicControlMapper.findByFoodId(foodId));
+    }
+
+    public Optional<AllergenicControl> findByFoodIdAndBusinessAccountId(Integer foodId, Integer businessAccountId) {
+        return Optional.ofNullable(allergenicControlMapper.findByFoodIdAndBusinessAccountId(foodId, businessAccountId));
     }
 
     public void save(AllergenicControl allergenicControl) {
@@ -30,5 +38,9 @@ public class AllergenicControlRepository {
 
     public void delete(Integer foodId) {
         allergenicControlMapper.delete(foodId);
+    }
+
+    public void deleteByFoodIdAndBusinessAccountId(Integer foodId, Integer businessAccountId) {
+        allergenicControlMapper.deleteByFoodIdAndBusinessAccountId(foodId, businessAccountId);
     }
 }

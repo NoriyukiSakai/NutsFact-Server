@@ -23,12 +23,24 @@ public class FoodPreProductRepository {
         return mapper.findByKind(preKind);
     }
 
+    public List<FoodPreProductItem> findByKindAndBusinessAccountId(Integer preKind, Integer businessAccountId) {
+        return mapper.findByKindAndBusinessAccountId(preKind, businessAccountId);
+    }
+
+    public List<FoodPreProductItem> findByBusinessAccountId(Integer businessAccountId) {
+        return mapper.findByBusinessAccountId(businessAccountId);
+    }
+
     public List<SelectItem> findSelectItems(Integer preKind) {
         return mapper.findSelectItems(preKind);
     }
 
     public Optional<FoodPreProductItem> findById(Integer id) {
         return mapper.findById(id);
+    }
+
+    public Optional<FoodPreProductItem> findByIdAndBusinessAccountId(Integer id, Integer businessAccountId) {
+        return mapper.findByIdAndBusinessAccountId(id, businessAccountId);
     }
 
     public int insert(FoodPreProductItem entity) {
@@ -41,6 +53,10 @@ public class FoodPreProductRepository {
 
     public int delete(Integer id) {
         return mapper.delete(id);
+    }
+
+    public int deleteByIdAndBusinessAccountId(Integer id, Integer businessAccountId) {
+        return mapper.deleteByIdAndBusinessAccountId(id, businessAccountId);
     }
 
     public Integer getLastInsertId() {

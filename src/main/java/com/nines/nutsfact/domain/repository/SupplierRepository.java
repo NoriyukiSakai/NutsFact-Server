@@ -20,8 +20,16 @@ public class SupplierRepository {
         return supplierMapper.findAll();
     }
 
+    public List<Supplier> findByBusinessAccountId(Integer businessAccountId) {
+        return supplierMapper.findByBusinessAccountId(businessAccountId);
+    }
+
     public Optional<Supplier> findById(Integer supplierId) {
         return Optional.ofNullable(supplierMapper.findById(supplierId));
+    }
+
+    public Optional<Supplier> findByIdAndBusinessAccountId(Integer supplierId, Integer businessAccountId) {
+        return Optional.ofNullable(supplierMapper.findByIdAndBusinessAccountId(supplierId, businessAccountId));
     }
 
     public void save(Supplier supplier) {
@@ -34,5 +42,9 @@ public class SupplierRepository {
 
     public void delete(Integer supplierId) {
         supplierMapper.delete(supplierId);
+    }
+
+    public void deleteByIdAndBusinessAccountId(Integer supplierId, Integer businessAccountId) {
+        supplierMapper.deleteByIdAndBusinessAccountId(supplierId, businessAccountId);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class AllergenicControl {
     private Integer foodId;
+    private Integer businessAccountId;
     private Boolean item1Val;  // えび
     private Boolean item2Val;  // かに
     private Boolean item3Val;  // 小麦

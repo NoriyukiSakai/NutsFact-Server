@@ -32,12 +32,13 @@ public class ApixFoodRawMaterialSupplierController {
 
     /**
      * 原材料IDで仕入先情報一覧取得
+     * businessAccountIdでフィルタリング
      */
     @GetMapping("/findByFoodId")
     public ResponseEntity<Map<String, Object>> findByFoodId(
             @RequestParam("foodId") Integer foodId) {
 
-        List<FoodRawMaterialSupplier> items = service.findByFoodId(foodId);
+        List<FoodRawMaterialSupplier> items = service.findByFoodIdWithBusinessAccountFilter(foodId);
 
         List<Map<String, Object>> itemList = items.stream()
             .map(this::toMap)
@@ -52,12 +53,13 @@ public class ApixFoodRawMaterialSupplierController {
 
     /**
      * ID指定で仕入先情報取得
+     * businessAccountIdでフィルタリング
      */
     @GetMapping("/findById")
     public ResponseEntity<Map<String, Object>> findById(
             @RequestParam("id") Integer id) {
 
-        FoodRawMaterialSupplier item = service.findById(id);
+        FoodRawMaterialSupplier item = service.findByIdWithBusinessAccountFilter(id);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("item", toMap(item));
@@ -82,6 +84,7 @@ public class ApixFoodRawMaterialSupplierController {
 
     /**
      * 仕入先情報更新
+     * businessAccountIdでフィルタリング
      */
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> update(
@@ -92,13 +95,13 @@ public class ApixFoodRawMaterialSupplierController {
             throw new IllegalArgumentException("idが指定されていません");
         }
 
-        // 既存データを取得
-        FoodRawMaterialSupplier existing = service.findById(id);
+        // 既存データを取得（businessAccountIdでフィルタリング）
+        FoodRawMaterialSupplier existing = service.findByIdWithBusinessAccountFilter(id);
 
         // リクエストの値で上書き
         mergeFromMap(existing, request);
 
-        FoodRawMaterialSupplier updated = service.update(existing);
+        FoodRawMaterialSupplier updated = service.updateWithBusinessAccountFilter(existing);
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -108,12 +111,13 @@ public class ApixFoodRawMaterialSupplierController {
 
     /**
      * 仕入先情報削除
+     * businessAccountIdでフィルタリング
      */
     @GetMapping("/delete")
     public ResponseEntity<Map<String, Object>> delete(
             @RequestParam("id") Integer id) {
 
-        service.delete(id);
+        service.deleteWithBusinessAccountFilter(id);
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -124,6 +128,7 @@ public class ApixFoodRawMaterialSupplierController {
     private Map<String, Object> toMap(FoodRawMaterialSupplier item) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", item.getId());
+        map.put("business_account_id", item.getBusinessAccountId());
         map.put("food_id", item.getFoodId());
         map.put("supplier_id", item.getSupplierId());
         map.put("supplier_name", item.getSupplierName());

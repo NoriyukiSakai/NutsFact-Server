@@ -18,8 +18,16 @@ public class FoodRawMaterialSupplierRepository {
         return mapper.findByFoodId(foodId);
     }
 
+    public List<FoodRawMaterialSupplier> findByFoodIdAndBusinessAccountId(Integer foodId, Integer businessAccountId) {
+        return mapper.findByFoodIdAndBusinessAccountId(foodId, businessAccountId);
+    }
+
     public Optional<FoodRawMaterialSupplier> findById(Integer id) {
         return mapper.findById(id);
+    }
+
+    public Optional<FoodRawMaterialSupplier> findByIdAndBusinessAccountId(Integer id, Integer businessAccountId) {
+        return mapper.findByIdAndBusinessAccountId(id, businessAccountId);
     }
 
     public int insert(FoodRawMaterialSupplier entity) {
@@ -32,6 +40,10 @@ public class FoodRawMaterialSupplierRepository {
 
     public int delete(Integer id) {
         return mapper.delete(id);
+    }
+
+    public int deleteByIdAndBusinessAccountId(Integer id, Integer businessAccountId) {
+        return mapper.deleteByIdAndBusinessAccountId(id, businessAccountId);
     }
 
     public Integer getLastInsertId() {

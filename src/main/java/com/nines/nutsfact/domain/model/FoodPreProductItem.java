@@ -19,6 +19,7 @@ import java.util.List;
 public class FoodPreProductItem implements Serializable {
 
     private Integer preId;
+    private Integer businessAccountId;
     private String preNo;
     private Integer preKind;            // 1:仕込品 2:中間加工品 3:完成品
     private String preName;

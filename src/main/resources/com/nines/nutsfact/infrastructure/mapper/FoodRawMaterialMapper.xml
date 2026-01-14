@@ -127,6 +127,7 @@
     <!-- 原材料のResultMap -->
     <resultMap id="foodRawMaterialResult" type="com.nines.nutsfact.domain.model.FoodRawMaterial">
         <id property="foodId" column="food_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="foodNo" column="food_no"/>
         <result property="foodGroupId" column="food_group_id"/>
         <result property="indexNo" column="index_no"/>
@@ -171,7 +172,7 @@
     </resultMap>
 
     <sql id="selectColumns">
-        food_id, food_no, food_group_id, index_no, class_category_id,
+        food_id, business_account_id, food_no, food_group_id, index_no, class_category_id,
         original_food_id, original_food_group_id, original_food_no, original_index_no, original_food_name,
         food_name, food_fuku_bunrui, food_rui_kubun, food_dai_bunrui, food_cyu_bunrui, food_syo_bunrui, food_saibun,
         category_id, hashtag, composite_raw_materials_kb, price_per_unit,
@@ -203,6 +204,23 @@
         WHERE category_id = #{categoryId}
     </select>
 
+    <!-- ビジネスアカウントIDとカテゴリで原材料を取得 -->
+    <select id="findByCategoryAndBusinessAccountId" resultMap="foodRawMaterialResult">
+        SELECT <include refid="selectColumns"/>
+        FROM VFOOD_RAW_MATERIALS
+        WHERE category_id = #{categoryId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
+    <!-- ビジネスアカウントIDで原材料を取得 -->
+    <select id="findByBusinessAccountId" resultMap="foodRawMaterialResult">
+        SELECT <include refid="selectColumns"/>
+        FROM VFOOD_RAW_MATERIALS
+        WHERE business_account_id = #{businessAccountId}
+    </select>
+
     <select id="findSelectItems" resultType="com.nines.nutsfact.domain.model.SelectItem">
         SELECT food_id as id, food_name as name, food_no as no, IFNULL(maker_name, '') as description
         FROM VFOOD_RAW_MATERIALS
@@ -219,6 +237,16 @@
         WHERE food_id = #{id}
     </select>
 
+    <!-- IDとビジネスアカウントIDで原材料を取得（categoryId=1,2は除外可能） -->
+    <select id="findByIdAndBusinessAccountId" resultMap="foodRawMaterialResult">
+        SELECT <include refid="selectColumns"/>
+        FROM VFOOD_RAW_MATERIALS
+        WHERE food_id = #{id}
+        <if test="businessAccountId != null">
+            AND (category_id IN (1, 2) OR business_account_id = #{businessAccountId})
+        </if>
+    </select>
+
     <select id="findByFoodNo" resultMap="foodRawMaterialResult">
         SELECT <include refid="selectColumns"/>
         FROM VFOOD_RAW_MATERIALS
@@ -231,7 +259,7 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="entity.foodId">
         INSERT INTO FOOD_RAW_MATERIALS (
-            food_no, food_group_id, index_no, class_category_id,
+            business_account_id, food_no, food_group_id, index_no, class_category_id,
             original_food_id, original_food_group_id, original_food_no, original_index_no,
             food_name, food_fuku_bunrui, food_rui_kubun, food_dai_bunrui, food_cyu_bunrui, food_syo_bunrui, food_saibun,
             original_food_name, category_id, hashtag, composite_raw_materials_kb, price_per_unit,
@@ -249,7 +277,7 @@
             vitb6a, vitb6a_flag, vitb12, vitb12_flag, fol, fol_flag, pantac, pantac_flag, biot, biot_flag,
             vitc, vitc_flag, alc, alc_flag, nacl_eq, nacl_eq_flag
         ) VALUES (
-            #{entity.foodNo}, #{entity.foodGroupId}, #{entity.indexNo}, #{entity.classCategoryId},
+            #{entity.businessAccountId}, #{entity.foodNo}, #{entity.foodGroupId}, #{entity.indexNo}, #{entity.classCategoryId},
             #{entity.originalFoodId}, #{entity.originalFoodGroupId}, #{entity.originalFoodNo}, #{entity.originalIndexNo},
             #{entity.foodName}, #{entity.foodFukuBunrui}, #{entity.foodRuiKubun}, #{entity.foodDaiBunrui},
             #{entity.foodCyuBunrui}, #{entity.foodSyoBunrui}, #{entity.foodSaibun},
@@ -353,9 +381,21 @@
             description_flag = #{entity.descriptionFlag},
             is_active = #{entity.isActive}
         WHERE food_id = #{entity.foodId}
+        <if test="entity.businessAccountId != null">
+            AND business_account_id = #{entity.businessAccountId}
+        </if>
     </update>
 
     <delete id="delete">
         DELETE FROM FOOD_RAW_MATERIALS WHERE food_id = #{id}
+    </delete>
+
+    <!-- ビジネスアカウントIDを条件に含む削除 -->
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM FOOD_RAW_MATERIALS
+        WHERE food_id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 </mapper>

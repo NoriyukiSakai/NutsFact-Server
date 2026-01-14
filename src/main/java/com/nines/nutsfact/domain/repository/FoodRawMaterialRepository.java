@@ -23,12 +23,24 @@ public class FoodRawMaterialRepository {
         return mapper.findByCategory(categoryId);
     }
 
+    public List<FoodRawMaterial> findByCategoryAndBusinessAccountId(Integer categoryId, Integer businessAccountId) {
+        return mapper.findByCategoryAndBusinessAccountId(categoryId, businessAccountId);
+    }
+
+    public List<FoodRawMaterial> findByBusinessAccountId(Integer businessAccountId) {
+        return mapper.findByBusinessAccountId(businessAccountId);
+    }
+
     public List<SelectItem> findSelectItems(Integer categoryId) {
         return mapper.findSelectItems(categoryId);
     }
 
     public Optional<FoodRawMaterial> findById(Integer id) {
         return mapper.findById(id);
+    }
+
+    public Optional<FoodRawMaterial> findByIdAndBusinessAccountId(Integer id, Integer businessAccountId) {
+        return mapper.findByIdAndBusinessAccountId(id, businessAccountId);
     }
 
     public Optional<FoodRawMaterial> findByFoodNo(String foodNo) {
@@ -45,6 +57,10 @@ public class FoodRawMaterialRepository {
 
     public int delete(Integer id) {
         return mapper.delete(id);
+    }
+
+    public int deleteByIdAndBusinessAccountId(Integer id, Integer businessAccountId) {
+        return mapper.deleteByIdAndBusinessAccountId(id, businessAccountId);
     }
 
     public Integer getLastInsertId() {

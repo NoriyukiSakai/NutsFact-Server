@@ -37,7 +37,13 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> getData(Authentication authentication) {
         AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
 
-        List<User> users = userService.findByBusinessAccountId(authUser.getBusinessAccountId());
+        // businessAccountIdがnullの場合は空リストを返す
+        List<User> users;
+        if (authUser.getBusinessAccountId() == null) {
+            users = List.of();
+        } else {
+            users = userService.findByBusinessAccountId(authUser.getBusinessAccountId());
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -80,6 +86,9 @@ public class UserController {
         }
         if (request.getProfileImageUrl() != null) {
             existing.setProfileImageUrl(request.getProfileImageUrl());
+        }
+        if (request.getPhone() != null) {
+            existing.setPhone(request.getPhone());
         }
         if (request.getIsActive() != null) {
             existing.setIsActive(request.getIsActive());
@@ -154,6 +163,7 @@ public class UserController {
         response.put("name", user.getName());
         response.put("role", user.getRole());
         response.put("profileImageUrl", user.getProfileImageUrl());
+        response.put("phone", user.getPhone());
         response.put("lastLoginAt", user.getLastSignInAt());
         response.put("createDate", user.getCreatedDate());
         response.put("lastUpdateDate", user.getLastUpdateDate());

@@ -33,7 +33,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/**").permitAll()
-                .requestMatchers("/apix/Auth/signUp", "/apix/Auth/signIn", "/apix/Auth/signInWithOAuth").permitAll()
+                .requestMatchers("/apix/Auth/signUp", "/apix/Auth/signIn", "/apix/Auth/signInWithOAuth", "/apix/Auth/signUpWithInvitationCode").permitAll()
                 .requestMatchers("/apix/Auth/refreshToken", "/apix/Auth/requestPasswordReset").permitAll()
                 .requestMatchers("/apix/InvitationCode/verify").permitAll()
                 .requestMatchers("/apix/FoodRawMaterial/**").permitAll()

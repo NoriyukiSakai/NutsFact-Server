@@ -4,6 +4,7 @@
 
     <resultMap id="MakerResultMap" type="com.nines.nutsfact.domain.model.master.Maker">
         <id property="makerId" column="maker_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
         <result property="makerName" column="maker_name"/>
         <result property="contactInfo" column="contact_info"/>
         <result property="address" column="address"/>
@@ -13,20 +14,36 @@
     </resultMap>
 
     <select id="findAll" resultMap="MakerResultMap">
-        SELECT maker_id, maker_name, contact_info, address, phone_number, email, is_active
+        SELECT maker_id, business_account_id, maker_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_MAKER
         ORDER BY maker_id
     </select>
 
+    <select id="findByBusinessAccountId" resultMap="MakerResultMap">
+        SELECT maker_id, business_account_id, maker_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_MAKER
+        WHERE business_account_id = #{businessAccountId}
+        ORDER BY maker_id
+    </select>
+
     <select id="findById" resultMap="MakerResultMap">
-        SELECT maker_id, maker_name, contact_info, address, phone_number, email, is_active
+        SELECT maker_id, business_account_id, maker_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_MAKER
         WHERE maker_id = #{makerId}
     </select>
 
+    <select id="findByIdAndBusinessAccountId" resultMap="MakerResultMap">
+        SELECT maker_id, business_account_id, maker_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_MAKER
+        WHERE maker_id = #{makerId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.Maker" useGeneratedKeys="true" keyProperty="makerId">
-        INSERT INTO MASTER_MAKER (maker_name, contact_info, address, phone_number, email, is_active)
-        VALUES (#{makerName}, #{contactInfo}, #{address}, #{phoneNumber}, #{email}, #{isActive})
+        INSERT INTO MASTER_MAKER (business_account_id, maker_name, contact_info, address, phone_number, email, is_active)
+        VALUES (#{businessAccountId}, #{makerName}, #{contactInfo}, #{address}, #{phoneNumber}, #{email}, #{isActive})
     </insert>
 
     <update id="update" parameterType="com.nines.nutsfact.domain.model.master.Maker">
@@ -38,10 +55,21 @@
             email = #{email},
             is_active = #{isActive}
         WHERE maker_id = #{makerId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </update>
 
     <delete id="delete">
         DELETE FROM MASTER_MAKER WHERE maker_id = #{makerId}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM MASTER_MAKER
+        WHERE maker_id = #{makerId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
     </delete>
 
 </mapper>
