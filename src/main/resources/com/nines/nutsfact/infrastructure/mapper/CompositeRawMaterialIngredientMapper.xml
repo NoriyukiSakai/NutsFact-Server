@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.CompositeRawMaterialIngredientMapper">
+
+    <resultMap id="CompositeRawMaterialIngredientResultMap" type="com.nines.nutsfact.domain.model.CompositeRawMaterialIngredient">
+        <id property="id" column="id"/>
+        <result property="businessAccountId" column="business_account_id"/>
+        <result property="foodId" column="food_id"/>
+        <result property="displayOrder" column="display_order"/>
+        <result property="ingredientFoodId" column="ingredient_food_id"/>
+        <result property="ingredientName" column="ingredient_name"/>
+        <result property="ratio" column="ratio"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createDate" column="create_date"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+    </resultMap>
+
+    <select id="findByFoodId" resultMap="CompositeRawMaterialIngredientResultMap">
+        SELECT id, business_account_id, food_id, display_order, ingredient_food_id, ingredient_name,
+               ratio, is_active, create_date, last_update_date
+        FROM COMPOSITE_RAW_MATERIAL_INGREDIENT
+        WHERE food_id = #{foodId}
+        ORDER BY display_order, id
+    </select>
+
+    <select id="findByFoodIdAndBusinessAccountId" resultMap="CompositeRawMaterialIngredientResultMap">
+        SELECT id, business_account_id, food_id, display_order, ingredient_food_id, ingredient_name,
+               ratio, is_active, create_date, last_update_date
+        FROM COMPOSITE_RAW_MATERIAL_INGREDIENT
+        WHERE food_id = #{foodId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+        ORDER BY display_order, id
+    </select>
+
+    <select id="findById" resultMap="CompositeRawMaterialIngredientResultMap">
+        SELECT id, business_account_id, food_id, display_order, ingredient_food_id, ingredient_name,
+               ratio, is_active, create_date, last_update_date
+        FROM COMPOSITE_RAW_MATERIAL_INGREDIENT
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByIdAndBusinessAccountId" resultMap="CompositeRawMaterialIngredientResultMap">
+        SELECT id, business_account_id, food_id, display_order, ingredient_food_id, ingredient_name,
+               ratio, is_active, create_date, last_update_date
+        FROM COMPOSITE_RAW_MATERIAL_INGREDIENT
+        WHERE id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
+    <select id="getLastInsertId" resultType="Integer">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="entity.id">
+        INSERT INTO COMPOSITE_RAW_MATERIAL_INGREDIENT (business_account_id, food_id, display_order,
+                                                       ingredient_food_id, ingredient_name, ratio, is_active)
+        VALUES (#{entity.businessAccountId}, #{entity.foodId}, #{entity.displayOrder},
+                #{entity.ingredientFoodId}, #{entity.ingredientName}, #{entity.ratio}, #{entity.isActive})
+    </insert>
+
+    <update id="update">
+        UPDATE COMPOSITE_RAW_MATERIAL_INGREDIENT
+        SET display_order = #{entity.displayOrder},
+            ingredient_food_id = #{entity.ingredientFoodId},
+            ingredient_name = #{entity.ingredientName},
+            ratio = #{entity.ratio},
+            is_active = #{entity.isActive}
+        WHERE id = #{entity.id}
+        <if test="entity.businessAccountId != null">
+            AND business_account_id = #{entity.businessAccountId}
+        </if>
+    </update>
+
+    <delete id="delete">
+        DELETE FROM COMPOSITE_RAW_MATERIAL_INGREDIENT WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM COMPOSITE_RAW_MATERIAL_INGREDIENT
+        WHERE id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </delete>
+
+    <delete id="deleteByFoodId">
+        DELETE FROM COMPOSITE_RAW_MATERIAL_INGREDIENT WHERE food_id = #{foodId}
+    </delete>
+
+    <delete id="deleteByFoodIdAndBusinessAccountId">
+        DELETE FROM COMPOSITE_RAW_MATERIAL_INGREDIENT
+        WHERE food_id = #{foodId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </delete>
+
+</mapper>

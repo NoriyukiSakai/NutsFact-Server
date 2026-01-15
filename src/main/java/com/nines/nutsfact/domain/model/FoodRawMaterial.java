@@ -50,7 +50,8 @@ public class FoodRawMaterial implements Serializable {
 
     // === 価格・取引先情報 ===
     private Boolean compositeRawMaterialsKb;    // 複合原材料フラグ
-    private Float pricePerUnit;                  // 100グラム単価
+    private Float pricePerUnit;                  // 加重平均単価（100グラム当たり）
+    private Float lastPricePerUnit;              // 最終仕入単価（100グラム当たり）
     private Integer makerId;
     private String makerName;
     private Integer sellerId;

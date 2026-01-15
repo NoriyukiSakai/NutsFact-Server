@@ -13,6 +13,11 @@ spring:
     password: ${DB_PASSWORD:root@1}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
   jackson:
     property-naming-strategy: SNAKE_CASE
     serialization:

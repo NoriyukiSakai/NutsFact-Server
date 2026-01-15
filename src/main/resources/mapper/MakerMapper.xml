@@ -26,6 +26,13 @@
         ORDER BY maker_id
     </select>
 
+    <select id="findByBusinessAccountIdIsNull" resultMap="MakerResultMap">
+        SELECT maker_id, business_account_id, maker_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_MAKER
+        WHERE business_account_id IS NULL
+        ORDER BY maker_id
+    </select>
+
     <select id="findById" resultMap="MakerResultMap">
         SELECT maker_id, business_account_id, maker_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_MAKER

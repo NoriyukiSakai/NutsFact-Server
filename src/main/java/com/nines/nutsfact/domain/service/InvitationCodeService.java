@@ -127,7 +127,11 @@ public class InvitationCodeService {
             return InvitationCodeVerifyResult.invalid("EXPIRED", "この招待コードは有効期限が切れています");
         }
 
-        return InvitationCodeVerifyResult.valid(invitationCode);
+        // 既存ユーザーチェック
+        User existingUser = userRepository.findByEmail(email).orElse(null);
+        String existingProvider = existingUser != null ? existingUser.getProvider() : null;
+
+        return InvitationCodeVerifyResult.valid(invitationCode, existingUser != null, existingProvider);
     }
 
     @Transactional
@@ -155,26 +159,35 @@ public class InvitationCodeService {
         private final InvitationCode invitationCode;
         private final String errorCode;
         private final String errorMessage;
+        private final boolean existingUser;
+        private final String existingProvider;
 
         private InvitationCodeVerifyResult(boolean valid, InvitationCode invitationCode,
-                                            String errorCode, String errorMessage) {
+                                            String errorCode, String errorMessage,
+                                            boolean existingUser, String existingProvider) {
             this.valid = valid;
             this.invitationCode = invitationCode;
             this.errorCode = errorCode;
             this.errorMessage = errorMessage;
+            this.existingUser = existingUser;
+            this.existingProvider = existingProvider;
         }
 
-        public static InvitationCodeVerifyResult valid(InvitationCode invitationCode) {
-            return new InvitationCodeVerifyResult(true, invitationCode, null, null);
+        public static InvitationCodeVerifyResult valid(InvitationCode invitationCode,
+                                                        boolean existingUser, String existingProvider) {
+            return new InvitationCodeVerifyResult(true, invitationCode, null, null,
+                                                   existingUser, existingProvider);
         }
 
         public static InvitationCodeVerifyResult invalid(String errorCode, String errorMessage) {
-            return new InvitationCodeVerifyResult(false, null, errorCode, errorMessage);
+            return new InvitationCodeVerifyResult(false, null, errorCode, errorMessage, false, null);
         }
 
         public boolean isValid() { return valid; }
         public InvitationCode getInvitationCode() { return invitationCode; }
         public String getErrorCode() { return errorCode; }
         public String getErrorMessage() { return errorMessage; }
+        public boolean isExistingUser() { return existingUser; }
+        public String getExistingProvider() { return existingProvider; }
     }
 }

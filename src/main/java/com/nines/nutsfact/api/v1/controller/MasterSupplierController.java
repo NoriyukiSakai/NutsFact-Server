@@ -41,13 +41,7 @@ public class MasterSupplierController {
         Supplier supplier = supplierService.findByIdWithBusinessAccountFilter(id);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
-        response.put("supplierId", supplier.getSupplierId());
-        response.put("supplierName", supplier.getSupplierName());
-        response.put("contactInfo", supplier.getContactInfo());
-        response.put("address", supplier.getAddress());
-        response.put("phoneNumber", supplier.getPhoneNumber());
-        response.put("email", supplier.getEmail());
-        response.put("isActive", supplier.getIsActive());
+        response.put("item", supplier);
         return ResponseEntity.ok(response);
     }
 
@@ -108,13 +102,7 @@ public class MasterSupplierController {
     private Map<String, Object> buildResponse(Supplier supplier) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
-        response.put("supplierId", supplier.getSupplierId());
-        response.put("supplierName", supplier.getSupplierName());
-        response.put("contactInfo", supplier.getContactInfo());
-        response.put("address", supplier.getAddress());
-        response.put("phoneNumber", supplier.getPhoneNumber());
-        response.put("email", supplier.getEmail());
-        response.put("isActive", supplier.getIsActive());
+        response.put("item", supplier);
         return response;
     }
 }

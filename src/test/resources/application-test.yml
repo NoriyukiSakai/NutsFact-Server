@@ -1,0 +1,53 @@
+# Test configuration for NutsFact Server
+# This profile is used for unit and integration tests
+
+spring:
+  datasource:
+    # Use H2 in-memory database for tests
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  sql:
+    init:
+      mode: never
+
+# MyBatis configuration
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/**/*.xml
+
+# JWT configuration for tests
+jwt:
+  secret: test-secret-key-for-unit-tests-minimum-32-chars
+  access-token-expiration: 3600
+  refresh-token-expiration: 604800
+
+# Logging configuration
+logging:
+  level:
+    root: WARN
+    com.nines.nutsfact: DEBUG
+    org.springframework.security: DEBUG
+    org.mybatis: DEBUG
+
+# Server configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# Security settings for tests
+security:
+  require-ssl: false

@@ -12,6 +12,8 @@ public interface ClassCategoryMapper {
     List<ClassCategory> findAll();
     List<ClassCategory> findByType(@Param("categoryType") Integer categoryType);
     List<ClassCategory> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
+    List<ClassCategory> findByBusinessAccountIdIsNull();
+    List<ClassCategory> findByTypeAndBusinessAccountIdIsNull(@Param("categoryType") Integer categoryType);
     List<ClassCategory> findByTypeAndBusinessAccountId(
             @Param("categoryType") Integer categoryType,
             @Param("businessAccountId") Integer businessAccountId);

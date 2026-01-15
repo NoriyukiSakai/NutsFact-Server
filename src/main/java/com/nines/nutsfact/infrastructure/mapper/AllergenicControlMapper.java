@@ -11,6 +11,7 @@ import com.nines.nutsfact.domain.model.allergy.AllergenicControl;
 public interface AllergenicControlMapper {
     List<AllergenicControl> findAll();
     List<AllergenicControl> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
+    List<AllergenicControl> findByBusinessAccountIdIsNull();
     AllergenicControl findByFoodId(@Param("foodId") Integer foodId);
     AllergenicControl findByFoodIdAndBusinessAccountId(
             @Param("foodId") Integer foodId,

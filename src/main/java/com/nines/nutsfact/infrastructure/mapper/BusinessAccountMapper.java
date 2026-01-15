@@ -12,6 +12,7 @@ public interface BusinessAccountMapper {
     List<BusinessAccount> findAll();
     BusinessAccount findById(@Param("id") Integer id);
     BusinessAccount findByCode(@Param("code") String code);
+    BusinessAccount findHeadquarters();
     void insert(BusinessAccount businessAccount);
     void update(BusinessAccount businessAccount);
     void updateStatus(@Param("id") Integer id, @Param("registrationStatus") Integer registrationStatus);

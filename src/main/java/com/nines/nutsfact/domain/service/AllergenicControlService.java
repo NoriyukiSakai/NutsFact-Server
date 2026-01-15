@@ -28,7 +28,8 @@ public class AllergenicControlService {
         if (businessAccountId != null) {
             return allergenicControlRepository.findByBusinessAccountId(businessAccountId);
         }
-        return allergenicControlRepository.findAll();
+        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
+        return allergenicControlRepository.findByBusinessAccountIdIsNull();
     }
 
     public AllergenicControl findByFoodId(Integer foodId) {

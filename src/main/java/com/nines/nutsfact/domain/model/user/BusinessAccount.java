@@ -15,6 +15,7 @@ public class BusinessAccount {
     private Integer registrationStatus;
     private Integer maxUserCount;
     private Integer currentUserCount;
+    private Boolean isHeadquarters;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
     private Boolean isActive;

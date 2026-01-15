@@ -34,7 +34,8 @@ public class FoodPreProductService {
         if (businessAccountId != null) {
             return repository.findByBusinessAccountId(businessAccountId);
         }
-        return repository.findAll();
+        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
+        return repository.findByBusinessAccountIdIsNull();
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +49,8 @@ public class FoodPreProductService {
         if (businessAccountId != null) {
             return repository.findByKindAndBusinessAccountId(preKind, businessAccountId);
         }
-        return repository.findByKind(preKind);
+        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
+        return repository.findByKindAndBusinessAccountIdIsNull(preKind);
     }
 
     @Transactional(readOnly = true)

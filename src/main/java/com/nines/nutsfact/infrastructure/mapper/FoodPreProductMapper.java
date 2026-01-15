@@ -21,6 +21,10 @@ public interface FoodPreProductMapper {
 
     List<FoodPreProductItem> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
 
+    List<FoodPreProductItem> findByBusinessAccountIdIsNull();
+
+    List<FoodPreProductItem> findByKindAndBusinessAccountIdIsNull(@Param("preKind") Integer preKind);
+
     List<SelectItem> findSelectItems(@Param("preKind") Integer preKind);
 
     Optional<FoodPreProductItem> findById(@Param("id") Integer id);

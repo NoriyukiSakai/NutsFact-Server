@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.FoodCompositionDictionaryMapper">
+
+    <resultMap id="foodCompositionDictionaryResult" type="com.nines.nutsfact.domain.model.FoodCompositionDictionary">
+        <id property="foodId" column="food_id"/>
+        <result property="foodGroupId" column="food_group_id"/>
+        <result property="foodNo" column="food_no"/>
+        <result property="indexNo" column="index_no"/>
+        <result property="foodName" column="food_name"/>
+        <result property="foodFukuBunrui" column="food_fuku_bunrui"/>
+        <result property="foodRuiKubun" column="food_rui_kubun"/>
+        <result property="foodDaiBunrui" column="food_dai_bunrui"/>
+        <result property="foodCyuBunrui" column="food_cyu_bunrui"/>
+        <result property="foodSyoBunrui" column="food_syo_bunrui"/>
+        <result property="foodSaibun" column="food_saibun"/>
+        <result property="refuse" column="refuse"/>
+        <result property="enerc" column="enerc"/>
+        <result property="enercKcal" column="enerc_kcal"/>
+        <result property="water" column="water"/>
+        <result property="waterFlag" column="water_flag"/>
+        <result property="protcaa" column="protcaa"/>
+        <result property="protcaaFlag" column="protcaa_flag"/>
+        <result property="prot" column="prot"/>
+        <result property="protFlag" column="prot_flag"/>
+        <result property="fatnlea" column="fatnlea"/>
+        <result property="fatnleaFlag" column="fatnlea_flag"/>
+        <result property="chole" column="chole"/>
+        <result property="choleFlag" column="chole_flag"/>
+        <result property="fat" column="fat"/>
+        <result property="fatFlag" column="fat_flag"/>
+        <result property="choavlm" column="choavlm"/>
+        <result property="choavlmFlag" column="choavlm_flag"/>
+        <result property="choavlmMark" column="choavlm_mark"/>
+        <result property="choavl" column="choavl"/>
+        <result property="choavlFlag" column="choavl_flag"/>
+        <result property="choavldf" column="choavldf"/>
+        <result property="choavldfFlag" column="choavldf_flag"/>
+        <result property="choavldfMark" column="choavldf_mark"/>
+        <result property="fib" column="fib"/>
+        <result property="fibFlag" column="fib_flag"/>
+        <result property="polyl" column="polyl"/>
+        <result property="polylFlag" column="polyl_flag"/>
+        <result property="chocdf" column="chocdf"/>
+        <result property="chocdfFlag" column="chocdf_flag"/>
+        <result property="oa" column="oa"/>
+        <result property="oaFlag" column="oa_flag"/>
+        <result property="ash" column="ash"/>
+        <result property="ashFlag" column="ash_flag"/>
+        <result property="na" column="na"/>
+        <result property="naFlag" column="na_flag"/>
+        <result property="k" column="k"/>
+        <result property="kFlag" column="k_flag"/>
+        <result property="ca" column="ca"/>
+        <result property="caFlag" column="ca_flag"/>
+        <result property="mg" column="mg"/>
+        <result property="mgFlag" column="mg_flag"/>
+        <result property="p" column="p"/>
+        <result property="pFlag" column="p_flag"/>
+        <result property="fe" column="fe"/>
+        <result property="feFlag" column="fe_flag"/>
+        <result property="zn" column="zn"/>
+        <result property="znFlag" column="zn_flag"/>
+        <result property="cu" column="cu"/>
+        <result property="cuFlag" column="cu_flag"/>
+        <result property="mn" column="mn"/>
+        <result property="mnFlag" column="mn_flag"/>
+        <result property="id" column="id"/>
+        <result property="idFlag" column="id_flag"/>
+        <result property="se" column="se"/>
+        <result property="seFlag" column="se_flag"/>
+        <result property="cr" column="cr"/>
+        <result property="crFlag" column="cr_flag"/>
+        <result property="mo" column="mo"/>
+        <result property="moFlag" column="mo_flag"/>
+        <result property="ret" column="ret"/>
+        <result property="retFlag" column="ret_flag"/>
+        <result property="carta" column="carta"/>
+        <result property="cartaFlag" column="carta_flag"/>
+        <result property="cartb" column="cartb"/>
+        <result property="cartbFlag" column="cartb_flag"/>
+        <result property="crypxb" column="crypxb"/>
+        <result property="crypxbFlag" column="crypxb_flag"/>
+        <result property="cartbeq" column="cartbeq"/>
+        <result property="cartbeqFlag" column="cartbeq_flag"/>
+        <result property="vitaRae" column="vita_rae"/>
+        <result property="vitaRaeFlag" column="vita_rae_flag"/>
+        <result property="vitd" column="vitd"/>
+        <result property="vitdFlag" column="vitd_flag"/>
+        <result property="tocpha" column="tocpha"/>
+        <result property="tocphaFlag" column="tocpha_flag"/>
+        <result property="tocphb" column="tocphb"/>
+        <result property="tocphbFlag" column="tocphb_flag"/>
+        <result property="tocphg" column="tocphg"/>
+        <result property="tocphgFlag" column="tocphg_flag"/>
+        <result property="tocphd" column="tocphd"/>
+        <result property="tocphdFlag" column="tocphd_flag"/>
+        <result property="vitk" column="vitk"/>
+        <result property="vitkFlag" column="vitk_flag"/>
+        <result property="thia" column="thia"/>
+        <result property="thiaFlag" column="thia_flag"/>
+        <result property="ribf" column="ribf"/>
+        <result property="ribfFlag" column="ribf_flag"/>
+        <result property="nia" column="nia"/>
+        <result property="niaFlag" column="nia_flag"/>
+        <result property="niac" column="niac"/>
+        <result property="niacFlag" column="niac_flag"/>
+        <result property="vitb6a" column="vitb6a"/>
+        <result property="vitb6aFlag" column="vitb6a_flag"/>
+        <result property="vitb12" column="vitb12"/>
+        <result property="vitb12Flag" column="vitb12_flag"/>
+        <result property="fol" column="fol"/>
+        <result property="folFlag" column="fol_flag"/>
+        <result property="pantac" column="pantac"/>
+        <result property="pantacFlag" column="pantac_flag"/>
+        <result property="biot" column="biot"/>
+        <result property="biotFlag" column="biot_flag"/>
+        <result property="vitc" column="vitc"/>
+        <result property="vitcFlag" column="vitc_flag"/>
+        <result property="alc" column="alc"/>
+        <result property="alcFlag" column="alc_flag"/>
+        <result property="naclEq" column="nacl_eq"/>
+        <result property="naclEqFlag" column="nacl_eq_flag"/>
+        <result property="description" column="description"/>
+        <result property="historyId" column="history_id"/>
+        <result property="isActive" column="is_active"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        food_id, food_group_id, food_no, index_no, food_name,
+        food_fuku_bunrui, food_rui_kubun, food_dai_bunrui, food_cyu_bunrui, food_syo_bunrui, food_saibun,
+        refuse, enerc, enerc_kcal, water, water_flag,
+        protcaa, protcaa_flag, prot, prot_flag, fatnlea, fatnlea_flag, chole, chole_flag, fat, fat_flag,
+        choavlm, choavlm_flag, choavlm_mark, choavl, choavl_flag, choavldf, choavldf_flag, choavldf_mark,
+        fib, fib_flag, polyl, polyl_flag, chocdf, chocdf_flag, oa, oa_flag, ash, ash_flag,
+        na, na_flag, k, k_flag, ca, ca_flag, mg, mg_flag, p, p_flag, fe, fe_flag, zn, zn_flag,
+        cu, cu_flag, mn, mn_flag, id, id_flag, se, se_flag, cr, cr_flag, mo, mo_flag,
+        ret, ret_flag, carta, carta_flag, cartb, cartb_flag, crypxb, crypxb_flag, cartbeq, cartbeq_flag, vita_rae, vita_rae_flag,
+        vitd, vitd_flag, tocpha, tocpha_flag, tocphb, tocphb_flag, tocphg, tocphg_flag, tocphd, tocphd_flag,
+        vitk, vitk_flag, thia, thia_flag, ribf, ribf_flag, nia, nia_flag, niac, niac_flag,
+        vitb6a, vitb6a_flag, vitb12, vitb12_flag, fol, fol_flag, pantac, pantac_flag, biot, biot_flag,
+        vitc, vitc_flag, alc, alc_flag, nacl_eq, nacl_eq_flag, description, history_id, is_active
+    </sql>
+
+    <select id="findAll" resultMap="foodCompositionDictionaryResult">
+        SELECT <include refid="selectColumns"/>
+        FROM FOOD_COMPOSITION_DICTIONARY
+    </select>
+
+    <select id="findById" resultMap="foodCompositionDictionaryResult">
+        SELECT <include refid="selectColumns"/>
+        FROM FOOD_COMPOSITION_DICTIONARY
+        WHERE food_id = #{id}
+    </select>
+
+    <select id="findByFoodGroupId" resultMap="foodCompositionDictionaryResult">
+        SELECT <include refid="selectColumns"/>
+        FROM FOOD_COMPOSITION_DICTIONARY
+        WHERE food_group_id = #{foodGroupId}
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM FOOD_COMPOSITION_DICTIONARY
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="entity.foodId">
+        INSERT INTO FOOD_COMPOSITION_DICTIONARY (
+            food_group_id, food_no, index_no, food_name,
+            food_fuku_bunrui, food_rui_kubun, food_dai_bunrui, food_cyu_bunrui, food_syo_bunrui, food_saibun,
+            refuse, enerc, enerc_kcal, water, water_flag,
+            protcaa, protcaa_flag, prot, prot_flag, fatnlea, fatnlea_flag, chole, chole_flag, fat, fat_flag,
+            choavlm, choavlm_flag, choavlm_mark, choavl, choavl_flag, choavldf, choavldf_flag, choavldf_mark,
+            fib, fib_flag, polyl, polyl_flag, chocdf, chocdf_flag, oa, oa_flag, ash, ash_flag,
+            na, na_flag, k, k_flag, ca, ca_flag, mg, mg_flag, p, p_flag, fe, fe_flag, zn, zn_flag,
+            cu, cu_flag, mn, mn_flag, id, id_flag, se, se_flag, cr, cr_flag, mo, mo_flag,
+            ret, ret_flag, carta, carta_flag, cartb, cartb_flag, crypxb, crypxb_flag, cartbeq, cartbeq_flag, vita_rae, vita_rae_flag,
+            vitd, vitd_flag, tocpha, tocpha_flag, tocphb, tocphb_flag, tocphg, tocphg_flag, tocphd, tocphd_flag,
+            vitk, vitk_flag, thia, thia_flag, ribf, ribf_flag, nia, nia_flag, niac, niac_flag,
+            vitb6a, vitb6a_flag, vitb12, vitb12_flag, fol, fol_flag, pantac, pantac_flag, biot, biot_flag,
+            vitc, vitc_flag, alc, alc_flag, nacl_eq, nacl_eq_flag, description, history_id, is_active
+        ) VALUES (
+            #{entity.foodGroupId}, #{entity.foodNo}, #{entity.indexNo}, #{entity.foodName},
+            #{entity.foodFukuBunrui}, #{entity.foodRuiKubun}, #{entity.foodDaiBunrui}, #{entity.foodCyuBunrui}, #{entity.foodSyoBunrui}, #{entity.foodSaibun},
+            #{entity.refuse}, #{entity.enerc}, #{entity.enercKcal}, #{entity.water}, #{entity.waterFlag},
+            #{entity.protcaa}, #{entity.protcaaFlag}, #{entity.prot}, #{entity.protFlag}, #{entity.fatnlea}, #{entity.fatnleaFlag}, #{entity.chole}, #{entity.choleFlag}, #{entity.fat}, #{entity.fatFlag},
+            #{entity.choavlm}, #{entity.choavlmFlag}, #{entity.choavlmMark}, #{entity.choavl}, #{entity.choavlFlag}, #{entity.choavldf}, #{entity.choavldfFlag}, #{entity.choavldfMark},
+            #{entity.fib}, #{entity.fibFlag}, #{entity.polyl}, #{entity.polylFlag}, #{entity.chocdf}, #{entity.chocdfFlag}, #{entity.oa}, #{entity.oaFlag}, #{entity.ash}, #{entity.ashFlag},
+            #{entity.na}, #{entity.naFlag}, #{entity.k}, #{entity.kFlag}, #{entity.ca}, #{entity.caFlag}, #{entity.mg}, #{entity.mgFlag}, #{entity.p}, #{entity.pFlag}, #{entity.fe}, #{entity.feFlag}, #{entity.zn}, #{entity.znFlag},
+            #{entity.cu}, #{entity.cuFlag}, #{entity.mn}, #{entity.mnFlag}, #{entity.id}, #{entity.idFlag}, #{entity.se}, #{entity.seFlag}, #{entity.cr}, #{entity.crFlag}, #{entity.mo}, #{entity.moFlag},
+            #{entity.ret}, #{entity.retFlag}, #{entity.carta}, #{entity.cartaFlag}, #{entity.cartb}, #{entity.cartbFlag}, #{entity.crypxb}, #{entity.crypxbFlag}, #{entity.cartbeq}, #{entity.cartbeqFlag}, #{entity.vitaRae}, #{entity.vitaRaeFlag},
+            #{entity.vitd}, #{entity.vitdFlag}, #{entity.tocpha}, #{entity.tocphaFlag}, #{entity.tocphb}, #{entity.tocphbFlag}, #{entity.tocphg}, #{entity.tocphgFlag}, #{entity.tocphd}, #{entity.tocphdFlag},
+            #{entity.vitk}, #{entity.vitkFlag}, #{entity.thia}, #{entity.thiaFlag}, #{entity.ribf}, #{entity.ribfFlag}, #{entity.nia}, #{entity.niaFlag}, #{entity.niac}, #{entity.niacFlag},
+            #{entity.vitb6a}, #{entity.vitb6aFlag}, #{entity.vitb12}, #{entity.vitb12Flag}, #{entity.fol}, #{entity.folFlag}, #{entity.pantac}, #{entity.pantacFlag}, #{entity.biot}, #{entity.biotFlag},
+            #{entity.vitc}, #{entity.vitcFlag}, #{entity.alc}, #{entity.alcFlag}, #{entity.naclEq}, #{entity.naclEqFlag}, #{entity.description}, #{entity.historyId}, #{entity.isActive}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE FOOD_COMPOSITION_DICTIONARY SET
+            food_group_id = #{entity.foodGroupId},
+            food_no = #{entity.foodNo},
+            index_no = #{entity.indexNo},
+            food_name = #{entity.foodName}
+        WHERE food_id = #{entity.foodId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM FOOD_COMPOSITION_DICTIONARY WHERE food_id = #{id}
+    </delete>
+
+    <update id="truncate">
+        TRUNCATE TABLE FOOD_COMPOSITION_DICTIONARY
+    </update>
+</mapper>

@@ -127,6 +127,43 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * ユーザーの所属ビジネスアカウント一覧を取得
+     */
+    @GetMapping("/memberships")
+    public ResponseEntity<Map<String, Object>> getMemberships(Authentication authentication) {
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
+        AuthService.MembershipsResult result = authService.getUserMemberships(authUser.getUserId());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "Success");
+        response.put("userId", result.userId());
+        response.put("memberships", result.memberships());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * ビジネスアカウントを選択（ログイン後のアカウント選択・アカウント切り替え）
+     */
+    @PostMapping("/selectAccount")
+    public ResponseEntity<Map<String, Object>> selectAccount(
+            Authentication authentication,
+            @RequestBody Map<String, Object> request) {
+        AuthenticatedUser authUser = (AuthenticatedUser) authentication.getPrincipal();
+        // クライアントはsnake_case (business_account_id) で送信する
+        Object businessAccountIdObj = request.get("business_account_id");
+        if (businessAccountIdObj == null) {
+            // camelCase (businessAccountId) もサポート（後方互換性）
+            businessAccountIdObj = request.get("businessAccountId");
+        }
+        if (businessAccountIdObj == null) {
+            throw new IllegalArgumentException("business_account_idは必須です");
+        }
+        Integer businessAccountId = ((Number) businessAccountIdObj).intValue();
+        AuthService.AuthResult result = authService.selectBusinessAccount(authUser.getUserId(), businessAccountId);
+        return ResponseEntity.ok(buildAuthResponse(result));
+    }
+
     private Map<String, Object> buildAuthResponse(AuthService.AuthResult result) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
@@ -141,6 +178,11 @@ public class AuthController {
         if (result.message() != null) {
             response.put("message", result.message());
         }
+        // マルチアカウント対応フィールド
+        if (result.memberships() != null && !result.memberships().isEmpty()) {
+            response.put("memberships", result.memberships());
+        }
+        response.put("needsAccountSelection", result.needsAccountSelection());
         return response;
     }
 }

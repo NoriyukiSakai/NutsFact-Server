@@ -11,6 +11,7 @@ import com.nines.nutsfact.domain.model.master.Maker;
 public interface MakerMapper {
     List<Maker> findAll();
     List<Maker> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
+    List<Maker> findByBusinessAccountIdIsNull();
     Maker findById(@Param("makerId") Integer makerId);
     Maker findByIdAndBusinessAccountId(
             @Param("makerId") Integer makerId,

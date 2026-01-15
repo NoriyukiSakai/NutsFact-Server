@@ -30,12 +30,14 @@
     </select>
 
     <select id="findByBusinessAccountId" resultMap="UserResultMap">
-        SELECT user_id, business_account_id, auth_user_id, email, name, role,
-               profile_image_url, phone, password, provider, last_sign_in_at,
-               created_date, last_update_date, is_active, login_failure_count, locked_until
-        FROM USERS
-        WHERE business_account_id = #{businessAccountId}
-        ORDER BY user_id
+        SELECT u.user_id, u.business_account_id, u.auth_user_id, u.email, u.name,
+               m.role as role,
+               u.profile_image_url, u.phone, u.password, u.provider, u.last_sign_in_at,
+               u.created_date, u.last_update_date, u.is_active, u.login_failure_count, u.locked_until
+        FROM USERS u
+        INNER JOIN USER_BUSINESS_ACCOUNT_MEMBERSHIP m ON u.user_id = m.user_id
+        WHERE m.business_account_id = #{businessAccountId}
+        ORDER BY u.user_id
     </select>
 
     <select id="findById" resultMap="UserResultMap">
@@ -94,7 +96,10 @@
     </delete>
 
     <select id="countByBusinessAccountId" resultType="int">
-        SELECT COUNT(*) FROM USERS WHERE business_account_id = #{businessAccountId} AND is_active = true
+        SELECT COUNT(*)
+        FROM USER_BUSINESS_ACCOUNT_MEMBERSHIP m
+        INNER JOIN USERS u ON m.user_id = u.user_id
+        WHERE m.business_account_id = #{businessAccountId} AND u.is_active = true
     </select>
 
     <update id="incrementLoginFailureCount">

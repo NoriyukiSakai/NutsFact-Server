@@ -28,6 +28,14 @@ public class BusinessAccountRepository {
         return Optional.ofNullable(businessAccountMapper.findByCode(code));
     }
 
+    /**
+     * 本部アカウントを取得
+     * @return 本部アカウント（is_headquarters = TRUE）
+     */
+    public Optional<BusinessAccount> findHeadquarters() {
+        return Optional.ofNullable(businessAccountMapper.findHeadquarters());
+    }
+
     public void save(BusinessAccount businessAccount) {
         if (businessAccount.getId() == null) {
             businessAccountMapper.insert(businessAccount);

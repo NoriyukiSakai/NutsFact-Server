@@ -24,6 +24,10 @@ public class SellerRepository {
         return sellerMapper.findByBusinessAccountId(businessAccountId);
     }
 
+    public List<Seller> findByBusinessAccountIdIsNull() {
+        return sellerMapper.findByBusinessAccountIdIsNull();
+    }
+
     public Optional<Seller> findById(Integer sellerId) {
         return Optional.ofNullable(sellerMapper.findById(sellerId));
     }

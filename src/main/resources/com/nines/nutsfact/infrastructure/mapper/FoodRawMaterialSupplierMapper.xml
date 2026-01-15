@@ -23,7 +23,7 @@
                weight_or_capacity, convert_ratio, price_per_unit, create_date, last_update_date, is_active
         FROM vfood_raw_material_supplier
         WHERE food_id = #{foodId}
-        ORDER BY id
+        ORDER BY create_date DESC
     </select>
 
     <select id="findByFoodIdAndBusinessAccountId" resultMap="FoodRawMaterialSupplierResultMap">
@@ -34,7 +34,7 @@
         <if test="businessAccountId != null">
             AND business_account_id = #{businessAccountId}
         </if>
-        ORDER BY id
+        ORDER BY create_date DESC
     </select>
 
     <select id="findById" resultMap="FoodRawMaterialSupplierResultMap">

@@ -11,6 +11,7 @@ import com.nines.nutsfact.domain.model.master.Supplier;
 public interface SupplierMapper {
     List<Supplier> findAll();
     List<Supplier> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
+    List<Supplier> findByBusinessAccountIdIsNull();
     Supplier findById(@Param("supplierId") Integer supplierId);
     Supplier findByIdAndBusinessAccountId(
             @Param("supplierId") Integer supplierId,

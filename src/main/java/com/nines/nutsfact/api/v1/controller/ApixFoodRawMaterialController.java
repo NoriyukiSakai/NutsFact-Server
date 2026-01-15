@@ -101,6 +101,12 @@ public class ApixFoodRawMaterialController {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("item", toFlatMap(created));
+
+        // 新バージョンとして保存された場合はメッセージを追加
+        if (created.getRevisionOfFoodNo() != null && created.getRevisionOfFoodNo() > 0) {
+            response.put("message", "新たなバージョン（リビジョン" + created.getRevisionOfFoodNo() + "）として保存されました");
+        }
+
         return ResponseEntity.ok(response);
     }
 
@@ -340,40 +346,48 @@ public class ApixFoodRawMaterialController {
     private FoodRawMaterial fromFlatMap(Map<String, Object> map) {
         FoodRawMaterial entity = new FoodRawMaterial();
 
-        // 基本情報
-        entity.setFoodId(getInteger(map, "foodId"));
-        entity.setFoodNo(getString(map, "foodNo"));
-        entity.setFoodGroupId(getInteger(map, "foodGroupId"));
-        entity.setIndexNo(getString(map, "indexNo"));
-        entity.setClassCategoryId(getInteger(map, "classCategoryId"));
-        entity.setOriginalFoodId(getInteger(map, "originalFoodId"));
-        entity.setOriginalFoodGroupId(getInteger(map, "originalFoodGroupId"));
-        entity.setOriginalFoodNo(getString(map, "originalFoodNo"));
-        entity.setOriginalIndexNo(getString(map, "originalIndexNo"));
-        entity.setOriginalFoodName(getString(map, "originalFoodName"));
-        entity.setFoodName(getString(map, "foodName"));
-        entity.setFoodFukuBunrui(getString(map, "foodFukuBunrui"));
-        entity.setFoodRuiKubun(getString(map, "foodRuiKubun"));
-        entity.setFoodDaiBunrui(getString(map, "foodDaiBunrui"));
-        entity.setFoodCyuBunrui(getString(map, "foodCyuBunrui"));
-        entity.setFoodSyoBunrui(getString(map, "foodSyoBunrui"));
-        entity.setFoodSaibun(getString(map, "foodSaibun"));
-        entity.setCategoryId(getInteger(map, "categoryId"));
-        entity.setHashtag(getString(map, "hashtag"));
-        entity.setCompositeRawMaterialsKb(getBoolean(map, "compositeRawMaterialsKb"));
-        entity.setPricePerUnit(getFloat(map, "pricePerUnit"));
-        entity.setMakerId(getInteger(map, "makerId"));
-        entity.setSellerId(getInteger(map, "sallerId"));
-        entity.setCompositeRawItemlist(getString(map, "compositeRawItemlist"));
-        entity.setDisplayName(getString(map, "displayName"));
-        entity.setPlaceOfOrigin(getString(map, "placeOfOrigin"));
-        entity.setDisplayPlaceOfOrigin(getString(map, "displayPlaceOfOrigin"));
-        entity.setRevisionOfFoodNo(getInteger(map, "revisionOfFoodNo"));
-        entity.setNextFoodId(getInteger(map, "nextFoodId"));
-        entity.setStatus(getInteger(map, "status"));
-        entity.setUpdateInformation(getString(map, "updateInformation"));
-        entity.setDescription(getString(map, "description"));
-        entity.setIsActive(getBoolean(map, "isActive"));
+        // 基本情報（snake_case/camelCase両対応）
+        entity.setFoodId(getIntegerAny(map, "food_id", "foodId"));
+        entity.setFoodNo(getStringAny(map, "food_no", "foodNo"));
+        entity.setFoodGroupId(getIntegerAny(map, "food_group_id", "foodGroupId"));
+        entity.setIndexNo(getStringAny(map, "index_no", "indexNo"));
+        entity.setClassCategoryId(getIntegerAny(map, "class_category_id", "classCategoryId"));
+        entity.setOriginalFoodId(getIntegerAny(map, "original_food_id", "originalFoodId"));
+        entity.setOriginalFoodGroupId(getIntegerAny(map, "original_food_group_id", "originalFoodGroupId"));
+        entity.setOriginalFoodNo(getStringAny(map, "original_food_no", "originalFoodNo"));
+        entity.setOriginalIndexNo(getStringAny(map, "original_index_no", "originalIndexNo"));
+        entity.setOriginalFoodName(getStringAny(map, "original_food_name", "originalFoodName"));
+        entity.setFoodName(getStringAny(map, "food_name", "foodName"));
+        entity.setFoodFukuBunrui(getStringAny(map, "food_fuku_bunrui", "foodFukuBunrui"));
+        entity.setFoodRuiKubun(getStringAny(map, "food_rui_kubun", "foodRuiKubun"));
+        entity.setFoodDaiBunrui(getStringAny(map, "food_dai_bunrui", "foodDaiBunrui"));
+        entity.setFoodCyuBunrui(getStringAny(map, "food_cyu_bunrui", "foodCyuBunrui"));
+        entity.setFoodSyoBunrui(getStringAny(map, "food_syo_bunrui", "foodSyoBunrui"));
+        entity.setFoodSaibun(getStringAny(map, "food_saibun", "foodSaibun"));
+        entity.setCategoryId(getIntegerAny(map, "category_id", "categoryId"));
+        entity.setHashtag(getStringAny(map, "hashtag", "hashtag"));
+        // compositeRawMaterialsKb はNOT NULL制約があるためデフォルトfalse
+        Boolean compositeKb = getBooleanAny(map, "composite_raw_materials_kb", "compositeRawMaterialsKb");
+        entity.setCompositeRawMaterialsKb(compositeKb != null ? compositeKb : false);
+        entity.setPricePerUnit(getFloatAny(map, "price_per_unit", "pricePerUnit"));
+        entity.setMakerId(getIntegerAny(map, "maker_id", "makerId"));
+        entity.setSellerId(getIntegerAny(map, "saller_id", "sallerId"));
+        entity.setCompositeRawItemlist(getStringAny(map, "composite_raw_itemlist", "compositeRawItemlist"));
+        entity.setDisplayName(getStringAny(map, "display_name", "displayName"));
+        entity.setPlaceOfOrigin(getStringAny(map, "place_of_origin", "placeOfOrigin"));
+        entity.setDisplayPlaceOfOrigin(getStringAny(map, "display_place_of_origin", "displayPlaceOfOrigin"));
+        // revisionOfFoodNo はNOT NULL制約があるためデフォルト0
+        Integer revisionNo = getIntegerAny(map, "revision_of_food_no", "revisionOfFoodNo");
+        entity.setRevisionOfFoodNo(revisionNo != null ? revisionNo : 0);
+        entity.setNextFoodId(getIntegerAny(map, "next_food_id", "nextFoodId"));
+        // status はNOT NULL制約があるためデフォルト0
+        Integer status = getIntegerAny(map, "status", "status");
+        entity.setStatus(status != null ? status : 0);
+        entity.setUpdateInformation(getStringAny(map, "update_information", "updateInformation"));
+        entity.setDescription(getStringAny(map, "description", "description"));
+        // isActive はNOT NULL制約があるためデフォルトtrue
+        Boolean isActive = getBooleanAny(map, "is_active", "isActive");
+        entity.setIsActive(isActive != null ? isActive : true);
 
         // 栄養成分はinsert/update時に必要であれば追加
 

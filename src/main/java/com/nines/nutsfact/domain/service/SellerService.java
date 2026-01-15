@@ -27,7 +27,8 @@ public class SellerService {
         if (businessAccountId != null) {
             return sellerRepository.findByBusinessAccountId(businessAccountId);
         }
-        return sellerRepository.findAll();
+        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
+        return sellerRepository.findByBusinessAccountIdIsNull();
     }
 
     public Seller findById(Integer sellerId) {

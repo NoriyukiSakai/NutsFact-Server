@@ -27,7 +27,8 @@ public class ClassCategoryService {
         if (businessAccountId != null) {
             return classCategoryRepository.findByBusinessAccountId(businessAccountId);
         }
-        return classCategoryRepository.findAll();
+        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
+        return classCategoryRepository.findByBusinessAccountIdIsNull();
     }
 
     public List<ClassCategory> findByType(Integer categoryType) {
@@ -39,7 +40,8 @@ public class ClassCategoryService {
         if (businessAccountId != null) {
             return classCategoryRepository.findByTypeAndBusinessAccountId(categoryType, businessAccountId);
         }
-        return classCategoryRepository.findByType(categoryType);
+        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
+        return classCategoryRepository.findByTypeAndBusinessAccountIdIsNull(categoryType);
     }
 
     public ClassCategory findById(Integer categoryId) {

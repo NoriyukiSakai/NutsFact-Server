@@ -39,15 +39,27 @@ public class JwtUtil {
     }
 
     public AuthToken generateTokens(User user) {
+        return generateTokens(user, user.getBusinessAccountId(), user.getRole());
+    }
+
+    /**
+     * 特定のビジネスアカウントと役割でトークンを生成
+     * マルチアカウント対応：選択されたアカウントでのトークン生成
+     */
+    public AuthToken generateTokens(User user, Integer businessAccountId, Integer role) {
         Instant now = Instant.now();
         Instant accessExpiry = now.plusSeconds(accessTokenExpirationSeconds);
         Instant refreshExpiry = now.plusSeconds(refreshTokenExpirationSeconds);
 
+        // isSystemAdmin: user.role = 0 は運営管理者
+        boolean isSystemAdmin = user.getRole() != null && user.getRole() == 0;
+
         String accessToken = Jwts.builder()
                 .subject(String.valueOf(user.getUserId()))
                 .claim("email", user.getEmail())
-                .claim("businessAccountId", user.getBusinessAccountId())
-                .claim("role", user.getRole())
+                .claim("businessAccountId", businessAccountId)
+                .claim("role", role)
+                .claim("isSystemAdmin", isSystemAdmin)
                 .claim("type", "access")
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(accessExpiry))

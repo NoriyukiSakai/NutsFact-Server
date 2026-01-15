@@ -95,6 +95,10 @@ public class InvitationCodeController {
             response.put("business_account_name", businessAccount.getCompanyName());
             response.put("role", code.getRole());
             response.put("expires_at", code.getExpiresAt());
+
+            // 既存ユーザー情報を追加
+            response.put("existing_user", result.isExistingUser());
+            response.put("existing_provider", result.getExistingProvider());
         } else {
             response.put("error_code", result.getErrorCode());
             response.put("error_message", result.getErrorMessage());

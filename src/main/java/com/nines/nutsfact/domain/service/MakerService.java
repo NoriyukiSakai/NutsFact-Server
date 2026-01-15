@@ -27,7 +27,8 @@ public class MakerService {
         if (businessAccountId != null) {
             return makerRepository.findByBusinessAccountId(businessAccountId);
         }
-        return makerRepository.findAll();
+        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
+        return makerRepository.findByBusinessAccountIdIsNull();
     }
 
     public Maker findById(Integer makerId) {

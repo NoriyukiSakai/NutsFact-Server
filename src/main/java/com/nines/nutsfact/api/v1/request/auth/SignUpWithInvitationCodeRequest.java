@@ -15,7 +15,7 @@ public class SignUpWithInvitationCodeRequest {
     @Size(min = 8, message = "パスワードは8文字以上で入力してください")
     private String password;
 
-    @NotBlank(message = "ユーザー名は必須です")
+    // 既存ユーザーの場合は空でも可（サービス層で新規ユーザーのみバリデーション）
     private String name;
 
     @NotBlank(message = "招待コードは必須です")

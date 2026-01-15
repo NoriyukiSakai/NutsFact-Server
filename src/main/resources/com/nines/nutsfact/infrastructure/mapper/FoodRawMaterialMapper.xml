@@ -148,6 +148,7 @@
         <result property="hashtag" column="hashtag"/>
         <result property="compositeRawMaterialsKb" column="composite_raw_materials_kb"/>
         <result property="pricePerUnit" column="price_per_unit"/>
+        <result property="lastPricePerUnit" column="last_price_per_unit"/>
         <result property="makerId" column="maker_id"/>
         <result property="makerName" column="maker_name"/>
         <result property="sellerId" column="saller_id"/>
@@ -175,7 +176,7 @@
         food_id, business_account_id, food_no, food_group_id, index_no, class_category_id,
         original_food_id, original_food_group_id, original_food_no, original_index_no, original_food_name,
         food_name, food_fuku_bunrui, food_rui_kubun, food_dai_bunrui, food_cyu_bunrui, food_syo_bunrui, food_saibun,
-        category_id, hashtag, composite_raw_materials_kb, price_per_unit,
+        category_id, hashtag, composite_raw_materials_kb, price_per_unit, last_price_per_unit,
         maker_id, maker_name, saller_id, saller_name,
         composite_raw_itemlist, display_name, place_of_origin, display_place_of_origin,
         revision_of_food_no, next_food_id, expire_date, create_date, last_update_date,
@@ -212,6 +213,14 @@
         <if test="businessAccountId != null">
             AND business_account_id = #{businessAccountId}
         </if>
+    </select>
+
+    <!-- カテゴリでbusiness_account_idがnullの原材料を取得（運営管理者用） -->
+    <select id="findByCategoryAndBusinessAccountIdIsNull" resultMap="foodRawMaterialResult">
+        SELECT <include refid="selectColumns"/>
+        FROM VFOOD_RAW_MATERIALS
+        WHERE category_id = #{categoryId}
+        AND business_account_id IS NULL
     </select>
 
     <!-- ビジネスアカウントIDで原材料を取得 -->
@@ -262,7 +271,7 @@
             business_account_id, food_no, food_group_id, index_no, class_category_id,
             original_food_id, original_food_group_id, original_food_no, original_index_no,
             food_name, food_fuku_bunrui, food_rui_kubun, food_dai_bunrui, food_cyu_bunrui, food_syo_bunrui, food_saibun,
-            original_food_name, category_id, hashtag, composite_raw_materials_kb, price_per_unit,
+            original_food_name, category_id, hashtag, composite_raw_materials_kb, price_per_unit, last_price_per_unit,
             maker_id, saller_id, composite_raw_itemlist, display_name, place_of_origin, display_place_of_origin,
             revision_of_food_no, next_food_id, expire_date, status, update_information, description, description_flag, is_active,
             refuse, refuse_flag, enerc, enerc_flag, enerc_kcal, enerc_kcal_flag, water, water_flag,
@@ -282,7 +291,7 @@
             #{entity.foodName}, #{entity.foodFukuBunrui}, #{entity.foodRuiKubun}, #{entity.foodDaiBunrui},
             #{entity.foodCyuBunrui}, #{entity.foodSyoBunrui}, #{entity.foodSaibun},
             #{entity.originalFoodName}, #{entity.categoryId}, #{entity.hashtag},
-            #{entity.compositeRawMaterialsKb}, #{entity.pricePerUnit},
+            #{entity.compositeRawMaterialsKb}, #{entity.pricePerUnit}, #{entity.lastPricePerUnit},
             #{entity.makerId}, #{entity.sellerId}, #{entity.compositeRawItemlist}, #{entity.displayName},
             #{entity.placeOfOrigin}, #{entity.displayPlaceOfOrigin},
             #{entity.revisionOfFoodNo}, #{entity.nextFoodId}, #{entity.expireDate},
@@ -366,6 +375,7 @@
             hashtag = #{entity.hashtag},
             composite_raw_materials_kb = #{entity.compositeRawMaterialsKb},
             price_per_unit = #{entity.pricePerUnit},
+            last_price_per_unit = #{entity.lastPricePerUnit},
             maker_id = #{entity.makerId},
             saller_id = #{entity.sellerId},
             composite_raw_itemlist = #{entity.compositeRawItemlist},
@@ -398,4 +408,144 @@
             AND business_account_id = #{businessAccountId}
         </if>
     </delete>
+
+    <!-- 栄養成分データを更新（成分表からの移送用） -->
+    <update id="updateNutritionByFoodNo">
+        UPDATE FOOD_RAW_MATERIALS SET
+            food_group_id = #{entity.foodGroupId},
+            index_no = #{entity.indexNo},
+            original_food_id = #{entity.originalFoodId},
+            original_food_group_id = #{entity.originalFoodGroupId},
+            original_food_no = #{entity.originalFoodNo},
+            original_index_no = #{entity.originalIndexNo},
+            original_food_name = #{entity.originalFoodName},
+            food_name = #{entity.foodName},
+            food_fuku_bunrui = #{entity.foodFukuBunrui},
+            food_rui_kubun = #{entity.foodRuiKubun},
+            food_dai_bunrui = #{entity.foodDaiBunrui},
+            food_cyu_bunrui = #{entity.foodCyuBunrui},
+            food_syo_bunrui = #{entity.foodSyoBunrui},
+            food_saibun = #{entity.foodSaibun},
+            refuse = #{entity.basicNutrition.refuse},
+            refuse_flag = #{entity.basicNutrition.refuseFlag},
+            enerc = #{entity.basicNutrition.enerc},
+            enerc_flag = #{entity.basicNutrition.enercFlag},
+            enerc_kcal = #{entity.basicNutrition.enercKcal},
+            enerc_kcal_flag = #{entity.basicNutrition.enercKcalFlag},
+            water = #{entity.basicNutrition.water},
+            water_flag = #{entity.basicNutrition.waterFlag},
+            protcaa = #{entity.basicNutrition.protcaa},
+            protcaa_flag = #{entity.basicNutrition.protcaaFlag},
+            prot = #{entity.basicNutrition.prot},
+            prot_flag = #{entity.basicNutrition.protFlag},
+            fatnlea = #{entity.basicNutrition.fatnlea},
+            fatnlea_flag = #{entity.basicNutrition.fatnleaFlag},
+            chole = #{entity.basicNutrition.chole},
+            chole_flag = #{entity.basicNutrition.choleFlag},
+            fat = #{entity.basicNutrition.fat},
+            fat_flag = #{entity.basicNutrition.fatFlag},
+            choavlm = #{entity.basicNutrition.choavlm},
+            choavlm_flag = #{entity.basicNutrition.choavlmFlag},
+            choavlm_mark = #{entity.basicNutrition.choavlmMark},
+            choavl = #{entity.basicNutrition.choavl},
+            choavl_flag = #{entity.basicNutrition.choavlFlag},
+            choavldf = #{entity.basicNutrition.choavldf},
+            choavldf_flag = #{entity.basicNutrition.choavldfFlag},
+            choavldf_mark = #{entity.basicNutrition.choavldfMark},
+            fib = #{entity.basicNutrition.fib},
+            fib_flag = #{entity.basicNutrition.fibFlag},
+            polyl = #{entity.basicNutrition.polyl},
+            polyl_flag = #{entity.basicNutrition.polylFlag},
+            chocdf = #{entity.basicNutrition.chocdf},
+            chocdf_flag = #{entity.basicNutrition.chocdfFlag},
+            oa = #{entity.basicNutrition.oa},
+            oa_flag = #{entity.basicNutrition.oaFlag},
+            ash = #{entity.basicNutrition.ash},
+            ash_flag = #{entity.basicNutrition.ashFlag},
+            na = #{entity.minerals.na},
+            na_flag = #{entity.minerals.naFlag},
+            k = #{entity.minerals.k},
+            k_flag = #{entity.minerals.kFlag},
+            ca = #{entity.minerals.ca},
+            ca_flag = #{entity.minerals.caFlag},
+            mg = #{entity.minerals.mg},
+            mg_flag = #{entity.minerals.mgFlag},
+            p = #{entity.minerals.p},
+            p_flag = #{entity.minerals.pFlag},
+            fe = #{entity.minerals.fe},
+            fe_flag = #{entity.minerals.feFlag},
+            zn = #{entity.minerals.zn},
+            zn_flag = #{entity.minerals.znFlag},
+            cu = #{entity.minerals.cu},
+            cu_flag = #{entity.minerals.cuFlag},
+            mn = #{entity.minerals.mn},
+            mn_flag = #{entity.minerals.mnFlag},
+            id = #{entity.minerals.idd},
+            id_flag = #{entity.minerals.iddFlag},
+            se = #{entity.minerals.se},
+            se_flag = #{entity.minerals.seFlag},
+            cr = #{entity.minerals.cr},
+            cr_flag = #{entity.minerals.crFlag},
+            mo = #{entity.minerals.mo},
+            mo_flag = #{entity.minerals.moFlag},
+            ret = #{entity.vitamins.ret},
+            ret_flag = #{entity.vitamins.retFlag},
+            carta = #{entity.vitamins.carta},
+            carta_flag = #{entity.vitamins.cartaFlag},
+            cartb = #{entity.vitamins.cartb},
+            cartb_flag = #{entity.vitamins.cartbFlag},
+            crypxb = #{entity.vitamins.crypxb},
+            crypxb_flag = #{entity.vitamins.crypxbFlag},
+            cartbeq = #{entity.vitamins.cartbeq},
+            cartbeq_flag = #{entity.vitamins.cartbeqFlag},
+            vita_rae = #{entity.vitamins.vitaRae},
+            vita_rae_flag = #{entity.vitamins.vitaRaeFlag},
+            vitd = #{entity.vitamins.vitd},
+            vitd_flag = #{entity.vitamins.vitdFlag},
+            tocpha = #{entity.vitamins.tocpha},
+            tocpha_flag = #{entity.vitamins.tocphaFlag},
+            tocphb = #{entity.vitamins.tocphb},
+            tocphb_flag = #{entity.vitamins.tocphbFlag},
+            tocphg = #{entity.vitamins.tocphg},
+            tocphg_flag = #{entity.vitamins.tocphgFlag},
+            tocphd = #{entity.vitamins.tocphd},
+            tocphd_flag = #{entity.vitamins.tocphdFlag},
+            vitk = #{entity.vitamins.vitk},
+            vitk_flag = #{entity.vitamins.vitkFlag},
+            thia = #{entity.vitamins.thia},
+            thia_flag = #{entity.vitamins.thiaFlag},
+            ribf = #{entity.vitamins.ribf},
+            ribf_flag = #{entity.vitamins.ribfFlag},
+            nia = #{entity.vitamins.nia},
+            nia_flag = #{entity.vitamins.niaFlag},
+            niac = #{entity.vitamins.niac},
+            niac_flag = #{entity.vitamins.niacFlag},
+            vitb6a = #{entity.vitamins.vitb6a},
+            vitb6a_flag = #{entity.vitamins.vitb6aFlag},
+            vitb12 = #{entity.vitamins.vitb12},
+            vitb12_flag = #{entity.vitamins.vitb12Flag},
+            fol = #{entity.vitamins.fol},
+            fol_flag = #{entity.vitamins.folFlag},
+            pantac = #{entity.vitamins.pantac},
+            pantac_flag = #{entity.vitamins.pantacFlag},
+            biot = #{entity.vitamins.biot},
+            biot_flag = #{entity.vitamins.biotFlag},
+            vitc = #{entity.vitamins.vitc},
+            vitc_flag = #{entity.vitamins.vitcFlag},
+            alc = #{entity.basicNutrition.alc},
+            alc_flag = #{entity.basicNutrition.alcFlag},
+            nacl_eq = #{entity.basicNutrition.naclEq},
+            nacl_eq_flag = #{entity.basicNutrition.naclEqFlag},
+            description = #{entity.description}
+        WHERE food_no = #{entity.foodNo}
+        AND category_id = 1
+    </update>
+
+    <!-- 指定されたfood_noとbusiness_account_idの最大revision_of_food_noを取得 -->
+    <select id="getMaxRevisionByFoodNoAndBusinessAccountId" resultType="java.lang.Integer">
+        SELECT MAX(revision_of_food_no)
+        FROM FOOD_RAW_MATERIALS
+        WHERE food_no = #{foodNo}
+        AND business_account_id = #{businessAccountId}
+    </select>
 </mapper>

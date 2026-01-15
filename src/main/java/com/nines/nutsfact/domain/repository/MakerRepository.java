@@ -24,6 +24,10 @@ public class MakerRepository {
         return makerMapper.findByBusinessAccountId(businessAccountId);
     }
 
+    public List<Maker> findByBusinessAccountIdIsNull() {
+        return makerMapper.findByBusinessAccountIdIsNull();
+    }
+
     public Optional<Maker> findById(Integer makerId) {
         return Optional.ofNullable(makerMapper.findById(makerId));
     }

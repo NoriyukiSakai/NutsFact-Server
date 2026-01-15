@@ -12,6 +12,7 @@
         <result property="registrationStatus" column="registration_status"/>
         <result property="maxUserCount" column="max_user_count"/>
         <result property="currentUserCount" column="current_user_count"/>
+        <result property="isHeadquarters" column="is_headquarters"/>
         <result property="createDate" column="create_date"/>
         <result property="lastUpdateDate" column="last_update_date"/>
         <result property="isActive" column="is_active"/>
@@ -19,7 +20,7 @@
 
     <select id="findAll" resultMap="BusinessAccountResultMap">
         SELECT id, code, company_name, contact_phone, logo_image_url, website_url,
-               registration_status, max_user_count, current_user_count,
+               registration_status, max_user_count, current_user_count, is_headquarters,
                create_date, last_update_date, is_active
         FROM BUSINESS_ACCOUNT
         ORDER BY id
@@ -27,7 +28,7 @@
 
     <select id="findById" resultMap="BusinessAccountResultMap">
         SELECT id, code, company_name, contact_phone, logo_image_url, website_url,
-               registration_status, max_user_count, current_user_count,
+               registration_status, max_user_count, current_user_count, is_headquarters,
                create_date, last_update_date, is_active
         FROM BUSINESS_ACCOUNT
         WHERE id = #{id}
@@ -35,19 +36,28 @@
 
     <select id="findByCode" resultMap="BusinessAccountResultMap">
         SELECT id, code, company_name, contact_phone, logo_image_url, website_url,
-               registration_status, max_user_count, current_user_count,
+               registration_status, max_user_count, current_user_count, is_headquarters,
                create_date, last_update_date, is_active
         FROM BUSINESS_ACCOUNT
         WHERE code = #{code}
     </select>
 
+    <select id="findHeadquarters" resultMap="BusinessAccountResultMap">
+        SELECT id, code, company_name, contact_phone, logo_image_url, website_url,
+               registration_status, max_user_count, current_user_count, is_headquarters,
+               create_date, last_update_date, is_active
+        FROM BUSINESS_ACCOUNT
+        WHERE is_headquarters = TRUE
+        LIMIT 1
+    </select>
+
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.user.BusinessAccount" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO BUSINESS_ACCOUNT (code, company_name, contact_phone, logo_image_url,
                                       website_url, registration_status, max_user_count,
-                                      current_user_count, is_active)
+                                      current_user_count, is_headquarters, is_active)
         VALUES (#{code}, #{companyName}, #{contactPhone}, #{logoImageUrl},
                 #{websiteUrl}, #{registrationStatus}, #{maxUserCount},
-                #{currentUserCount}, #{isActive})
+                #{currentUserCount}, #{isHeadquarters}, #{isActive})
     </insert>
 
     <update id="update" parameterType="com.nines.nutsfact.domain.model.user.BusinessAccount">

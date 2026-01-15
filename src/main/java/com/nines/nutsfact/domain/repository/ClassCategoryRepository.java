@@ -28,6 +28,14 @@ public class ClassCategoryRepository {
         return classCategoryMapper.findByBusinessAccountId(businessAccountId);
     }
 
+    public List<ClassCategory> findByBusinessAccountIdIsNull() {
+        return classCategoryMapper.findByBusinessAccountIdIsNull();
+    }
+
+    public List<ClassCategory> findByTypeAndBusinessAccountIdIsNull(Integer categoryType) {
+        return classCategoryMapper.findByTypeAndBusinessAccountIdIsNull(categoryType);
+    }
+
     public List<ClassCategory> findByTypeAndBusinessAccountId(Integer categoryType, Integer businessAccountId) {
         return classCategoryMapper.findByTypeAndBusinessAccountId(categoryType, businessAccountId);
     }

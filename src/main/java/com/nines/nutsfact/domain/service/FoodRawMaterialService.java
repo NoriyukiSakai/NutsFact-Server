@@ -33,6 +33,9 @@ public class FoodRawMaterialService {
     /**
      * カテゴリ別原材料一覧取得（businessAccountIdフィルタリング）
      * categoryId=1（8訂）, 2（拡張）の場合はbusinessAccountIdでフィルタリングしない
+     * categoryId=3（ユーザ定義）の場合:
+     *   - businessAccountIdがnull（運営管理者）: business_account_idがnullのデータのみ
+     *   - businessAccountIdがある場合: 該当business_account_idのデータのみ
      */
     @Transactional(readOnly = true)
     public List<FoodRawMaterial> findByCategoryWithBusinessAccountFilter(Integer categoryId) {
@@ -42,12 +45,12 @@ public class FoodRawMaterialService {
         }
 
         // patternId=3（ユーザ定義）はbusiness_account_idでフィルタリング
-        Integer businessAccountId = SecurityContextHelper.
-        getCurrentBusinessAccountId();
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
         if (businessAccountId != null) {
             return repository.findByCategoryAndBusinessAccountId(categoryId, businessAccountId);
         }
-        return repository.findByCategory(categoryId);
+        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
+        return repository.findByCategoryAndBusinessAccountIdIsNull(categoryId);
     }
 
     @Transactional(readOnly = true)
@@ -94,11 +97,24 @@ public class FoodRawMaterialService {
                 entity.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
             }
 
+            // revision_of_food_noを自動設定（同じfood_noかつ同じbusiness_account_idの最大値+1）
+            if (entity.getFoodNo() != null && entity.getBusinessAccountId() != null) {
+                Integer maxRevision = repository.getMaxRevisionByFoodNoAndBusinessAccountId(
+                        entity.getFoodNo(), entity.getBusinessAccountId());
+                int newRevision = (maxRevision != null ? maxRevision : -1) + 1;
+                entity.setRevisionOfFoodNo(newRevision);
+                log.info("revision_of_food_no を {} に設定: food_no={}, businessAccountId={}",
+                        newRevision, entity.getFoodNo(), entity.getBusinessAccountId());
+            } else {
+                entity.setRevisionOfFoodNo(0);
+            }
+
             repository.insert(entity);
             Integer newId = repository.getLastInsertId();
             entity.setFoodId(newId);
 
-            log.info("原材料を登録しました: ID={}, businessAccountId={}", newId, entity.getBusinessAccountId());
+            log.info("原材料を登録しました: ID={}, businessAccountId={}, revision={}",
+                newId, entity.getBusinessAccountId(), entity.getRevisionOfFoodNo());
             return entity;
 
         } catch (Exception e) {

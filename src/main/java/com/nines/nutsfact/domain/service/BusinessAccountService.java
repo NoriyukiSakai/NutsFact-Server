@@ -20,17 +20,31 @@ public class BusinessAccountService {
     private final UserRepository userRepository;
 
     public List<BusinessAccount> findAll() {
-        return businessAccountRepository.findAll();
+        List<BusinessAccount> accounts = businessAccountRepository.findAll();
+        // 各アカウントのユーザー数を動的に計算
+        for (BusinessAccount account : accounts) {
+            int actualCount = userRepository.countByBusinessAccountId(account.getId());
+            account.setCurrentUserCount(actualCount);
+        }
+        return accounts;
     }
 
     public BusinessAccount findById(Integer id) {
-        return businessAccountRepository.findById(id)
+        BusinessAccount account = businessAccountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("BusinessAccount", id));
+        // ユーザー数を動的に計算（メンバーシップテーブルから）
+        int actualCount = userRepository.countByBusinessAccountId(id);
+        account.setCurrentUserCount(actualCount);
+        return account;
     }
 
     public BusinessAccount findByCode(String code) {
-        return businessAccountRepository.findByCode(code)
+        BusinessAccount account = businessAccountRepository.findByCode(code)
                 .orElseThrow(() -> new ResourceNotFoundException("BusinessAccount with code " + code + " not found"));
+        // ユーザー数を動的に計算（メンバーシップテーブルから）
+        int actualCount = userRepository.countByBusinessAccountId(account.getId());
+        account.setCurrentUserCount(actualCount);
+        return account;
     }
 
     @Transactional

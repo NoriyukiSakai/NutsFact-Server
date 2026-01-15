@@ -27,6 +27,10 @@ public class FoodRawMaterialRepository {
         return mapper.findByCategoryAndBusinessAccountId(categoryId, businessAccountId);
     }
 
+    public List<FoodRawMaterial> findByCategoryAndBusinessAccountIdIsNull(Integer categoryId) {
+        return mapper.findByCategoryAndBusinessAccountIdIsNull(categoryId);
+    }
+
     public List<FoodRawMaterial> findByBusinessAccountId(Integer businessAccountId) {
         return mapper.findByBusinessAccountId(businessAccountId);
     }
@@ -65,5 +69,13 @@ public class FoodRawMaterialRepository {
 
     public Integer getLastInsertId() {
         return mapper.getLastInsertId();
+    }
+
+    public int updateNutritionByFoodNo(FoodRawMaterial entity) {
+        return mapper.updateNutritionByFoodNo(entity);
+    }
+
+    public Integer getMaxRevisionByFoodNoAndBusinessAccountId(String foodNo, Integer businessAccountId) {
+        return mapper.getMaxRevisionByFoodNoAndBusinessAccountId(foodNo, businessAccountId);
     }
 }
