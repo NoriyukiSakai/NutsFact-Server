@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.SystemParameterMapper">
+
+    <resultMap id="SystemParameterResultMap" type="com.nines.nutsfact.domain.model.system.SystemParameter">
+        <id property="id" column="id"/>
+        <result property="parameterKey" column="parameter_key"/>
+        <result property="parameterValue" column="parameter_value"/>
+        <result property="parameterType" column="parameter_type"/>
+        <result property="description" column="description"/>
+        <result property="createDate" column="create_date"/>
+        <result property="lastUpdateDate" column="last_update_date"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="SystemParameterResultMap">
+        SELECT id, parameter_key, parameter_value, parameter_type, description,
+               create_date, last_update_date
+        FROM SYSTEM_PARAMETER
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultMap="SystemParameterResultMap">
+        SELECT id, parameter_key, parameter_value, parameter_type, description,
+               create_date, last_update_date
+        FROM SYSTEM_PARAMETER
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByKey" resultMap="SystemParameterResultMap">
+        SELECT id, parameter_key, parameter_value, parameter_type, description,
+               create_date, last_update_date
+        FROM SYSTEM_PARAMETER
+        WHERE parameter_key = #{parameterKey}
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.system.SystemParameter" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO SYSTEM_PARAMETER (parameter_key, parameter_value, parameter_type, description)
+        VALUES (#{parameterKey}, #{parameterValue}, #{parameterType}, #{description})
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.system.SystemParameter">
+        UPDATE SYSTEM_PARAMETER
+        SET parameter_value = #{parameterValue},
+            parameter_type = #{parameterType},
+            description = #{description}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

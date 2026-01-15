@@ -36,6 +36,13 @@ public class InvitationCodeRepository {
         return Optional.ofNullable(invitationCodeMapper.findByCodeAndEmail(code, email));
     }
 
+    /**
+     * 有効な（未使用かつ期限内の）招待コードをメールアドレスで検索
+     */
+    public Optional<InvitationCode> findActiveByEmail(String email) {
+        return Optional.ofNullable(invitationCodeMapper.findActiveByEmail(email));
+    }
+
     public void save(InvitationCode invitationCode) {
         if (invitationCode.getId() == null) {
             invitationCodeMapper.insert(invitationCode);

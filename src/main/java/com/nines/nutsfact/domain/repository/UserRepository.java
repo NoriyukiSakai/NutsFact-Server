@@ -1,5 +1,6 @@
 package com.nines.nutsfact.domain.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,5 +55,17 @@ public class UserRepository {
 
     public int countByBusinessAccountId(Integer businessAccountId) {
         return userMapper.countByBusinessAccountId(businessAccountId);
+    }
+
+    public void incrementLoginFailureCount(Integer userId) {
+        userMapper.incrementLoginFailureCount(userId);
+    }
+
+    public void lockUser(Integer userId, LocalDateTime lockedUntil) {
+        userMapper.lockUser(userId, lockedUntil);
+    }
+
+    public void resetLoginFailureCount(Integer userId) {
+        userMapper.resetLoginFailureCount(userId);
     }
 }

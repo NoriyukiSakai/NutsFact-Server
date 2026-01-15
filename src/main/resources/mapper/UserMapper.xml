@@ -17,12 +17,14 @@
         <result property="createdDate" column="created_date"/>
         <result property="lastUpdateDate" column="last_update_date"/>
         <result property="isActive" column="is_active"/>
+        <result property="loginFailureCount" column="login_failure_count"/>
+        <result property="lockedUntil" column="locked_until"/>
     </resultMap>
 
     <select id="findAll" resultMap="UserResultMap">
         SELECT user_id, business_account_id, auth_user_id, email, name, role,
                profile_image_url, phone, password, provider, last_sign_in_at,
-               created_date, last_update_date, is_active
+               created_date, last_update_date, is_active, login_failure_count, locked_until
         FROM USERS
         ORDER BY user_id
     </select>
@@ -30,7 +32,7 @@
     <select id="findByBusinessAccountId" resultMap="UserResultMap">
         SELECT user_id, business_account_id, auth_user_id, email, name, role,
                profile_image_url, phone, password, provider, last_sign_in_at,
-               created_date, last_update_date, is_active
+               created_date, last_update_date, is_active, login_failure_count, locked_until
         FROM USERS
         WHERE business_account_id = #{businessAccountId}
         ORDER BY user_id
@@ -39,7 +41,7 @@
     <select id="findById" resultMap="UserResultMap">
         SELECT user_id, business_account_id, auth_user_id, email, name, role,
                profile_image_url, phone, password, provider, last_sign_in_at,
-               created_date, last_update_date, is_active
+               created_date, last_update_date, is_active, login_failure_count, locked_until
         FROM USERS
         WHERE user_id = #{userId}
     </select>
@@ -47,7 +49,7 @@
     <select id="findByEmail" resultMap="UserResultMap">
         SELECT user_id, business_account_id, auth_user_id, email, name, role,
                profile_image_url, phone, password, provider, last_sign_in_at,
-               created_date, last_update_date, is_active
+               created_date, last_update_date, is_active, login_failure_count, locked_until
         FROM USERS
         WHERE email = #{email}
     </select>
@@ -55,7 +57,7 @@
     <select id="findByAuthUserId" resultMap="UserResultMap">
         SELECT user_id, business_account_id, auth_user_id, email, name, role,
                profile_image_url, phone, password, provider, last_sign_in_at,
-               created_date, last_update_date, is_active
+               created_date, last_update_date, is_active, login_failure_count, locked_until
         FROM USERS
         WHERE auth_user_id = #{authUserId}
     </select>
@@ -92,7 +94,27 @@
     </delete>
 
     <select id="countByBusinessAccountId" resultType="int">
-        SELECT COUNT(*) FROM USERS WHERE business_account_id = #{businessAccountId}
+        SELECT COUNT(*) FROM USERS WHERE business_account_id = #{businessAccountId} AND is_active = true
     </select>
+
+    <update id="incrementLoginFailureCount">
+        UPDATE USERS
+        SET login_failure_count = COALESCE(login_failure_count, 0) + 1
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="lockUser">
+        UPDATE USERS
+        SET login_failure_count = COALESCE(login_failure_count, 0) + 1,
+            locked_until = #{lockedUntil}
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="resetLoginFailureCount">
+        UPDATE USERS
+        SET login_failure_count = 0,
+            locked_until = NULL
+        WHERE user_id = #{userId}
+    </update>
 
 </mapper>

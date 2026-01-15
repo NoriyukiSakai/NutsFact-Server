@@ -86,18 +86,18 @@ public class InvitationCodeController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
-        response.put("isValid", result.isValid());
+        response.put("is_valid", result.isValid());
 
         if (result.isValid()) {
             InvitationCode code = result.getInvitationCode();
             BusinessAccount businessAccount = businessAccountService.findById(code.getBusinessAccountId());
 
-            response.put("businessAccountName", businessAccount.getCompanyName());
+            response.put("business_account_name", businessAccount.getCompanyName());
             response.put("role", code.getRole());
-            response.put("expiresAt", code.getExpiresAt());
+            response.put("expires_at", code.getExpiresAt());
         } else {
-            response.put("errorCode", result.getErrorCode());
-            response.put("errorMessage", result.getErrorMessage());
+            response.put("error_code", result.getErrorCode());
+            response.put("error_message", result.getErrorMessage());
         }
 
         return ResponseEntity.ok(response);
@@ -114,7 +114,7 @@ public class InvitationCodeController {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("user", result.user());
-        response.put("businessAccount", result.businessAccount());
+        response.put("business_account", result.businessAccount());
         return ResponseEntity.ok(response);
     }
 
@@ -142,15 +142,15 @@ public class InvitationCodeController {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("id", code.getId());
-        response.put("businessAccountId", code.getBusinessAccountId());
+        response.put("business_account_id", code.getBusinessAccountId());
         response.put("code", code.getCode());
         response.put("email", code.getEmail());
         response.put("role", code.getRole());
-        response.put("expiresAt", code.getExpiresAt());
-        response.put("isUsed", code.getIsUsed());
-        response.put("usedAt", code.getUsedAt());
-        response.put("createDate", code.getCreateDate());
-        response.put("createdByUserId", code.getCreatedByUserId());
+        response.put("expires_at", code.getExpiresAt());
+        response.put("is_used", code.getIsUsed());
+        response.put("used_at", code.getUsedAt());
+        response.put("create_date", code.getCreateDate());
+        response.put("created_by_user_id", code.getCreatedByUserId());
         return response;
     }
 }

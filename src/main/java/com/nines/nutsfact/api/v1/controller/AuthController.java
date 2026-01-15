@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nines.nutsfact.api.v1.request.auth.LoginRequest;
 import com.nines.nutsfact.api.v1.request.auth.OAuthRequest;
+import com.nines.nutsfact.api.v1.request.auth.OAuthWithInvitationCodeRequest;
 import com.nines.nutsfact.api.v1.request.auth.PasswordResetRequest;
 import com.nines.nutsfact.api.v1.request.auth.PasswordUpdateRequest;
 import com.nines.nutsfact.api.v1.request.auth.RefreshTokenRequest;
@@ -60,6 +61,20 @@ public class AuthController {
         Map<String, Object> response = buildAuthResponse(result);
         response.put("isNewUser", result.isNewUser());
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * OAuth + 招待コードでの新規登録
+     */
+    @PostMapping("/signInWithOAuthAndInvitationCode")
+    public ResponseEntity<Map<String, Object>> signInWithOAuthAndInvitationCode(
+            @Valid @RequestBody OAuthWithInvitationCodeRequest request) {
+        AuthService.AuthResult result = authService.signInWithOAuthAndInvitationCode(
+                request.getProvider(),
+                request.getIdToken(),
+                request.getAccessToken(),
+                request.getInvitationCode());
+        return ResponseEntity.ok(buildAuthResponse(result));
     }
 
     @PostMapping("/signOut")

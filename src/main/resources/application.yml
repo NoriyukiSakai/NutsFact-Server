@@ -29,6 +29,15 @@ mybatis:
     default-fetch-size: 100
     default-statement-timeout: 30
 
+# Google OAuth Client ID設定
+google:
+  client-id:
+    # 共通のClient ID（iOS/macOS両方で使用）
+    common: ${GOOGLE_CLIENT_ID:}
+    # 個別のClient ID（設定されている場合はこちらを優先）
+    ios: ${GOOGLE_CLIENT_ID_IOS:${GOOGLE_CLIENT_ID:}}
+    macos: ${GOOGLE_CLIENT_ID_MACOS:${GOOGLE_CLIENT_ID:}}
+
 logging:
   level:
     root: INFO

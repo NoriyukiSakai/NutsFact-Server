@@ -187,7 +187,7 @@ public class BusinessAccountController {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("item", buildInvitationCodeMap(created));
-        response.put("businessAccountName", businessAccount.getCompanyName());
+        response.put("business_account_name", businessAccount.getCompanyName());
         return ResponseEntity.ok(response);
     }
 
@@ -201,7 +201,8 @@ public class BusinessAccountController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
-        response.put("items", codes.stream().map(this::buildInvitationCodeMap).toList());
+        response.put("records", codes.size());
+        response.put("item", codes.stream().map(this::buildInvitationCodeMap).toList());
         return ResponseEntity.ok(response);
     }
 
@@ -220,15 +221,15 @@ public class BusinessAccountController {
     private Map<String, Object> buildInvitationCodeMap(InvitationCode code) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", code.getId());
-        map.put("businessAccountId", code.getBusinessAccountId());
+        map.put("business_account_id", code.getBusinessAccountId());
         map.put("code", code.getCode());
         map.put("email", code.getEmail());
         map.put("role", code.getRole());
-        map.put("expiresAt", code.getExpiresAt());
-        map.put("isUsed", code.getIsUsed());
-        map.put("usedAt", code.getUsedAt());
-        map.put("createDate", code.getCreateDate());
-        map.put("createdByUserId", code.getCreatedByUserId());
+        map.put("expires_at", code.getExpiresAt());
+        map.put("is_used", code.getIsUsed());
+        map.put("used_at", code.getUsedAt());
+        map.put("create_date", code.getCreateDate());
+        map.put("created_by_user_id", code.getCreatedByUserId());
         return map;
     }
 
@@ -243,16 +244,16 @@ public class BusinessAccountController {
         Map<String, Object> map = new HashMap<>();
         map.put("id", businessAccount.getId());
         map.put("code", businessAccount.getCode());
-        map.put("companyName", businessAccount.getCompanyName());
-        map.put("contactPhone", businessAccount.getContactPhone());
-        map.put("logoImageUrl", businessAccount.getLogoImageUrl());
-        map.put("websiteUrl", businessAccount.getWebsiteUrl());
-        map.put("registrationStatus", businessAccount.getRegistrationStatus());
-        map.put("maxUserCount", businessAccount.getMaxUserCount());
-        map.put("currentUserCount", businessAccount.getCurrentUserCount());
-        map.put("createDate", businessAccount.getCreateDate());
-        map.put("lastUpdateDate", businessAccount.getLastUpdateDate());
-        map.put("isActive", businessAccount.getIsActive());
+        map.put("company_name", businessAccount.getCompanyName());
+        map.put("contact_phone", businessAccount.getContactPhone());
+        map.put("logo_image_url", businessAccount.getLogoImageUrl());
+        map.put("website_url", businessAccount.getWebsiteUrl());
+        map.put("registration_status", businessAccount.getRegistrationStatus());
+        map.put("max_user_count", businessAccount.getMaxUserCount());
+        map.put("current_user_count", businessAccount.getCurrentUserCount());
+        map.put("create_date", businessAccount.getCreateDate());
+        map.put("last_update_date", businessAccount.getLastUpdateDate());
+        map.put("is_active", businessAccount.getIsActive());
         return map;
     }
 }

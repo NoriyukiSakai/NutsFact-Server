@@ -1,5 +1,6 @@
 package com.nines.nutsfact.infrastructure.mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -19,4 +20,7 @@ public interface UserMapper {
     void updateLastSignInAt(@Param("userId") Integer userId);
     void delete(@Param("userId") Integer userId);
     int countByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
+    void incrementLoginFailureCount(@Param("userId") Integer userId);
+    void lockUser(@Param("userId") Integer userId, @Param("lockedUntil") LocalDateTime lockedUntil);
+    void resetLoginFailureCount(@Param("userId") Integer userId);
 }

@@ -51,6 +51,17 @@
         WHERE code = #{code} AND email = #{email}
     </select>
 
+    <select id="findActiveByEmail" resultMap="InvitationCodeResultMap">
+        SELECT id, business_account_id, code, email, role, expires_at,
+               is_used, used_at, create_date, created_by_user_id
+        FROM INVITATION_CODE
+        WHERE email = #{email}
+          AND is_used = false
+          AND expires_at > NOW()
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.user.InvitationCode" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO INVITATION_CODE (business_account_id, code, email, role,
                                      expires_at, is_used, created_by_user_id)

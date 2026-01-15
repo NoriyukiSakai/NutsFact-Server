@@ -20,4 +20,6 @@ public class User {
     private LocalDateTime createdDate;
     private LocalDateTime lastUpdateDate;
     private Boolean isActive;
+    private Integer loginFailureCount;
+    private LocalDateTime lockedUntil;
 }
