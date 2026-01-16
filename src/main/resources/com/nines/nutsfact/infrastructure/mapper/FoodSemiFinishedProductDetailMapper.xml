@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.FoodSemiFinishedProductDetailMapper">
+
+    <resultMap id="foodSemiFinishedProductDetailResult" type="com.nines.nutsfact.domain.model.FoodSemiFinishedProductDetail">
+        <id property="detailId" column="detail_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
+        <result property="semiId" column="semi_id"/>
+        <result property="componentKb" column="component_kb"/>
+        <result property="detailFoodId" column="detail_food_id"/>
+        <result property="detailPreId" column="detail_pre_id"/>
+        <result property="compositeRawMaterialsKb" column="composite_raw_materials_kb"/>
+        <result property="detailFoodName" column="detail_food_name"/>
+        <result property="detailPreName" column="detail_pre_name"/>
+        <result property="mixingRatio" column="mixing_ratio"/>
+        <result property="weight" column="weight"/>
+        <result property="costPrice" column="cost_price"/>
+        <result property="energy" column="energy"/>
+        <result property="protein" column="protein"/>
+        <result property="fat" column="fat"/>
+        <result property="carbo" column="carbo"/>
+        <result property="sugar" column="sugar"/>
+        <result property="sodium" column="sodium"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <select id="findBySemiId" resultMap="foodSemiFinishedProductDetailResult">
+        SELECT * FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL WHERE semi_id = #{semiId}
+    </select>
+
+    <select id="findById" resultMap="foodSemiFinishedProductDetailResult">
+        SELECT * FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL WHERE detail_id = #{id}
+    </select>
+
+    <select id="getLastInsertId" resultType="Integer">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <select id="findBySemiIdAndBusinessAccountId" resultMap="foodSemiFinishedProductDetailResult">
+        SELECT * FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL
+        WHERE semi_id = #{semiId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
+    <select id="findByIdAndBusinessAccountId" resultMap="foodSemiFinishedProductDetailResult">
+        SELECT * FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL
+        WHERE detail_id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="entity.detailId">
+        INSERT INTO FOOD_SEMI_FINISHED_PRODUCT_DETAIL (
+            business_account_id, semi_id, component_kb, detail_food_id, detail_pre_id, composite_raw_materials_kb,
+            detail_food_name, detail_pre_name, mixing_ratio, weight, cost_price,
+            energy, protein, fat, carbo, sugar, sodium, is_active
+        ) VALUES (
+            #{entity.businessAccountId}, #{entity.semiId}, #{entity.componentKb}, #{entity.detailFoodId}, #{entity.detailPreId},
+            #{entity.compositeRawMaterialsKb}, #{entity.detailFoodName}, #{entity.detailPreName},
+            #{entity.mixingRatio}, #{entity.weight}, #{entity.costPrice},
+            #{entity.energy}, #{entity.protein}, #{entity.fat}, #{entity.carbo}, #{entity.sugar}, #{entity.sodium},
+            #{entity.isActive}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE FOOD_SEMI_FINISHED_PRODUCT_DETAIL SET
+            semi_id = #{entity.semiId},
+            component_kb = #{entity.componentKb},
+            detail_food_id = #{entity.detailFoodId},
+            detail_pre_id = #{entity.detailPreId},
+            composite_raw_materials_kb = #{entity.compositeRawMaterialsKb},
+            detail_food_name = #{entity.detailFoodName},
+            detail_pre_name = #{entity.detailPreName},
+            mixing_ratio = #{entity.mixingRatio},
+            weight = #{entity.weight},
+            cost_price = #{entity.costPrice},
+            energy = #{entity.energy},
+            protein = #{entity.protein},
+            fat = #{entity.fat},
+            carbo = #{entity.carbo},
+            sugar = #{entity.sugar},
+            sodium = #{entity.sodium},
+            is_active = #{entity.isActive}
+        WHERE detail_id = #{entity.detailId}
+        <if test="entity.businessAccountId != null">
+            AND business_account_id = #{entity.businessAccountId}
+        </if>
+    </update>
+
+    <delete id="delete">
+        DELETE FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL WHERE detail_id = #{id}
+    </delete>
+
+    <delete id="deleteBySemiId">
+        DELETE FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL WHERE semi_id = #{semiId}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL
+        WHERE detail_id = #{id}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </delete>
+
+    <delete id="deleteBySemiIdAndBusinessAccountId">
+        DELETE FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL
+        WHERE semi_id = #{semiId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </delete>
+</mapper>
