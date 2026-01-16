@@ -9,8 +9,8 @@ import lombok.Data;
 public class SupplierRequest {
     private Integer supplierId;
 
-    @NotBlank(message = "仕入先名は必須です")
-    @Size(max = 100, message = "仕入先名は100文字以内で入力してください")
+    @NotBlank(message = "仕入元名は必須です")
+    @Size(max = 100, message = "仕入元名は100文字以内で入力してください")
     private String supplierName;
 
     private String contactInfo;

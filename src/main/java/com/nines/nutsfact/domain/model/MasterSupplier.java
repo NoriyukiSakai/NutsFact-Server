@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 仕入先マスタ
+ * 仕入元マスタ
  */
 @Data
 @Builder

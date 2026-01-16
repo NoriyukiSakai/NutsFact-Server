@@ -179,7 +179,7 @@ public class FoodRawMaterialService {
 
     /**
      * 原材料削除
-     * 関連する仕入先情報、アレルゲン情報、複合材料情報も削除する
+     * 関連する仕入元情報、アレルゲン情報、複合材料情報も削除する
      */
     @Transactional
     public void delete(Integer id) {
@@ -190,7 +190,7 @@ public class FoodRawMaterialService {
         try {
             // 関連データを先に削除（外部キー制約対応）
             supplierRepository.deleteByFoodId(id);
-            log.info("原材料の仕入先情報を削除しました: foodId={}", id);
+            log.info("原材料の仕入元情報を削除しました: foodId={}", id);
 
             allergenicControlRepository.delete(id);
             log.info("原材料のアレルゲン情報を削除しました: foodId={}", id);
@@ -210,7 +210,7 @@ public class FoodRawMaterialService {
 
     /**
      * 原材料削除（businessAccountIdでのフィルタリング付き）
-     * 関連する仕入先情報、アレルゲン情報、複合材料情報も削除する
+     * 関連する仕入元情報、アレルゲン情報、複合材料情報も削除する
      */
     @Transactional
     public void deleteWithBusinessAccountFilter(Integer id) {
@@ -222,7 +222,7 @@ public class FoodRawMaterialService {
         try {
             // 関連データを先に削除（外部キー制約対応）
             supplierRepository.deleteByFoodIdAndBusinessAccountId(id, businessAccountId);
-            log.info("原材料の仕入先情報を削除しました: foodId={}", id);
+            log.info("原材料の仕入元情報を削除しました: foodId={}", id);
 
             allergenicControlRepository.deleteByFoodIdAndBusinessAccountId(id, businessAccountId);
             log.info("原材料のアレルゲン情報を削除しました: foodId={}", id);

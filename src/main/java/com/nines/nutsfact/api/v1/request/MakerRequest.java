@@ -9,8 +9,8 @@ import lombok.Data;
 public class MakerRequest {
     private Integer makerId;
 
-    @NotBlank(message = "製造者名は必須です")
-    @Size(max = 100, message = "製造者名は100文字以内で入力してください")
+    @NotBlank(message = "製造元名は必須です")
+    @Size(max = 100, message = "製造元名は100文字以内で入力してください")
     private String makerName;
 
     private String contactInfo;

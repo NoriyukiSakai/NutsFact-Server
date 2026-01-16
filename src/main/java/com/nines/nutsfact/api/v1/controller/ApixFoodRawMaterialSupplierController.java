@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 原材料仕入先情報API Controller（apix互換）
+ * 原材料仕入元情報API Controller（apix互換）
  */
 @Slf4j
 @RestController
@@ -31,7 +31,7 @@ public class ApixFoodRawMaterialSupplierController {
     private final FoodRawMaterialSupplierService service;
 
     /**
-     * 原材料IDで仕入先情報一覧取得
+     * 原材料IDで仕入元情報一覧取得
      * businessAccountIdでフィルタリング
      */
     @GetMapping("/findByFoodId")
@@ -52,7 +52,7 @@ public class ApixFoodRawMaterialSupplierController {
     }
 
     /**
-     * ID指定で仕入先情報取得
+     * ID指定で仕入元情報取得
      * businessAccountIdでフィルタリング
      */
     @GetMapping("/findById")
@@ -67,7 +67,7 @@ public class ApixFoodRawMaterialSupplierController {
     }
 
     /**
-     * 仕入先情報登録
+     * 仕入元情報登録
      */
     @PostMapping("/insert")
     public ResponseEntity<Map<String, Object>> insert(
@@ -83,7 +83,7 @@ public class ApixFoodRawMaterialSupplierController {
     }
 
     /**
-     * 仕入先情報更新
+     * 仕入元情報更新
      * businessAccountIdでフィルタリング
      */
     @PostMapping("/update")
@@ -110,7 +110,7 @@ public class ApixFoodRawMaterialSupplierController {
     }
 
     /**
-     * 仕入先情報削除
+     * 仕入元情報削除
      * businessAccountIdでフィルタリング
      */
     @GetMapping("/delete")

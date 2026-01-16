@@ -47,7 +47,7 @@ public class SupplierService {
         // businessAccountIdを必須で取得して設定
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
         if (businessAccountId == null) {
-            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは仕入先を登録できません");
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは仕入元を登録できません");
         }
         supplier.setBusinessAccountId(businessAccountId);
         supplierRepository.save(supplier);

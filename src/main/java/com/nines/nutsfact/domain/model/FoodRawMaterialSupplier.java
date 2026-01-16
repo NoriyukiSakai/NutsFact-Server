@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * 原材料仕入先情報エンティティ
+ * 原材料仕入元情報エンティティ
  */
 @Data
 @Builder
