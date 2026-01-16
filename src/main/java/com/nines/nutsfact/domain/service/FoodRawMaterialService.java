@@ -3,7 +3,10 @@ package com.nines.nutsfact.domain.service;
 import com.nines.nutsfact.config.SecurityContextHelper;
 import com.nines.nutsfact.domain.model.FoodRawMaterial;
 import com.nines.nutsfact.domain.model.SelectItem;
+import com.nines.nutsfact.domain.repository.AllergenicControlRepository;
+import com.nines.nutsfact.domain.repository.CompositeRawMaterialIngredientRepository;
 import com.nines.nutsfact.domain.repository.FoodRawMaterialRepository;
+import com.nines.nutsfact.domain.repository.FoodRawMaterialSupplierRepository;
 import com.nines.nutsfact.exception.DataAccessFailedException;
 import com.nines.nutsfact.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,9 @@ import java.util.List;
 public class FoodRawMaterialService {
 
     private final FoodRawMaterialRepository repository;
+    private final FoodRawMaterialSupplierRepository supplierRepository;
+    private final AllergenicControlRepository allergenicControlRepository;
+    private final CompositeRawMaterialIngredientRepository compositeIngredientRepository;
 
     @Transactional(readOnly = true)
     public List<FoodRawMaterial> findAll() {
@@ -171,6 +177,10 @@ public class FoodRawMaterialService {
         }
     }
 
+    /**
+     * 原材料削除
+     * 関連する仕入先情報、アレルゲン情報、複合材料情報も削除する
+     */
     @Transactional
     public void delete(Integer id) {
         // 存在確認
@@ -178,6 +188,17 @@ public class FoodRawMaterialService {
             .orElseThrow(() -> new EntityNotFoundException("原材料", id));
 
         try {
+            // 関連データを先に削除（外部キー制約対応）
+            supplierRepository.deleteByFoodId(id);
+            log.info("原材料の仕入先情報を削除しました: foodId={}", id);
+
+            allergenicControlRepository.delete(id);
+            log.info("原材料のアレルゲン情報を削除しました: foodId={}", id);
+
+            compositeIngredientRepository.deleteByFoodId(id);
+            log.info("原材料の複合材料情報を削除しました: foodId={}", id);
+
+            // メインの原材料データを削除
             repository.delete(id);
             log.info("原材料を削除しました: ID={}", id);
 
@@ -189,6 +210,7 @@ public class FoodRawMaterialService {
 
     /**
      * 原材料削除（businessAccountIdでのフィルタリング付き）
+     * 関連する仕入先情報、アレルゲン情報、複合材料情報も削除する
      */
     @Transactional
     public void deleteWithBusinessAccountFilter(Integer id) {
@@ -198,6 +220,17 @@ public class FoodRawMaterialService {
             .orElseThrow(() -> new EntityNotFoundException("原材料", id));
 
         try {
+            // 関連データを先に削除（外部キー制約対応）
+            supplierRepository.deleteByFoodIdAndBusinessAccountId(id, businessAccountId);
+            log.info("原材料の仕入先情報を削除しました: foodId={}", id);
+
+            allergenicControlRepository.deleteByFoodIdAndBusinessAccountId(id, businessAccountId);
+            log.info("原材料のアレルゲン情報を削除しました: foodId={}", id);
+
+            compositeIngredientRepository.deleteByFoodIdAndBusinessAccountId(id, businessAccountId);
+            log.info("原材料の複合材料情報を削除しました: foodId={}", id);
+
+            // メインの原材料データを削除
             repository.deleteByIdAndBusinessAccountId(id, businessAccountId);
             log.info("原材料を削除しました: ID={}, businessAccountId={}", id, businessAccountId);
 

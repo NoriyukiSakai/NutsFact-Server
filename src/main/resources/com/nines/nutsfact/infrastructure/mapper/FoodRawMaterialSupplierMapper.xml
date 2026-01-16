@@ -91,4 +91,16 @@
         </if>
     </delete>
 
+    <delete id="deleteByFoodId">
+        DELETE FROM FOOD_RAW_MATERIAL_SUPPLIER WHERE food_id = #{foodId}
+    </delete>
+
+    <delete id="deleteByFoodIdAndBusinessAccountId">
+        DELETE FROM FOOD_RAW_MATERIAL_SUPPLIER
+        WHERE food_id = #{foodId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </delete>
+
 </mapper>

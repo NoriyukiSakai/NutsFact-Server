@@ -15,6 +15,7 @@ public interface InvitationCodeMapper {
     InvitationCode findByCode(@Param("code") String code);
     InvitationCode findByCodeAndEmail(@Param("code") String code, @Param("email") String email);
     InvitationCode findActiveByEmail(@Param("email") String email);
+    int countActiveByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
     void insert(InvitationCode invitationCode);
     void update(InvitationCode invitationCode);
     void markAsUsed(@Param("id") Integer id);

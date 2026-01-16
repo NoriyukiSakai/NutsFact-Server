@@ -44,10 +44,12 @@ public class MakerService {
 
     @Transactional
     public Maker create(Maker maker) {
-        // businessAccountIdを自動設定
-        if (maker.getBusinessAccountId() == null) {
-            maker.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+        // businessAccountIdを必須で取得して設定
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは製造元を登録できません");
         }
+        maker.setBusinessAccountId(businessAccountId);
         makerRepository.save(maker);
         return maker;
     }

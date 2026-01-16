@@ -7,12 +7,17 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nines.nutsfact.domain.model.user.BusinessAccount;
 import com.nines.nutsfact.domain.model.user.InvitationCode;
 import com.nines.nutsfact.domain.model.user.User;
+import com.nines.nutsfact.domain.repository.BusinessAccountRepository;
 import com.nines.nutsfact.domain.repository.InvitationCodeRepository;
 import com.nines.nutsfact.domain.repository.UserRepository;
+import com.nines.nutsfact.exception.ApiException;
 import com.nines.nutsfact.exception.DuplicateEntityException;
 import com.nines.nutsfact.exception.ResourceNotFoundException;
+
+import org.springframework.http.HttpStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class InvitationCodeService {
 
     private final InvitationCodeRepository invitationCodeRepository;
+    private final BusinessAccountRepository businessAccountRepository;
     private final SystemParameterService systemParameterService;
     private final UserRepository userRepository;
 
@@ -56,6 +62,26 @@ public class InvitationCodeService {
     @Transactional
     public InvitationCode create(Integer businessAccountId, String email, Integer role,
                                   Integer expirationDays, Integer createdByUserId) {
+        // ビジネスアカウントのユーザー数上限チェック
+        BusinessAccount businessAccount = businessAccountRepository.findById(businessAccountId)
+                .orElseThrow(() -> new ResourceNotFoundException("BusinessAccount", businessAccountId));
+
+        // 現在のユーザー数を取得（メンバーシップテーブルから）
+        int currentUserCount = userRepository.countByBusinessAccountId(businessAccountId);
+        // 有効な招待コード数を取得
+        int activeInvitationCount = invitationCodeRepository.countActiveByBusinessAccountId(businessAccountId);
+        int maxUserCount = businessAccount.getMaxUserCount() != null ? businessAccount.getMaxUserCount() : 3;
+
+        // 現在のユーザー数 + 有効な招待コード数 >= 最大ユーザー数の場合はエラー
+        if (currentUserCount + activeInvitationCount >= maxUserCount) {
+            log.warn("ユーザー数上限に達しています: businessAccountId={}, currentUsers={}, activeInvitations={}, maxUsers={}",
+                    businessAccountId, currentUserCount, activeInvitationCount, maxUserCount);
+            throw new ApiException(
+                    String.format("ユーザー数が上限（%d名）に達しているため、新しい招待を作成できません。現在のユーザー数: %d名、有効な招待: %d件",
+                            maxUserCount, currentUserCount, activeInvitationCount),
+                    HttpStatus.BAD_REQUEST);
+        }
+
         // 同一メールアドレスで有効な（未使用かつ期限内の）招待が既に存在する場合はエラー
         invitationCodeRepository.findActiveByEmail(email).ifPresent(existing -> {
             throw new DuplicateEntityException(

@@ -44,10 +44,12 @@ public class SupplierService {
 
     @Transactional
     public Supplier create(Supplier supplier) {
-        // businessAccountIdを自動設定
-        if (supplier.getBusinessAccountId() == null) {
-            supplier.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+        // businessAccountIdを必須で取得して設定
+        Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは仕入先を登録できません");
         }
+        supplier.setBusinessAccountId(businessAccountId);
         supplierRepository.save(supplier);
         return supplier;
     }

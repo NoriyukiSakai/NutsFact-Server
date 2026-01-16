@@ -43,6 +43,13 @@ public class InvitationCodeRepository {
         return Optional.ofNullable(invitationCodeMapper.findActiveByEmail(email));
     }
 
+    /**
+     * ビジネスアカウントに対する有効な（未使用かつ期限内の）招待コード数をカウント
+     */
+    public int countActiveByBusinessAccountId(Integer businessAccountId) {
+        return invitationCodeMapper.countActiveByBusinessAccountId(businessAccountId);
+    }
+
     public void save(InvitationCode invitationCode) {
         if (invitationCode.getId() == null) {
             invitationCodeMapper.insert(invitationCode);

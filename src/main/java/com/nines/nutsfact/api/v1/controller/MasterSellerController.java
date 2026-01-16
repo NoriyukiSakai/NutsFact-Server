@@ -28,7 +28,7 @@ public class MasterSellerController {
 
     @GetMapping("/getData")
     public ResponseEntity<Map<String, Object>> getData() {
-        List<Seller> sellers = sellerService.findAll();
+        List<Seller> sellers = sellerService.findAllWithBusinessAccountFilter();
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("records", sellers.size());
@@ -38,7 +38,7 @@ public class MasterSellerController {
 
     @GetMapping("/findById")
     public ResponseEntity<Map<String, Object>> findById(@RequestParam("id") Integer id) {
-        Seller seller = sellerService.findById(id);
+        Seller seller = sellerService.findByIdWithBusinessAccountFilter(id);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("sellerId", seller.getSellerId());
@@ -61,13 +61,13 @@ public class MasterSellerController {
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> update(@Valid @RequestBody SellerRequest request) {
         Seller seller = convertToEntity(request);
-        Seller updated = sellerService.update(request.getSellerId(), seller);
+        Seller updated = sellerService.updateWithBusinessAccountFilter(request.getSellerId(), seller);
         return ResponseEntity.ok(buildResponse(updated));
     }
 
     @GetMapping("/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") Integer id) {
-        sellerService.delete(id);
+        sellerService.deleteWithBusinessAccountFilter(id);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("id", id);
@@ -76,7 +76,7 @@ public class MasterSellerController {
 
     @GetMapping("/getSelect")
     public ResponseEntity<Map<String, Object>> getSelect() {
-        List<Seller> sellers = sellerService.findAll();
+        List<Seller> sellers = sellerService.findAllWithBusinessAccountFilter();
         List<Map<String, Object>> selectItems = sellers.stream()
             .filter(s -> s.getIsActive() != null && s.getIsActive())
             .map(s -> {
@@ -106,15 +106,18 @@ public class MasterSellerController {
     }
 
     private Map<String, Object> buildResponse(Seller seller) {
+        Map<String, Object> item = new HashMap<>();
+        item.put("sellerId", seller.getSellerId());
+        item.put("sellerName", seller.getSellerName());
+        item.put("contactInfo", seller.getContactInfo());
+        item.put("address", seller.getAddress());
+        item.put("phoneNumber", seller.getPhoneNumber());
+        item.put("email", seller.getEmail());
+        item.put("isActive", seller.getIsActive());
+
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
-        response.put("sellerId", seller.getSellerId());
-        response.put("sellerName", seller.getSellerName());
-        response.put("contactInfo", seller.getContactInfo());
-        response.put("address", seller.getAddress());
-        response.put("phoneNumber", seller.getPhoneNumber());
-        response.put("email", seller.getEmail());
-        response.put("isActive", seller.getIsActive());
+        response.put("item", item);
         return response;
     }
 }

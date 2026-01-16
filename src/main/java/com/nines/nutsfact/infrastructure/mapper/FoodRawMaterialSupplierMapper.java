@@ -31,5 +31,11 @@ public interface FoodRawMaterialSupplierMapper {
             @Param("id") Integer id,
             @Param("businessAccountId") Integer businessAccountId);
 
+    int deleteByFoodId(@Param("foodId") Integer foodId);
+
+    int deleteByFoodIdAndBusinessAccountId(
+            @Param("foodId") Integer foodId,
+            @Param("businessAccountId") Integer businessAccountId);
+
     Integer getLastInsertId();
 }

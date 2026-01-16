@@ -90,4 +90,12 @@
         DELETE FROM INVITATION_CODE WHERE id = #{id}
     </delete>
 
+    <select id="countActiveByBusinessAccountId" resultType="int">
+        SELECT COUNT(*)
+        FROM INVITATION_CODE
+        WHERE business_account_id = #{businessAccountId}
+          AND is_used = false
+          AND expires_at > NOW()
+    </select>
+
 </mapper>

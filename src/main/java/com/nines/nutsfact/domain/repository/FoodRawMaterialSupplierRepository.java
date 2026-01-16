@@ -46,6 +46,14 @@ public class FoodRawMaterialSupplierRepository {
         return mapper.deleteByIdAndBusinessAccountId(id, businessAccountId);
     }
 
+    public int deleteByFoodId(Integer foodId) {
+        return mapper.deleteByFoodId(foodId);
+    }
+
+    public int deleteByFoodIdAndBusinessAccountId(Integer foodId, Integer businessAccountId) {
+        return mapper.deleteByFoodIdAndBusinessAccountId(foodId, businessAccountId);
+    }
+
     public Integer getLastInsertId() {
         return mapper.getLastInsertId();
     }

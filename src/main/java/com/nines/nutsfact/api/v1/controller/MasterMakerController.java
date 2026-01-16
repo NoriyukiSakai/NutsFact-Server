@@ -28,7 +28,7 @@ public class MasterMakerController {
 
     @GetMapping("/getData")
     public ResponseEntity<Map<String, Object>> getData() {
-        List<Maker> makers = makerService.findAll();
+        List<Maker> makers = makerService.findAllWithBusinessAccountFilter();
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("records", makers.size());
@@ -38,7 +38,7 @@ public class MasterMakerController {
 
     @GetMapping("/findById")
     public ResponseEntity<Map<String, Object>> findById(@RequestParam("id") Integer id) {
-        Maker maker = makerService.findById(id);
+        Maker maker = makerService.findByIdWithBusinessAccountFilter(id);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("makerId", maker.getMakerId());
@@ -61,13 +61,13 @@ public class MasterMakerController {
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> update(@Valid @RequestBody MakerRequest request) {
         Maker maker = convertToEntity(request);
-        Maker updated = makerService.update(request.getMakerId(), maker);
+        Maker updated = makerService.updateWithBusinessAccountFilter(request.getMakerId(), maker);
         return ResponseEntity.ok(buildResponse(updated));
     }
 
     @GetMapping("/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") Integer id) {
-        makerService.delete(id);
+        makerService.deleteWithBusinessAccountFilter(id);
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
         response.put("id", id);
@@ -76,7 +76,7 @@ public class MasterMakerController {
 
     @GetMapping("/getSelect")
     public ResponseEntity<Map<String, Object>> getSelect() {
-        List<Maker> makers = makerService.findAll();
+        List<Maker> makers = makerService.findAllWithBusinessAccountFilter();
         List<Map<String, Object>> selectItems = makers.stream()
             .filter(m -> m.getIsActive() != null && m.getIsActive())
             .map(m -> {
@@ -106,15 +106,18 @@ public class MasterMakerController {
     }
 
     private Map<String, Object> buildResponse(Maker maker) {
+        Map<String, Object> item = new HashMap<>();
+        item.put("makerId", maker.getMakerId());
+        item.put("makerName", maker.getMakerName());
+        item.put("contactInfo", maker.getContactInfo());
+        item.put("address", maker.getAddress());
+        item.put("phoneNumber", maker.getPhoneNumber());
+        item.put("email", maker.getEmail());
+        item.put("isActive", maker.getIsActive());
+
         Map<String, Object> response = new HashMap<>();
         response.put("status", "Success");
-        response.put("makerId", maker.getMakerId());
-        response.put("makerName", maker.getMakerName());
-        response.put("contactInfo", maker.getContactInfo());
-        response.put("address", maker.getAddress());
-        response.put("phoneNumber", maker.getPhoneNumber());
-        response.put("email", maker.getEmail());
-        response.put("isActive", maker.getIsActive());
+        response.put("item", item);
         return response;
     }
 }
