@@ -12,22 +12,22 @@ import java.io.Serializable;
 public class ApiResponse<T> implements Serializable {
 
     private String status;
-    private T data;
+    private T item;
     private String message;
-    private Integer totalRecords;
+    private Integer records;
 
-    public static <T> ApiResponse<T> success(T data) {
+    public static <T> ApiResponse<T> success(T item) {
         return ApiResponse.<T>builder()
             .status("Success")
-            .data(data)
+            .item(item)
             .build();
     }
 
-    public static <T> ApiResponse<T> success(T data, int totalRecords) {
+    public static <T> ApiResponse<T> success(T item, int records) {
         return ApiResponse.<T>builder()
             .status("Success")
-            .data(data)
-            .totalRecords(totalRecords)
+            .item(item)
+            .records(records)
             .build();
     }
 
