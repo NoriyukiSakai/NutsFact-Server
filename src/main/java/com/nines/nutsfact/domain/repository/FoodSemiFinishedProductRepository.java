@@ -23,10 +23,6 @@ public class FoodSemiFinishedProductRepository {
         return mapper.findByBusinessAccountId(businessAccountId);
     }
 
-    public List<FoodSemiFinishedProduct> findByBusinessAccountIdIsNull() {
-        return mapper.findByBusinessAccountIdIsNull();
-    }
-
     public List<SelectItem> findSelectItems(Integer businessAccountId) {
         return mapper.findSelectItems(businessAccountId);
     }

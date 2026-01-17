@@ -27,10 +27,6 @@ public class FoodRawMaterialRepository {
         return mapper.findByCategoryAndBusinessAccountId(categoryId, businessAccountId);
     }
 
-    public List<FoodRawMaterial> findByCategoryAndBusinessAccountIdIsNull(Integer categoryId) {
-        return mapper.findByCategoryAndBusinessAccountIdIsNull(categoryId);
-    }
-
     public List<FoodRawMaterial> findByBusinessAccountId(Integer businessAccountId) {
         return mapper.findByBusinessAccountId(businessAccountId);
     }

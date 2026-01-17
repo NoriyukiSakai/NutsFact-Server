@@ -47,12 +47,6 @@
         ORDER BY food_id
     </select>
 
-    <select id="findByBusinessAccountIdIsNull" resultMap="AllergenicControlResultMap">
-        SELECT * FROM ALLERGENIC_CONTROL
-        WHERE business_account_id IS NULL
-        ORDER BY food_id
-    </select>
-
     <select id="findByFoodId" resultMap="AllergenicControlResultMap">
         SELECT * FROM ALLERGENIC_CONTROL WHERE food_id = #{foodId}
     </select>

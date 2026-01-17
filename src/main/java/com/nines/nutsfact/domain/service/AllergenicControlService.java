@@ -25,11 +25,10 @@ public class AllergenicControlService {
 
     public List<AllergenicControl> findAllWithBusinessAccountFilter() {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return allergenicControlRepository.findByBusinessAccountId(businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーはアレルゲン管理を参照できません");
         }
-        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
-        return allergenicControlRepository.findByBusinessAccountIdIsNull();
+        return allergenicControlRepository.findByBusinessAccountId(businessAccountId);
     }
 
     public AllergenicControl findByFoodId(Integer foodId) {

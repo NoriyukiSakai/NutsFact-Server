@@ -31,11 +31,10 @@ public class FoodPreProductService {
     @Transactional(readOnly = true)
     public List<FoodPreProductItem> findAllWithBusinessAccountFilter() {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return repository.findByBusinessAccountId(businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは仕込品を参照できません");
         }
-        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
-        return repository.findByBusinessAccountIdIsNull();
+        return repository.findByBusinessAccountId(businessAccountId);
     }
 
     @Transactional(readOnly = true)
@@ -46,11 +45,10 @@ public class FoodPreProductService {
     @Transactional(readOnly = true)
     public List<FoodPreProductItem> findByKindWithBusinessAccountFilter(Integer preKind) {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return repository.findByKindAndBusinessAccountId(preKind, businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは仕込品を参照できません");
         }
-        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
-        return repository.findByKindAndBusinessAccountIdIsNull(preKind);
+        return repository.findByKindAndBusinessAccountId(preKind, businessAccountId);
     }
 
     @Transactional(readOnly = true)

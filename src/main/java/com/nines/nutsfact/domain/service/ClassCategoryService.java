@@ -24,11 +24,10 @@ public class ClassCategoryService {
 
     public List<ClassCategory> findAllWithBusinessAccountFilter() {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return classCategoryRepository.findByBusinessAccountId(businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは分類カテゴリを参照できません");
         }
-        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
-        return classCategoryRepository.findByBusinessAccountIdIsNull();
+        return classCategoryRepository.findByBusinessAccountId(businessAccountId);
     }
 
     public List<ClassCategory> findByType(Integer categoryType) {
@@ -37,11 +36,10 @@ public class ClassCategoryService {
 
     public List<ClassCategory> findByTypeWithBusinessAccountFilter(Integer categoryType) {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return classCategoryRepository.findByTypeAndBusinessAccountId(categoryType, businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは分類カテゴリを参照できません");
         }
-        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
-        return classCategoryRepository.findByTypeAndBusinessAccountIdIsNull(categoryType);
+        return classCategoryRepository.findByTypeAndBusinessAccountId(categoryType, businessAccountId);
     }
 
     public ClassCategory findById(Integer categoryId) {

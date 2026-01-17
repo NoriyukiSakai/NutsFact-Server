@@ -198,12 +198,6 @@
         WHERE business_account_id = #{businessAccountId}
     </select>
 
-    <select id="findByBusinessAccountIdIsNull" resultMap="foodSemiFinishedProductResult">
-        SELECT <include refid="selectColumns"/>
-        FROM FOOD_SEMI_FINISHED_PRODUCT
-        WHERE business_account_id IS NULL
-    </select>
-
     <select id="findSelectItems" resultType="com.nines.nutsfact.domain.model.SelectItem">
         SELECT semi_id as id, semi_name as name, semi_no as no, IFNULL(display_name, '') as description
         FROM FOOD_SEMI_FINISHED_PRODUCT

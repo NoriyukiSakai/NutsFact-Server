@@ -39,9 +39,7 @@ public class FoodRawMaterialService {
     /**
      * カテゴリ別原材料一覧取得（businessAccountIdフィルタリング）
      * categoryId=1（8訂）, 2（拡張）の場合はbusinessAccountIdでフィルタリングしない
-     * categoryId=3（ユーザ定義）の場合:
-     *   - businessAccountIdがnull（運営管理者）: business_account_idがnullのデータのみ
-     *   - businessAccountIdがある場合: 該当business_account_idのデータのみ
+     * categoryId=3（ユーザ定義）の場合: 該当business_account_idのデータのみ
      */
     @Transactional(readOnly = true)
     public List<FoodRawMaterial> findByCategoryWithBusinessAccountFilter(Integer categoryId) {
@@ -52,11 +50,10 @@ public class FoodRawMaterialService {
 
         // patternId=3（ユーザ定義）はbusiness_account_idでフィルタリング
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return repository.findByCategoryAndBusinessAccountId(categoryId, businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは原材料を参照できません");
         }
-        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
-        return repository.findByCategoryAndBusinessAccountIdIsNull(categoryId);
+        return repository.findByCategoryAndBusinessAccountId(categoryId, businessAccountId);
     }
 
     @Transactional(readOnly = true)

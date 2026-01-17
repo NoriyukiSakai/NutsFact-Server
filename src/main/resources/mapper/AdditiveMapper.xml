@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.AdditiveMapper">
+
+    <resultMap id="AdditiveResultMap" type="com.nines.nutsfact.domain.model.additive.Additive">
+        <id property="additiveId" column="additive_id"/>
+        <result property="businessAccountId" column="business_account_id"/>
+        <result property="additiveCode" column="additive_code"/>
+        <result property="substanceName" column="substance_name"/>
+        <result property="simplifiedName" column="simplified_name"/>
+        <result property="purposeCategory" column="purpose_category"/>
+        <result property="collectiveName" column="collective_name"/>
+        <result property="requiresPurposeDisplay" column="requires_purpose_display"/>
+        <result property="description" column="description"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="AdditiveResultMap">
+        SELECT additive_id, business_account_id, additive_code, substance_name, simplified_name,
+               purpose_category, collective_name, requires_purpose_display, description, is_active,
+               create_date, update_date
+        FROM master_additive
+        ORDER BY additive_id
+    </select>
+
+    <select id="findByBusinessAccountId" resultMap="AdditiveResultMap">
+        SELECT additive_id, business_account_id, additive_code, substance_name, simplified_name,
+               purpose_category, collective_name, requires_purpose_display, description, is_active,
+               create_date, update_date
+        FROM master_additive
+        WHERE business_account_id = #{businessAccountId}
+        ORDER BY additive_id
+    </select>
+
+    <select id="findActiveByBusinessAccountId" resultMap="AdditiveResultMap">
+        SELECT additive_id, business_account_id, additive_code, substance_name, simplified_name,
+               purpose_category, collective_name, requires_purpose_display, description, is_active,
+               create_date, update_date
+        FROM master_additive
+        WHERE business_account_id = #{businessAccountId}
+          AND is_active = TRUE
+        ORDER BY substance_name
+    </select>
+
+    <select id="findById" resultMap="AdditiveResultMap">
+        SELECT additive_id, business_account_id, additive_code, substance_name, simplified_name,
+               purpose_category, collective_name, requires_purpose_display, description, is_active,
+               create_date, update_date
+        FROM master_additive
+        WHERE additive_id = #{additiveId}
+    </select>
+
+    <select id="findByIdAndBusinessAccountId" resultMap="AdditiveResultMap">
+        SELECT additive_id, business_account_id, additive_code, substance_name, simplified_name,
+               purpose_category, collective_name, requires_purpose_display, description, is_active,
+               create_date, update_date
+        FROM master_additive
+        WHERE additive_id = #{additiveId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </select>
+
+    <select id="search" resultMap="AdditiveResultMap">
+        SELECT additive_id, business_account_id, additive_code, substance_name, simplified_name,
+               purpose_category, collective_name, requires_purpose_display, description, is_active,
+               create_date, update_date
+        FROM master_additive
+        WHERE business_account_id = #{businessAccountId}
+          AND is_active = TRUE
+        <if test="keyword != null and keyword != ''">
+            AND (substance_name LIKE CONCAT('%', #{keyword}, '%')
+              OR simplified_name LIKE CONCAT('%', #{keyword}, '%')
+              OR additive_code LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="purposeCategory != null">
+            AND purpose_category = #{purposeCategory}
+        </if>
+        ORDER BY substance_name
+    </select>
+
+    <insert id="insert" parameterType="com.nines.nutsfact.domain.model.additive.Additive" useGeneratedKeys="true" keyProperty="additiveId">
+        INSERT INTO master_additive (business_account_id, additive_code, substance_name, simplified_name,
+                                     purpose_category, collective_name, requires_purpose_display, description, is_active)
+        VALUES (#{businessAccountId}, #{additiveCode}, #{substanceName}, #{simplifiedName},
+                #{purposeCategory}, #{collectiveName}, #{requiresPurposeDisplay}, #{description}, #{isActive})
+    </insert>
+
+    <update id="update" parameterType="com.nines.nutsfact.domain.model.additive.Additive">
+        UPDATE master_additive
+        SET additive_code = #{additiveCode},
+            substance_name = #{substanceName},
+            simplified_name = #{simplifiedName},
+            purpose_category = #{purposeCategory},
+            collective_name = #{collectiveName},
+            requires_purpose_display = #{requiresPurposeDisplay},
+            description = #{description},
+            is_active = #{isActive}
+        WHERE additive_id = #{additiveId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </update>
+
+    <delete id="delete">
+        DELETE FROM master_additive WHERE additive_id = #{additiveId}
+    </delete>
+
+    <delete id="deleteByIdAndBusinessAccountId">
+        DELETE FROM master_additive
+        WHERE additive_id = #{additiveId}
+        <if test="businessAccountId != null">
+            AND business_account_id = #{businessAccountId}
+        </if>
+    </delete>
+
+    <!-- 本部の添加物マスタを取得 -->
+    <select id="findByHeadquarters" resultMap="AdditiveResultMap">
+        SELECT additive_id, business_account_id, additive_code, substance_name, simplified_name,
+               purpose_category, collective_name, requires_purpose_display, description, is_active,
+               create_date, update_date
+        FROM master_additive
+        WHERE business_account_id = #{headquartersBusinessAccountId}
+          AND is_active = TRUE
+        ORDER BY substance_name
+    </select>
+
+    <!-- 本部の添加物マスタを指定のビジネスアカウントにコピー -->
+    <insert id="copyFromHeadquarters">
+        INSERT INTO master_additive (business_account_id, additive_code, substance_name, simplified_name,
+                                     purpose_category, collective_name, requires_purpose_display, description, is_active)
+        SELECT #{targetBusinessAccountId}, additive_code, substance_name, simplified_name,
+               purpose_category, collective_name, requires_purpose_display, description, TRUE
+        FROM master_additive
+        WHERE business_account_id = #{sourceBusinessAccountId}
+          AND is_active = TRUE
+    </insert>
+
+</mapper>

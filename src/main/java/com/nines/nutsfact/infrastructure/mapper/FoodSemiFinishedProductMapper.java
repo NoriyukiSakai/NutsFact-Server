@@ -15,8 +15,6 @@ public interface FoodSemiFinishedProductMapper {
 
     List<FoodSemiFinishedProduct> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
 
-    List<FoodSemiFinishedProduct> findByBusinessAccountIdIsNull();
-
     List<SelectItem> findSelectItems(@Param("businessAccountId") Integer businessAccountId);
 
     Optional<FoodSemiFinishedProduct> findById(@Param("id") Integer id);

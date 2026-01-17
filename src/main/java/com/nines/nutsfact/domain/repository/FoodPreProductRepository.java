@@ -31,14 +31,6 @@ public class FoodPreProductRepository {
         return mapper.findByBusinessAccountId(businessAccountId);
     }
 
-    public List<FoodPreProductItem> findByBusinessAccountIdIsNull() {
-        return mapper.findByBusinessAccountIdIsNull();
-    }
-
-    public List<FoodPreProductItem> findByKindAndBusinessAccountIdIsNull(Integer preKind) {
-        return mapper.findByKindAndBusinessAccountIdIsNull(preKind);
-    }
-
     public List<SelectItem> findSelectItems(Integer preKind) {
         return mapper.findSelectItems(preKind);
     }

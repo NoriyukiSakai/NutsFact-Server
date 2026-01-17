@@ -11,7 +11,6 @@ import com.nines.nutsfact.domain.model.master.Seller;
 public interface SellerMapper {
     List<Seller> findAll();
     List<Seller> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
-    List<Seller> findByBusinessAccountIdIsNull();
     Seller findById(@Param("sellerId") Integer sellerId);
     Seller findByIdAndBusinessAccountId(
             @Param("sellerId") Integer sellerId,

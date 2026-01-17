@@ -26,13 +26,6 @@
         ORDER BY saller_id
     </select>
 
-    <select id="findByBusinessAccountIdIsNull" resultMap="SellerResultMap">
-        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
-        FROM MASTER_SALLER
-        WHERE business_account_id IS NULL
-        ORDER BY saller_id
-    </select>
-
     <select id="findById" resultMap="SellerResultMap">
         SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_SALLER

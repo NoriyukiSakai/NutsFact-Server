@@ -24,11 +24,10 @@ public class MakerService {
 
     public List<Maker> findAllWithBusinessAccountFilter() {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return makerRepository.findByBusinessAccountId(businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは製造元を参照できません");
         }
-        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
-        return makerRepository.findByBusinessAccountIdIsNull();
+        return makerRepository.findByBusinessAccountId(businessAccountId);
     }
 
     public Maker findById(Integer makerId) {

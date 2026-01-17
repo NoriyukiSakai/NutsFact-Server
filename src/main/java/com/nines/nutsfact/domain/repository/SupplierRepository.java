@@ -24,10 +24,6 @@ public class SupplierRepository {
         return supplierMapper.findByBusinessAccountId(businessAccountId);
     }
 
-    public List<Supplier> findByBusinessAccountIdIsNull() {
-        return supplierMapper.findByBusinessAccountIdIsNull();
-    }
-
     public Optional<Supplier> findById(Integer supplierId) {
         return Optional.ofNullable(supplierMapper.findById(supplierId));
     }

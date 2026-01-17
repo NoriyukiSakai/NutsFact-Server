@@ -19,8 +19,6 @@ public interface FoodRawMaterialMapper {
             @Param("categoryId") Integer categoryId,
             @Param("businessAccountId") Integer businessAccountId);
 
-    List<FoodRawMaterial> findByCategoryAndBusinessAccountIdIsNull(@Param("categoryId") Integer categoryId);
-
     List<FoodRawMaterial> findByBusinessAccountId(@Param("businessAccountId") Integer businessAccountId);
 
     List<SelectItem> findSelectItems(@Param("categoryId") Integer categoryId);

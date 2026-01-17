@@ -24,11 +24,10 @@ public class SellerService {
 
     public List<Seller> findAllWithBusinessAccountFilter() {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return sellerRepository.findByBusinessAccountId(businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは販売元を参照できません");
         }
-        // 運営管理者（businessAccountId=null）はbusiness_account_idがnullのデータのみ
-        return sellerRepository.findByBusinessAccountIdIsNull();
+        return sellerRepository.findByBusinessAccountId(businessAccountId);
     }
 
     public Seller findById(Integer sellerId) {

@@ -26,13 +26,6 @@
         ORDER BY supplier_id
     </select>
 
-    <select id="findByBusinessAccountIdIsNull" resultMap="SupplierResultMap">
-        SELECT supplier_id, business_account_id, supplier_name, contact_info, address, phone_number, email, is_active
-        FROM MASTER_SUPPLIER
-        WHERE business_account_id IS NULL
-        ORDER BY supplier_id
-    </select>
-
     <select id="findById" resultMap="SupplierResultMap">
         SELECT supplier_id, business_account_id, supplier_name, contact_info, address, phone_number, email, is_active
         FROM MASTER_SUPPLIER

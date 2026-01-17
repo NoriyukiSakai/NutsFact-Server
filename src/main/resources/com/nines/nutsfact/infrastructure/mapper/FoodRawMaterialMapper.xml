@@ -215,14 +215,6 @@
         </if>
     </select>
 
-    <!-- カテゴリでbusiness_account_idがnullの原材料を取得（運営管理者用） -->
-    <select id="findByCategoryAndBusinessAccountIdIsNull" resultMap="foodRawMaterialResult">
-        SELECT <include refid="selectColumns"/>
-        FROM VFOOD_RAW_MATERIALS
-        WHERE category_id = #{categoryId}
-        AND business_account_id IS NULL
-    </select>
-
     <!-- ビジネスアカウントIDで原材料を取得 -->
     <select id="findByBusinessAccountId" resultMap="foodRawMaterialResult">
         SELECT <include refid="selectColumns"/>

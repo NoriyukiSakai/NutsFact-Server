@@ -31,10 +31,10 @@ public class FoodSemiFinishedProductService {
     @Transactional(readOnly = true)
     public List<FoodSemiFinishedProduct> findAllWithBusinessAccountFilter() {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
-        if (businessAccountId != null) {
-            return repository.findByBusinessAccountId(businessAccountId);
+        if (businessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは半完成品を参照できません");
         }
-        return repository.findByBusinessAccountIdIsNull();
+        return repository.findByBusinessAccountId(businessAccountId);
     }
 
     @Transactional(readOnly = true)

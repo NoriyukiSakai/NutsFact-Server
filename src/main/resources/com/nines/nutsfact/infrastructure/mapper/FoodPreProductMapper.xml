@@ -70,16 +70,6 @@
         SELECT * FROM FOOD_PRE_PRODUCT_ITEM WHERE business_account_id = #{businessAccountId}
     </select>
 
-    <select id="findByBusinessAccountIdIsNull" resultMap="foodPreProductResult">
-        SELECT * FROM FOOD_PRE_PRODUCT_ITEM WHERE business_account_id IS NULL
-    </select>
-
-    <select id="findByKindAndBusinessAccountIdIsNull" resultMap="foodPreProductResult">
-        SELECT * FROM FOOD_PRE_PRODUCT_ITEM
-        WHERE pre_kind = #{preKind}
-        AND business_account_id IS NULL
-    </select>
-
     <select id="findByKindAndBusinessAccountId" resultMap="foodPreProductResult">
         SELECT * FROM FOOD_PRE_PRODUCT_ITEM
         WHERE pre_kind = #{preKind}

@@ -24,10 +24,6 @@ public class AllergenicControlRepository {
         return allergenicControlMapper.findByBusinessAccountId(businessAccountId);
     }
 
-    public List<AllergenicControl> findByBusinessAccountIdIsNull() {
-        return allergenicControlMapper.findByBusinessAccountIdIsNull();
-    }
-
     public Optional<AllergenicControl> findByFoodId(Integer foodId) {
         return Optional.ofNullable(allergenicControlMapper.findByFoodId(foodId));
     }

@@ -31,21 +31,6 @@
         ORDER BY class_type, class_category_id
     </select>
 
-    <select id="findByBusinessAccountIdIsNull" resultMap="ClassCategoryResultMap">
-        SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
-        FROM MASTER_CLASSCATEGORY
-        WHERE business_account_id IS NULL
-        ORDER BY class_type, class_category_id
-    </select>
-
-    <select id="findByTypeAndBusinessAccountIdIsNull" resultMap="ClassCategoryResultMap">
-        SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
-        FROM MASTER_CLASSCATEGORY
-        WHERE class_type = #{categoryType}
-        AND business_account_id IS NULL
-        ORDER BY class_category_id
-    </select>
-
     <select id="findByTypeAndBusinessAccountId" resultMap="ClassCategoryResultMap">
         SELECT class_category_id, business_account_id, class_type, class_category_name, description, is_active
         FROM MASTER_CLASSCATEGORY
