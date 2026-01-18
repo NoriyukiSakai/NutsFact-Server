@@ -50,8 +50,11 @@ public class FoodRawMaterialRequest {
     // 価格・取引先
     private Boolean compositeRawMaterialsKb;
     private Float pricePerUnit;
+    private Float lastPricePerUnit;
     private Integer makerId;
+    private String makerName;
     private Integer sellerId;
+    private String sellerName;
 
     // 表示情報
     private String compositeRawItemlist;
