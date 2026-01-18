@@ -191,8 +191,8 @@ public class ApixFoodRawMaterialController {
         map.put("price_per_unit", item.getPricePerUnit());
         map.put("maker_id", item.getMakerId());
         map.put("maker_name", item.getMakerName());
-        map.put("saller_id", item.getSellerId());
-        map.put("saller_name", item.getSellerName());
+        map.put("saller_id", item.getSallerId());
+        map.put("saller_name", item.getSallerName());
         map.put("composite_raw_itemlist", item.getCompositeRawItemlist());
         map.put("display_name", item.getDisplayName());
         map.put("place_of_origin", item.getPlaceOfOrigin());
@@ -306,8 +306,8 @@ public class ApixFoodRawMaterialController {
         if (hasKey(map, "last_price_per_unit", "lastPricePerUnit")) entity.setLastPricePerUnit(getFloatAny(map, "last_price_per_unit", "lastPricePerUnit"));
         if (hasKey(map, "maker_id", "makerId")) entity.setMakerId(getIntegerAny(map, "maker_id", "makerId"));
         if (hasKey(map, "maker_name", "makerName")) entity.setMakerName(getStringAny(map, "maker_name", "makerName"));
-        if (hasKey(map, "saller_id", "sallerId")) entity.setSellerId(getIntegerAny(map, "saller_id", "sallerId"));
-        if (hasKey(map, "saller_name", "sallerName")) entity.setSellerName(getStringAny(map, "saller_name", "sallerName"));
+        if (hasKey(map, "saller_id", "sallerId")) entity.setSallerId(getIntegerAny(map, "saller_id", "sallerId"));
+        if (hasKey(map, "saller_name", "sallerName")) entity.setSallerName(getStringAny(map, "saller_name", "sallerName"));
         if (hasKey(map, "composite_raw_itemlist", "compositeRawItemlist")) entity.setCompositeRawItemlist(getStringAny(map, "composite_raw_itemlist", "compositeRawItemlist"));
         if (hasKey(map, "display_name", "displayName")) entity.setDisplayName(getStringAny(map, "display_name", "displayName"));
         if (hasKey(map, "place_of_origin", "placeOfOrigin")) entity.setPlaceOfOrigin(getStringAny(map, "place_of_origin", "placeOfOrigin"));
@@ -447,8 +447,8 @@ public class ApixFoodRawMaterialController {
         entity.setLastPricePerUnit(getFloatAny(map, "last_price_per_unit", "lastPricePerUnit"));
         entity.setMakerId(getIntegerAny(map, "maker_id", "makerId"));
         entity.setMakerName(getStringAny(map, "maker_name", "makerName"));
-        entity.setSellerId(getIntegerAny(map, "saller_id", "sallerId"));
-        entity.setSellerName(getStringAny(map, "saller_name", "sallerName"));
+        entity.setSallerId(getIntegerAny(map, "saller_id", "sallerId"));
+        entity.setSallerName(getStringAny(map, "saller_name", "sallerName"));
         entity.setCompositeRawItemlist(getStringAny(map, "composite_raw_itemlist", "compositeRawItemlist"));
         entity.setDisplayName(getStringAny(map, "display_name", "displayName"));
         entity.setPlaceOfOrigin(getStringAny(map, "place_of_origin", "placeOfOrigin"));

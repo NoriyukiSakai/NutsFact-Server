@@ -53,8 +53,8 @@ public class FoodRawMaterialRequest {
     private Float lastPricePerUnit;
     private Integer makerId;
     private String makerName;
-    private Integer sellerId;
-    private String sellerName;
+    private Integer sallerId;
+    private String sallerName;
 
     // 表示情報
     private String compositeRawItemlist;
