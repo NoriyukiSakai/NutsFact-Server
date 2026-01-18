@@ -39,4 +39,9 @@ public interface FoodSemiFinishedProductDetailMapper {
             @Param("businessAccountId") Integer businessAccountId);
 
     Integer getLastInsertId();
+
+    /**
+     * 原材料IDによる参照件数を取得
+     */
+    int countByDetailFoodId(@Param("foodId") Integer foodId);
 }

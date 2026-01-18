@@ -9,6 +9,9 @@ import com.nines.nutsfact.domain.repository.FoodRawMaterialRepository;
 import com.nines.nutsfact.domain.repository.FoodRawMaterialSupplierRepository;
 import com.nines.nutsfact.exception.DataAccessFailedException;
 import com.nines.nutsfact.exception.EntityNotFoundException;
+import com.nines.nutsfact.exception.ForeignKeyConstraintException;
+import com.nines.nutsfact.infrastructure.mapper.FoodPreProductDetailMapper;
+import com.nines.nutsfact.infrastructure.mapper.FoodSemiFinishedProductDetailMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class FoodRawMaterialService {
     private final FoodRawMaterialSupplierRepository supplierRepository;
     private final AllergenicControlRepository allergenicControlRepository;
     private final CompositeRawMaterialIngredientRepository compositeIngredientRepository;
+    private final FoodPreProductDetailMapper preProductDetailMapper;
+    private final FoodSemiFinishedProductDetailMapper semiFinishedProductDetailMapper;
 
     @Transactional(readOnly = true)
     public List<FoodRawMaterial> findAll() {
@@ -175,6 +180,24 @@ public class FoodRawMaterialService {
     }
 
     /**
+     * 原材料が仕込品・半完成品で使用されているか確認
+     * 使用されている場合はForeignKeyConstraintExceptionをスロー
+     */
+    private void checkRawMaterialNotInUse(Integer foodId) {
+        int preProductCount = preProductDetailMapper.countByDetailFoodId(foodId);
+        if (preProductCount > 0) {
+            throw new ForeignKeyConstraintException(
+                "この原材料は仕込品で使用されているため削除できません（" + preProductCount + "件）");
+        }
+
+        int semiFinishedCount = semiFinishedProductDetailMapper.countByDetailFoodId(foodId);
+        if (semiFinishedCount > 0) {
+            throw new ForeignKeyConstraintException(
+                "この原材料は半完成品で使用されているため削除できません（" + semiFinishedCount + "件）");
+        }
+    }
+
+    /**
      * 原材料削除
      * 関連する仕入元情報、アレルゲン情報、複合材料情報も削除する
      */
@@ -183,6 +206,9 @@ public class FoodRawMaterialService {
         // 存在確認
         repository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("原材料", id));
+
+        // 仕込品・半完成品での使用チェック
+        checkRawMaterialNotInUse(id);
 
         try {
             // 関連データを先に削除（外部キー制約対応）
@@ -215,6 +241,9 @@ public class FoodRawMaterialService {
 
         repository.findByIdAndBusinessAccountId(id, businessAccountId)
             .orElseThrow(() -> new EntityNotFoundException("原材料", id));
+
+        // 仕込品・半完成品での使用チェック
+        checkRawMaterialNotInUse(id);
 
         try {
             // 関連データを先に削除（外部キー制約対応）

@@ -12,6 +12,7 @@
         <result property="compositeRawMaterialsKb" column="composite_raw_materials_kb"/>
         <result property="detailFoodName" column="detail_food_name"/>
         <result property="detailPreName" column="detail_pre_name"/>
+        <result property="labelDisplayName" column="label_display_name"/>
         <result property="mixingRatio" column="mixing_ratio"/>
         <result property="weight" column="weight"/>
         <result property="costPrice" column="cost_price"/>
@@ -57,11 +58,11 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="entity.detailId">
         INSERT INTO FOOD_SEMI_FINISHED_PRODUCT_DETAIL (
             business_account_id, semi_id, component_kb, detail_food_id, detail_pre_id, composite_raw_materials_kb,
-            detail_food_name, detail_pre_name, mixing_ratio, weight, cost_price,
+            detail_food_name, detail_pre_name, label_display_name, mixing_ratio, weight, cost_price,
             energy, protein, fat, carbo, sugar, sodium, is_active
         ) VALUES (
             #{entity.businessAccountId}, #{entity.semiId}, #{entity.componentKb}, #{entity.detailFoodId}, #{entity.detailPreId},
-            #{entity.compositeRawMaterialsKb}, #{entity.detailFoodName}, #{entity.detailPreName},
+            #{entity.compositeRawMaterialsKb}, #{entity.detailFoodName}, #{entity.detailPreName}, #{entity.labelDisplayName},
             #{entity.mixingRatio}, #{entity.weight}, #{entity.costPrice},
             #{entity.energy}, #{entity.protein}, #{entity.fat}, #{entity.carbo}, #{entity.sugar}, #{entity.sodium},
             #{entity.isActive}
@@ -77,6 +78,7 @@
             composite_raw_materials_kb = #{entity.compositeRawMaterialsKb},
             detail_food_name = #{entity.detailFoodName},
             detail_pre_name = #{entity.detailPreName},
+            label_display_name = #{entity.labelDisplayName},
             mixing_ratio = #{entity.mixingRatio},
             weight = #{entity.weight},
             cost_price = #{entity.costPrice},
@@ -116,4 +118,9 @@
             AND business_account_id = #{businessAccountId}
         </if>
     </delete>
+
+    <!-- 原材料IDによる参照件数を取得 -->
+    <select id="countByDetailFoodId" resultType="int">
+        SELECT COUNT(*) FROM FOOD_SEMI_FINISHED_PRODUCT_DETAIL WHERE detail_food_id = #{foodId}
+    </select>
 </mapper>
