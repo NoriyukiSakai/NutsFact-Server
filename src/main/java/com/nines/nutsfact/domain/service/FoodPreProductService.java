@@ -31,10 +31,13 @@ public class FoodPreProductService {
     @Transactional(readOnly = true)
     public List<FoodPreProductItem> findAllWithBusinessAccountFilter() {
         Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        log.info("仕込品一覧取得: businessAccountId={}", businessAccountId);
         if (businessAccountId == null) {
             throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは仕込品を参照できません");
         }
-        return repository.findByBusinessAccountId(businessAccountId);
+        List<FoodPreProductItem> items = repository.findByBusinessAccountId(businessAccountId);
+        log.info("仕込品一覧取得結果: {} 件", items.size());
+        return items;
     }
 
     @Transactional(readOnly = true)
