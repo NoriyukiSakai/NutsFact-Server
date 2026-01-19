@@ -21,5 +21,17 @@ public class BusinessAccountUpdateRequest {
     @Size(max = 256, message = "WebサイトURLは256文字以内で入力してください")
     private String websiteUrl;
 
+    @Size(max = 256, message = "販売者名は256文字以内で入力してください")
+    private String labelSellerName;
+
+    @Size(max = 512, message = "販売者住所は512文字以内で入力してください")
+    private String labelSellerAddress;
+
+    @Size(max = 256, message = "製造者名は256文字以内で入力してください")
+    private String labelManufacturerName;
+
+    @Size(max = 512, message = "製造者住所は512文字以内で入力してください")
+    private String labelManufacturerAddress;
+
     private Integer maxUserCount;
 }

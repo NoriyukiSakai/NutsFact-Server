@@ -39,26 +39,6 @@ public class AuthService {
     private final GoogleIdTokenVerifierService googleIdTokenVerifierService;
 
     @Transactional
-    public AuthResult signUp(String email, String password, String name) {
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new AuthenticationException("このメールアドレスは既に登録されています");
-        }
-
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setName(name);
-        user.setProvider("email");
-        user.setIsActive(true);
-        userRepository.save(user);
-
-        AuthToken token = jwtUtil.generateTokens(user);
-        AuthUser authUser = createAuthUser(user);
-
-        return new AuthResult(authUser, token, user, null, false, "ユーザー登録が完了しました", List.of(), false);
-    }
-
-    @Transactional
     public AuthResult signIn(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthenticationException("メールアドレスまたはパスワードが正しくありません"));
@@ -90,9 +70,9 @@ public class AuthService {
         AuthUser authUser = createAuthUser(user);
 
         if (memberships.isEmpty()) {
-            // 所属なし（未所属ユーザー）
-            AuthToken token = jwtUtil.generateTokens(user);
-            return new AuthResult(authUser, token, user, null, false, null, memberships, false);
+            // 所属なし（未所属ユーザー）はログイン不可
+            log.warn("Login rejected: user {} has no business account membership", user.getEmail());
+            throw new AuthenticationException("ビジネスアカウントに所属していないため、ログインできません。管理者にお問い合わせください。");
         } else if (memberships.size() == 1) {
             // 単一所属：自動的にそのアカウントを選択
             UserBusinessAccountMembership membership = memberships.get(0);
@@ -167,9 +147,9 @@ public class AuthService {
         AuthUser authUser = createAuthUser(user);
 
         if (memberships.isEmpty()) {
-            // 所属なし
-            AuthToken token = jwtUtil.generateTokens(user);
-            return new AuthResult(authUser, token, user, null, false, null, memberships, false);
+            // 所属なし（未所属ユーザー）はログイン不可
+            log.warn("OAuth login rejected: user {} has no business account membership", user.getEmail());
+            throw new AuthenticationException("ビジネスアカウントに所属していないため、ログインできません。管理者にお問い合わせください。");
         } else if (memberships.size() == 1) {
             // 単一所属：自動的にそのアカウントを選択
             UserBusinessAccountMembership membership = memberships.get(0);
@@ -337,7 +317,20 @@ public class AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AuthenticationException("ユーザーが見つかりません"));
 
-        return jwtUtil.generateTokens(user);
+        // 所属ビジネスアカウントを確認
+        List<UserBusinessAccountMembership> memberships = membershipRepository.findByUserId(userId);
+        if (memberships.isEmpty()) {
+            log.warn("Token refresh rejected: user {} has no business account membership", user.getEmail());
+            throw new AuthenticationException("ビジネスアカウントに所属していないため、セッションを継続できません。再度ログインしてください。");
+        }
+
+        // デフォルトまたは最初のメンバーシップを使用
+        UserBusinessAccountMembership membership = memberships.stream()
+                .filter(m -> Boolean.TRUE.equals(m.getIsDefault()))
+                .findFirst()
+                .orElse(memberships.get(0));
+
+        return jwtUtil.generateTokens(user, membership.getBusinessAccountId(), membership.getRole());
     }
 
     @Transactional

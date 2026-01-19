@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nines.nutsfact.infrastructure.mapper.ConversionTableMapper">
+
+    <resultMap id="ConversionTableResultMap" type="com.nines.nutsfact.domain.model.ConversionTable">
+        <id property="id" column="id"/>
+        <result property="kubun" column="kubun"/>
+        <result property="foodName" column="food_name"/>
+        <result property="rateOfConversion" column="rate_of_conversion"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="ConversionTableResultMap">
+        SELECT id, kubun, food_name, rate_of_conversion
+        FROM CONVERSION_TABLE
+        ORDER BY kubun, food_name
+    </select>
+
+    <select id="findByKubun" resultMap="ConversionTableResultMap">
+        SELECT id, kubun, food_name, rate_of_conversion
+        FROM CONVERSION_TABLE
+        WHERE kubun = #{kubun}
+        ORDER BY food_name
+    </select>
+
+    <select id="findById" resultMap="ConversionTableResultMap">
+        SELECT id, kubun, food_name, rate_of_conversion
+        FROM CONVERSION_TABLE
+        WHERE id = #{id}
+    </select>
+
+</mapper>

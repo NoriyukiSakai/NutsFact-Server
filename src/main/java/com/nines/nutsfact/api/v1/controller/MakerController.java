@@ -30,7 +30,7 @@ public class MakerController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Maker>>> findAll() {
-        List<Maker> makers = makerService.findAll();
+        List<Maker> makers = makerService.findAllWithBusinessAccountFilter();
         return ResponseEntity.ok(ApiResponse.success(makers));
     }
 

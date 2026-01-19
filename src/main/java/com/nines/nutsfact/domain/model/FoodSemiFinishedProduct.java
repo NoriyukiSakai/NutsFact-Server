@@ -65,6 +65,18 @@ public class FoodSemiFinishedProduct implements Serializable {
     // アレルゲン集約情報（JSON形式）
     private String allergenSummary;
 
+    // 添加物集約情報（JSON形式）
+    private String additiveSummary;
+
+    // 表示モード設定
+    private Integer allergenDisplayMode;    // 0:個別表示 1:一括表示
+    private Integer nutritionDisplayMode;   // 0:100gあたり 1:1食分 2:1個
+    private Float servingSize;              // 1食分の量（g）
+
+    // 販売者・製造者表示フラグ
+    private Boolean showSeller;             // 販売者表示フラグ
+    private Boolean showManufacturer;       // 製造者表示フラグ
+
     // 合計値
     private Float weightSum;
     private Float costPriceSum;

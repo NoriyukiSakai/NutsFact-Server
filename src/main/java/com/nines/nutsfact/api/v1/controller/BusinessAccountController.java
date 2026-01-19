@@ -127,6 +127,19 @@ public class BusinessAccountController {
         if (request.getWebsiteUrl() != null) {
             existing.setWebsiteUrl(request.getWebsiteUrl());
         }
+        // ラベル用販売者・製造者情報
+        if (request.getLabelSellerName() != null) {
+            existing.setLabelSellerName(request.getLabelSellerName());
+        }
+        if (request.getLabelSellerAddress() != null) {
+            existing.setLabelSellerAddress(request.getLabelSellerAddress());
+        }
+        if (request.getLabelManufacturerName() != null) {
+            existing.setLabelManufacturerName(request.getLabelManufacturerName());
+        }
+        if (request.getLabelManufacturerAddress() != null) {
+            existing.setLabelManufacturerAddress(request.getLabelManufacturerAddress());
+        }
         if (request.getMaxUserCount() != null) {
             existing.setMaxUserCount(request.getMaxUserCount());
         }
@@ -248,9 +261,14 @@ public class BusinessAccountController {
         map.put("contact_phone", businessAccount.getContactPhone());
         map.put("logo_image_url", businessAccount.getLogoImageUrl());
         map.put("website_url", businessAccount.getWebsiteUrl());
+        map.put("label_seller_name", businessAccount.getLabelSellerName());
+        map.put("label_seller_address", businessAccount.getLabelSellerAddress());
+        map.put("label_manufacturer_name", businessAccount.getLabelManufacturerName());
+        map.put("label_manufacturer_address", businessAccount.getLabelManufacturerAddress());
         map.put("registration_status", businessAccount.getRegistrationStatus());
         map.put("max_user_count", businessAccount.getMaxUserCount());
         map.put("current_user_count", businessAccount.getCurrentUserCount());
+        map.put("is_headquarters", businessAccount.getIsHeadquarters());
         map.put("create_date", businessAccount.getCreateDate());
         map.put("last_update_date", businessAccount.getLastUpdateDate());
         map.put("is_active", businessAccount.getIsActive());

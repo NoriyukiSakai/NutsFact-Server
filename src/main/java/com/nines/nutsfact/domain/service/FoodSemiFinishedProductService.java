@@ -73,8 +73,13 @@ public class FoodSemiFinishedProductService {
                 entity.setIsActive(true);
             }
 
+            // businessAccountIdを必須で設定
             if (entity.getBusinessAccountId() == null) {
-                entity.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+                Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+                if (businessAccountId == null) {
+                    throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは半完成品を登録できません");
+                }
+                entity.setBusinessAccountId(businessAccountId);
             }
 
             repository.insert(entity);
@@ -138,8 +143,49 @@ public class FoodSemiFinishedProductService {
         entity.setBusinessAccountId(businessAccountId);
 
         try {
+            // 明細の更新処理
+            if (entity.getDetails() != null) {
+                // 既存の明細IDを取得
+                List<FoodSemiFinishedProductDetail> existingDetails = detailRepository.findBySemiIdAndBusinessAccountId(
+                    entity.getSemiId(), businessAccountId);
+                List<Integer> existingIds = existingDetails.stream()
+                    .map(FoodSemiFinishedProductDetail::getDetailId)
+                    .toList();
+
+                // 送信された明細を処理
+                List<Integer> processedIds = new java.util.ArrayList<>();
+                for (FoodSemiFinishedProductDetail detail : entity.getDetails()) {
+                    detail.setSemiId(entity.getSemiId());
+                    if (detail.getBusinessAccountId() == null) {
+                        detail.setBusinessAccountId(businessAccountId);
+                    }
+
+                    if (detail.getDetailId() != null && detail.getDetailId() > 0) {
+                        // 既存明細の更新
+                        detailRepository.update(detail);
+                        processedIds.add(detail.getDetailId());
+                    } else {
+                        // 新規明細の追加
+                        detailRepository.insert(detail);
+                        processedIds.add(detail.getDetailId());
+                    }
+                }
+
+                // 削除された明細を削除（送信されなかった既存明細）
+                for (Integer existingId : existingIds) {
+                    if (!processedIds.contains(existingId)) {
+                        detailRepository.deleteByIdAndBusinessAccountId(existingId, businessAccountId);
+                    }
+                }
+            }
+
             updateSummary(entity);
             repository.update(entity);
+
+            // 更新後の明細を再取得してセット
+            List<FoodSemiFinishedProductDetail> updatedDetails = detailRepository.findBySemiIdAndBusinessAccountId(
+                entity.getSemiId(), businessAccountId);
+            entity.setDetails(updatedDetails);
 
             log.info("半完成品を更新しました: ID={}", entity.getSemiId());
             return entity;

@@ -53,9 +53,13 @@ public class FoodRawMaterialSupplierService {
                 entity.setIsActive(true);
             }
 
-            // businessAccountIdを自動設定
+            // businessAccountIdを必須で設定
             if (entity.getBusinessAccountId() == null) {
-                entity.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+                Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+                if (businessAccountId == null) {
+                    throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは仕入元情報を登録できません");
+                }
+                entity.setBusinessAccountId(businessAccountId);
             }
 
             repository.insert(entity);

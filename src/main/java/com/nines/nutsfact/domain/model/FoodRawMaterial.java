@@ -54,8 +54,8 @@ public class FoodRawMaterial implements Serializable {
     private Float lastPricePerUnit;              // 最終仕入単価（100グラム当たり）
     private Integer makerId;
     private String makerName;
-    private Integer sallerId;
-    private String sallerName;
+    private Integer sellerId;
+    private String sellerName;
 
     // === 表示情報 ===
     private String compositeRawItemlist;        // 複合原材料の原材料表記

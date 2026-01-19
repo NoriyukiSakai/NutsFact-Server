@@ -25,6 +25,17 @@ spring:
     deserialization:
       fail-on-unknown-properties: false
 
+# Actuator設定
+management:
+  endpoints:
+    web:
+      base-path: /api/v1
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
 mybatis:
   mapper-locations:
     - classpath:com/nines/nutsfact/infrastructure/mapper/*.xml

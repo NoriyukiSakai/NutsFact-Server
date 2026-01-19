@@ -46,8 +46,13 @@ public class FoodSemiFinishedProductDetailService {
     @Transactional
     public FoodSemiFinishedProductDetail create(FoodSemiFinishedProductDetail entity) {
         try {
+            // businessAccountIdを必須で設定
             if (entity.getBusinessAccountId() == null) {
-                entity.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+                Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+                if (businessAccountId == null) {
+                    throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは半完成品明細を登録できません");
+                }
+                entity.setBusinessAccountId(businessAccountId);
             }
             if (entity.getIsActive() == null) {
                 entity.setIsActive(true);

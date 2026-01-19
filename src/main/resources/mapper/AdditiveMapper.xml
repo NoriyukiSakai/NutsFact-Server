@@ -127,15 +127,35 @@
         ORDER BY substance_name
     </select>
 
-    <!-- 本部の添加物マスタを指定のビジネスアカウントにコピー -->
+    <!-- 本部の添加物マスタを指定のビジネスアカウントにコピー（添加物コードが重複しないもののみ） -->
     <insert id="copyFromHeadquarters">
         INSERT INTO master_additive (business_account_id, additive_code, substance_name, simplified_name,
                                      purpose_category, collective_name, requires_purpose_display, description, is_active)
-        SELECT #{targetBusinessAccountId}, additive_code, substance_name, simplified_name,
-               purpose_category, collective_name, requires_purpose_display, description, TRUE
-        FROM master_additive
-        WHERE business_account_id = #{sourceBusinessAccountId}
-          AND is_active = TRUE
+        SELECT #{targetBusinessAccountId}, src.additive_code, src.substance_name, src.simplified_name,
+               src.purpose_category, src.collective_name, src.requires_purpose_display, src.description, TRUE
+        FROM master_additive src
+        WHERE src.business_account_id = #{sourceBusinessAccountId}
+          AND src.is_active = TRUE
+          AND NOT EXISTS (
+              SELECT 1 FROM master_additive existing
+              WHERE existing.business_account_id = #{targetBusinessAccountId}
+                AND existing.additive_code = src.additive_code
+                AND existing.additive_code IS NOT NULL
+          )
     </insert>
+
+    <!-- コピー可能な添加物の件数を取得（添加物コードが重複しないもののみ） -->
+    <select id="countCopyableFromHeadquarters" resultType="int">
+        SELECT COUNT(*)
+        FROM master_additive src
+        WHERE src.business_account_id = #{sourceBusinessAccountId}
+          AND src.is_active = TRUE
+          AND NOT EXISTS (
+              SELECT 1 FROM master_additive existing
+              WHERE existing.business_account_id = #{targetBusinessAccountId}
+                AND existing.additive_code = src.additive_code
+                AND existing.additive_code IS NOT NULL
+          )
+    </select>
 
 </mapper>

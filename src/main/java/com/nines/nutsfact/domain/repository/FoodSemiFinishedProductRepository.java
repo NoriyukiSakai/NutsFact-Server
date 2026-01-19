@@ -47,6 +47,10 @@ public class FoodSemiFinishedProductRepository {
         return mapper.updateAllergenSummary(id, allergenSummary);
     }
 
+    public int updateAdditiveSummary(Integer id, String additiveSummary) {
+        return mapper.updateAdditiveSummary(id, additiveSummary);
+    }
+
     public int delete(Integer id) {
         return mapper.delete(id);
     }

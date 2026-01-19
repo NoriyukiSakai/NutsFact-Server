@@ -152,6 +152,12 @@
         <result property="infContamiFlag" column="inf_contami_flag"/>
         <result property="infContamination" column="inf_contamination"/>
         <result property="allergenSummary" column="allergen_summary"/>
+        <result property="additiveSummary" column="additive_summary_json"/>
+        <result property="allergenDisplayMode" column="allergen_display_mode"/>
+        <result property="nutritionDisplayMode" column="nutrition_display_mode"/>
+        <result property="servingSize" column="serving_size"/>
+        <result property="showSeller" column="show_seller"/>
+        <result property="showManufacturer" column="show_manufacturer"/>
         <result property="weightSum" column="weight_sum"/>
         <result property="costPriceSum" column="cost_price_sum"/>
         <result property="detailCount" column="detail_count"/>
@@ -172,6 +178,8 @@
         inf_energy, inf_protein, inf_fat, inf_carbo, inf_sugar, inf_sodium,
         inf_lmt_kind, inf_lmt_date_flag, inf_lmt_date, inf_lmt_days, inf_storage_method,
         inf_contami_flag, inf_contamination, allergen_summary,
+        additive_summary_json, allergen_display_mode, nutrition_display_mode, serving_size,
+        show_seller, show_manufacturer,
         weight_sum, cost_price_sum, detail_count, place_of_origin, purpose, is_active,
         create_date, update_date,
         refuse, refuse_flag, enerc, enerc_flag, enerc_kcal, enerc_kcal_flag, water, water_flag,
@@ -235,6 +243,8 @@
             inf_energy, inf_protein, inf_fat, inf_carbo, inf_sugar, inf_sodium,
             inf_lmt_kind, inf_lmt_date_flag, inf_lmt_date, inf_lmt_days, inf_storage_method,
             inf_contami_flag, inf_contamination, allergen_summary,
+            additive_summary_json, allergen_display_mode, nutrition_display_mode, serving_size,
+            show_seller, show_manufacturer,
             weight_sum, cost_price_sum, detail_count, place_of_origin, purpose, is_active,
             refuse, refuse_flag, enerc, enerc_flag, enerc_kcal, enerc_kcal_flag, water, water_flag,
             protcaa, protcaa_flag, prot, prot_flag, fatnlea, fatnlea_flag, chole, chole_flag, fat, fat_flag,
@@ -254,6 +264,8 @@
             #{entity.infEnergy}, #{entity.infProtein}, #{entity.infFat}, #{entity.infCarbo}, #{entity.infSugar}, #{entity.infSodium},
             #{entity.infLmtKind}, #{entity.infLmtDateFlag}, #{entity.infLmtDate}, #{entity.infLmtDays}, #{entity.infStorageMethod},
             #{entity.infContamiFlag}, #{entity.infContamination}, #{entity.allergenSummary},
+            #{entity.additiveSummary}, #{entity.allergenDisplayMode}, #{entity.nutritionDisplayMode}, #{entity.servingSize},
+            #{entity.showSeller}, #{entity.showManufacturer},
             #{entity.weightSum}, #{entity.costPriceSum}, #{entity.detailCount},
             #{entity.placeOfOrigin}, #{entity.purpose}, #{entity.isActive},
             #{entity.basicNutrition.refuse}, #{entity.basicNutrition.refuseFlag},
@@ -338,6 +350,13 @@
             inf_storage_method = #{entity.infStorageMethod},
             inf_contami_flag = #{entity.infContamiFlag},
             inf_contamination = #{entity.infContamination},
+            allergen_summary = #{entity.allergenSummary},
+            additive_summary_json = #{entity.additiveSummary},
+            allergen_display_mode = #{entity.allergenDisplayMode},
+            nutrition_display_mode = #{entity.nutritionDisplayMode},
+            serving_size = #{entity.servingSize},
+            show_seller = #{entity.showSeller},
+            show_manufacturer = #{entity.showManufacturer},
             weight_sum = #{entity.weightSum},
             cost_price_sum = #{entity.costPriceSum},
             detail_count = #{entity.detailCount},
@@ -463,6 +482,12 @@
     <update id="updateAllergenSummary">
         UPDATE FOOD_SEMI_FINISHED_PRODUCT SET
             allergen_summary = #{allergenSummary}
+        WHERE semi_id = #{id}
+    </update>
+
+    <update id="updateAdditiveSummary">
+        UPDATE FOOD_SEMI_FINISHED_PRODUCT SET
+            additive_summary_json = #{additiveSummary}
         WHERE semi_id = #{id}
     </update>
 

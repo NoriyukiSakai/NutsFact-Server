@@ -120,7 +120,28 @@ public class AdditiveService {
     }
 
     /**
-     * 本部の添加物マスタを現在のビジネスアカウントにコピー
+     * コピー可能な添加物の件数を取得（添加物コードが重複しないもののみ）
+     * @return コピー可能な件数
+     */
+    public int countCopyableMasterAdditives() {
+        Integer currentBusinessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+        if (currentBusinessAccountId == null) {
+            throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは参照できません");
+        }
+
+        BusinessAccount headquarters = businessAccountRepository.findHeadquarters()
+                .orElseThrow(() -> new ResourceNotFoundException("本部アカウントが見つかりません"));
+
+        // 本部と同じアカウントの場合は0を返す
+        if (headquarters.getId().equals(currentBusinessAccountId)) {
+            return 0;
+        }
+
+        return additiveRepository.countCopyableFromHeadquarters(headquarters.getId(), currentBusinessAccountId);
+    }
+
+    /**
+     * 本部の添加物マスタを現在のビジネスアカウントにコピー（添加物コードが重複しないもののみ）
      * @return コピーされた件数
      */
     @Transactional

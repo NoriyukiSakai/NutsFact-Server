@@ -10,13 +10,13 @@ import java.io.Serializable;
 public class DeleteResponse implements Serializable {
 
     private String status;
-    private Integer deletedId;
+    private Integer id;
     private String message;
 
     public static DeleteResponse success(Integer id) {
         return DeleteResponse.builder()
             .status("Success")
-            .deletedId(id)
+            .id(id)
             .build();
     }
 

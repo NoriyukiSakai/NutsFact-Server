@@ -17,7 +17,6 @@ import com.nines.nutsfact.api.v1.request.auth.OAuthWithInvitationCodeRequest;
 import com.nines.nutsfact.api.v1.request.auth.PasswordResetRequest;
 import com.nines.nutsfact.api.v1.request.auth.PasswordUpdateRequest;
 import com.nines.nutsfact.api.v1.request.auth.RefreshTokenRequest;
-import com.nines.nutsfact.api.v1.request.auth.SignUpRequest;
 import com.nines.nutsfact.api.v1.request.auth.SignUpWithInvitationCodeRequest;
 import com.nines.nutsfact.config.AuthenticatedUser;
 import com.nines.nutsfact.domain.model.auth.AuthToken;
@@ -32,13 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthService authService;
-
-    @PostMapping("/signUp")
-    public ResponseEntity<Map<String, Object>> signUp(@Valid @RequestBody SignUpRequest request) {
-        AuthService.AuthResult result = authService.signUp(
-                request.getEmail(), request.getPassword(), request.getName());
-        return ResponseEntity.ok(buildAuthResponse(result));
-    }
 
     @PostMapping("/signUpWithInvitationCode")
     public ResponseEntity<Map<String, Object>> signUpWithInvitationCode(

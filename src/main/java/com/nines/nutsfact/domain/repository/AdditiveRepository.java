@@ -66,12 +66,22 @@ public class AdditiveRepository {
     }
 
     /**
-     * 本部の添加物マスタを指定のビジネスアカウントにコピー
+     * 本部の添加物マスタを指定のビジネスアカウントにコピー（添加物コードが重複しないもののみ）
      * @param sourceBusinessAccountId コピー元（本部）のビジネスアカウントID
      * @param targetBusinessAccountId コピー先のビジネスアカウントID
      * @return コピーされた件数
      */
     public int copyFromHeadquarters(Integer sourceBusinessAccountId, Integer targetBusinessAccountId) {
         return additiveMapper.copyFromHeadquarters(sourceBusinessAccountId, targetBusinessAccountId);
+    }
+
+    /**
+     * コピー可能な添加物の件数を取得（添加物コードが重複しないもののみ）
+     * @param sourceBusinessAccountId コピー元（本部）のビジネスアカウントID
+     * @param targetBusinessAccountId コピー先のビジネスアカウントID
+     * @return コピー可能な件数
+     */
+    public int countCopyableFromHeadquarters(Integer sourceBusinessAccountId, Integer targetBusinessAccountId) {
+        return additiveMapper.countCopyableFromHeadquarters(sourceBusinessAccountId, targetBusinessAccountId);
     }
 }

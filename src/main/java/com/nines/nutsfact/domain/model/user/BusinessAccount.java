@@ -12,6 +12,13 @@ public class BusinessAccount {
     private String contactPhone;
     private String logoImageUrl;
     private String websiteUrl;
+
+    // ラベル用販売者・製造者情報
+    private String labelSellerName;
+    private String labelSellerAddress;
+    private String labelManufacturerName;
+    private String labelManufacturerAddress;
+
     private Integer registrationStatus;
     private Integer maxUserCount;
     private Integer currentUserCount;

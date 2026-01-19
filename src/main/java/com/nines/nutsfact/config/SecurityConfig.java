@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/apix/FoodPreProductDetail/**").permitAll()
                 .requestMatchers("/apix/MasterSupplier/**").permitAll()
                 .requestMatchers("/apix/MasterMaker/**").permitAll()
-                .requestMatchers("/apix/MasterSaller/**").permitAll()
+                .requestMatchers("/apix/MasterSeller/**").permitAll()
                 .requestMatchers("/apix/AllergenicControl/**").permitAll()
                 .requestMatchers("/apix/MasterClassCategory/**").permitAll()
                 .requestMatchers("/apix/**").authenticated()

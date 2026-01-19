@@ -30,6 +30,7 @@ public class FoodSemiFinishedProductDetail implements Serializable {
     // 名称
     private String detailFoodName;
     private String detailPreName;
+    private String labelDisplayName;          // ラベル表示用名称
 
     // 数量・計算値
     private Float mixingRatio;                  // 配合比率

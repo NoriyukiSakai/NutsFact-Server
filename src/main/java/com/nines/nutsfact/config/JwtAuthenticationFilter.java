@@ -37,6 +37,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = claims.get("email", String.class);
                 Integer role = claims.get("role", Integer.class);
 
+                // ビジネスアカウントに所属していないユーザーは認証を拒否
+                // （運営管理者 role=0 を除く）
+                if (businessAccountId == null && (role == null || role != 0)) {
+                    // businessAccountIdがない場合は認証しない（ログアウト状態として扱う）
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
                 String authority = switch (role != null ? role : 99) {
                     case 0 -> "ROLE_SYSTEM_ADMIN";       // 運営管理者
                     case 10 -> "ROLE_BUSINESS_OWNER";    // ビジネスオーナー

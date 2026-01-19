@@ -30,7 +30,7 @@ public class SellerController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Seller>>> findAll() {
-        List<Seller> sellers = sellerService.findAll();
+        List<Seller> sellers = sellerService.findAllWithBusinessAccountFilter();
         return ResponseEntity.ok(ApiResponse.success(sellers));
     }
 

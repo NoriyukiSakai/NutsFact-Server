@@ -31,6 +31,10 @@ public interface FoodSemiFinishedProductMapper {
             @Param("id") Integer id,
             @Param("allergenSummary") String allergenSummary);
 
+    int updateAdditiveSummary(
+            @Param("id") Integer id,
+            @Param("additiveSummary") String additiveSummary);
+
     int delete(@Param("id") Integer id);
 
     int deleteByIdAndBusinessAccountId(

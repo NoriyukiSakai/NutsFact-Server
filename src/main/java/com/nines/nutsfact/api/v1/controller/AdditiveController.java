@@ -87,6 +87,15 @@ public class AdditiveController {
     }
 
     /**
+     * コピー可能な添加物の件数を取得（添加物コードが重複しないもののみ）
+     */
+    @GetMapping("/master/copyable-count")
+    public ResponseEntity<ApiResponse<CopyableCountResponse>> getCopyableCount() {
+        int count = additiveService.countCopyableMasterAdditives();
+        return ResponseEntity.ok(ApiResponse.success(new CopyableCountResponse(count)));
+    }
+
+    /**
      * 本部の添加物マスタを自分のビジネスアカウントにコピー
      */
     @PostMapping("/copy-master")
@@ -107,6 +116,11 @@ public class AdditiveController {
                 .isActive(request.getIsActive())
                 .build();
     }
+
+    /**
+     * コピー可能件数のレスポンス
+     */
+    public record CopyableCountResponse(int count) {}
 
     /**
      * 本部マスタコピーのレスポンス

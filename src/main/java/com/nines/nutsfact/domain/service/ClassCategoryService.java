@@ -55,9 +55,13 @@ public class ClassCategoryService {
 
     @Transactional
     public ClassCategory create(ClassCategory classCategory) {
-        // businessAccountIdを自動設定
+        // businessAccountIdを必須で設定
         if (classCategory.getBusinessAccountId() == null) {
-            classCategory.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+            Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+            if (businessAccountId == null) {
+                throw new IllegalStateException("ビジネスアカウントに所属していないユーザーは分類カテゴリを登録できません");
+            }
+            classCategory.setBusinessAccountId(businessAccountId);
         }
         classCategoryRepository.save(classCategory);
         return classCategory;

@@ -57,6 +57,15 @@ public class FoodSemiFinishedProductRequest {
     private Boolean infContamiFlag;
     private String infContamination;
 
+    // 表示モード設定
+    private Integer allergenDisplayMode;
+    private Integer nutritionDisplayMode;
+    private Float servingSize;
+
+    // 販売者・製造者表示フラグ
+    private Boolean showSeller;
+    private Boolean showManufacturer;
+
     // その他
     private String placeOfOrigin;
     private String purpose;

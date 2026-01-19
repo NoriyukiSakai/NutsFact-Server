@@ -3,9 +3,9 @@
 <mapper namespace="com.nines.nutsfact.infrastructure.mapper.SellerMapper">
 
     <resultMap id="SellerResultMap" type="com.nines.nutsfact.domain.model.master.Seller">
-        <id property="sellerId" column="saller_id"/>
+        <id property="sellerId" column="seller_id"/>
         <result property="businessAccountId" column="business_account_id"/>
-        <result property="sellerName" column="saller_name"/>
+        <result property="sellerName" column="seller_name"/>
         <result property="contactInfo" column="contact_info"/>
         <result property="address" column="address"/>
         <result property="phoneNumber" column="phone_number"/>
@@ -14,59 +14,59 @@
     </resultMap>
 
     <select id="findAll" resultMap="SellerResultMap">
-        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
-        FROM MASTER_SALLER
-        ORDER BY saller_id
+        SELECT seller_id, business_account_id, seller_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_SELLER
+        ORDER BY seller_id
     </select>
 
     <select id="findByBusinessAccountId" resultMap="SellerResultMap">
-        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
-        FROM MASTER_SALLER
+        SELECT seller_id, business_account_id, seller_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_SELLER
         WHERE business_account_id = #{businessAccountId}
-        ORDER BY saller_id
+        ORDER BY seller_id
     </select>
 
     <select id="findById" resultMap="SellerResultMap">
-        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
-        FROM MASTER_SALLER
-        WHERE saller_id = #{sellerId}
+        SELECT seller_id, business_account_id, seller_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_SELLER
+        WHERE seller_id = #{sellerId}
     </select>
 
     <select id="findByIdAndBusinessAccountId" resultMap="SellerResultMap">
-        SELECT saller_id, business_account_id, saller_name, contact_info, address, phone_number, email, is_active
-        FROM MASTER_SALLER
-        WHERE saller_id = #{sellerId}
+        SELECT seller_id, business_account_id, seller_name, contact_info, address, phone_number, email, is_active
+        FROM MASTER_SELLER
+        WHERE seller_id = #{sellerId}
         <if test="businessAccountId != null">
             AND business_account_id = #{businessAccountId}
         </if>
     </select>
 
     <insert id="insert" parameterType="com.nines.nutsfact.domain.model.master.Seller" useGeneratedKeys="true" keyProperty="sellerId">
-        INSERT INTO MASTER_SALLER (business_account_id, saller_name, contact_info, address, phone_number, email, is_active)
+        INSERT INTO MASTER_SELLER (business_account_id, seller_name, contact_info, address, phone_number, email, is_active)
         VALUES (#{businessAccountId}, #{sellerName}, #{contactInfo}, #{address}, #{phoneNumber}, #{email}, #{isActive})
     </insert>
 
     <update id="update" parameterType="com.nines.nutsfact.domain.model.master.Seller">
-        UPDATE MASTER_SALLER
-        SET saller_name = #{sellerName},
+        UPDATE MASTER_SELLER
+        SET seller_name = #{sellerName},
             contact_info = #{contactInfo},
             address = #{address},
             phone_number = #{phoneNumber},
             email = #{email},
             is_active = #{isActive}
-        WHERE saller_id = #{sellerId}
+        WHERE seller_id = #{sellerId}
         <if test="businessAccountId != null">
             AND business_account_id = #{businessAccountId}
         </if>
     </update>
 
     <delete id="delete">
-        DELETE FROM MASTER_SALLER WHERE saller_id = #{sellerId}
+        DELETE FROM MASTER_SELLER WHERE seller_id = #{sellerId}
     </delete>
 
     <delete id="deleteByIdAndBusinessAccountId">
-        DELETE FROM MASTER_SALLER
-        WHERE saller_id = #{sellerId}
+        DELETE FROM MASTER_SELLER
+        WHERE seller_id = #{sellerId}
         <if test="businessAccountId != null">
             AND business_account_id = #{businessAccountId}
         </if>

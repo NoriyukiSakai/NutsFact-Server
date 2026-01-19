@@ -53,9 +53,13 @@ public class AllergenicControlService {
 
     @Transactional
     public AllergenicControl save(AllergenicControl allergenicControl) {
-        // businessAccountIdを自動設定
+        // businessAccountIdを必須で設定
         if (allergenicControl.getBusinessAccountId() == null) {
-            allergenicControl.setBusinessAccountId(SecurityContextHelper.getCurrentBusinessAccountId());
+            Integer businessAccountId = SecurityContextHelper.getCurrentBusinessAccountId();
+            if (businessAccountId == null) {
+                throw new IllegalStateException("ビジネスアカウントに所属していないユーザーはアレルゲン情報を登録できません");
+            }
+            allergenicControl.setBusinessAccountId(businessAccountId);
         }
         allergenicControlRepository.save(allergenicControl);
         return allergenicControl;

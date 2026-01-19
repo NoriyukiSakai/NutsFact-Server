@@ -73,6 +73,7 @@ public class FoodSemiFinishedProductConverter {
             .compositeRawMaterialsKb(request.getCompositeRawMaterialsKb())
             .detailFoodName(request.getDetailFoodName())
             .detailPreName(request.getDetailPreName())
+            .labelDisplayName(request.getLabelDisplayName())
             .mixingRatio(request.getMixingRatio())
             .weight(request.getWeight())
             .costPrice(request.getCostPrice())

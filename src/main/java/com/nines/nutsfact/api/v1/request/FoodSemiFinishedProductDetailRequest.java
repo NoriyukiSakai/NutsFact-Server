@@ -26,6 +26,7 @@ public class FoodSemiFinishedProductDetailRequest {
     // 名称
     private String detailFoodName;
     private String detailPreName;
+    private String labelDisplayName;
 
     // 配合情報
     private Float mixingRatio;

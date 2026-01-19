@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/apix/MasterSaller")
+@RequestMapping("/apix/MasterSeller")
 @RequiredArgsConstructor
 public class MasterSellerController {
 
